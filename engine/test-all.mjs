@@ -89,6 +89,9 @@ const REQUIRED = [
   'templates/profile/icp.example.yml', 'templates/profile/preferences.example.yml',
   'templates/profile/background.example.md',
   'batch/batch-runner.sh', 'docs/ARCHITECTURE.md', 'docs/DECISIONS.md',
+  'LEGAL.md', 'docs/SETUP.md', 'docs/FAQ.md', 'docs/RUNNING_ON_A_BUDGET.md',
+  'docs/SUPPORTED_CLIS.md', 'docs/PLUGINS.md', 'engine/campaign.mjs',
+  'modes/campaign.md', 'batch/batch-prompt.md',
   'AGENTS.md', 'modes/_shared.md', 'modes/_weights.default.yml', 'modes/grade.md',
   'modes/dm.md', 'modes/email.md', 'modes/dossier.md', 'modes/onboard.md',
   'modes/ledger.md', 'engine/weights.mjs', '.agents/skills/outreach-ops/SKILL.md',
@@ -107,7 +110,7 @@ if (!reqBad) pass(`${REQUIRED.length} required files present`);
 
 // ── 5. Brand purge ────────────────────────────────────────────────
 console.log('\n5) Brand purge (career-ops only allowed in LICENSE/attribution docs)');
-const ALLOW = new Set(['LICENSE', 'README.md', 'CLAUDE.md', 'AGENTS.md', 'CHANGELOG.md', 'docs/DECISIONS.md', 'docs/ARCHITECTURE.md', 'docs/BUILD_PROMPT.md', 'engine/test-all.mjs']);
+const ALLOW = new Set(['LICENSE', 'README.md', 'CLAUDE.md', 'AGENTS.md', 'CHANGELOG.md', 'LEGAL.md', 'docs/DECISIONS.md', 'docs/ARCHITECTURE.md', 'docs/BUILD_PROMPT.md', 'engine/test-all.mjs']);
 const textFiles = walk('', ['.mjs', '.js', '.md', '.yml', '.json', '.sh', '.html']);
 let brandBad = 0;
 for (const f of textFiles) {

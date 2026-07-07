@@ -501,23 +501,22 @@ func NormalizeStatus(raw string) string {
 	}
 
 	switch {
-	// Most restrictive first — accepts both English and Spanish
-	case strings.Contains(s, "no aplicar") || strings.Contains(s, "no_aplicar") || s == "skip" || strings.Contains(s, "geo blocker"):
+	// Lead lifecycle → dashboard groups. Keep in sync with templates/states.yml.
+	case s == "disqualified" || s == "no_contact" || s == "skip" || s == "nurture" || s == "monitor" || s == "watch":
 		return "skip"
-	case strings.Contains(s, "interview") || strings.Contains(s, "entrevista"):
+	case s == "call" || s == "meeting" || strings.Contains(s, "interview"):
 		return "interview"
-	case s == "offer" || strings.Contains(s, "oferta"):
+	case s == "won" || s == "offer" || s == "closed_won" || s == "hired":
 		return "offer"
-	case strings.Contains(s, "responded") || strings.Contains(s, "respondido"):
+	case s == "replied" || strings.Contains(s, "responded"):
 		return "responded"
-	case strings.Contains(s, "applied") || strings.Contains(s, "aplicado") || s == "enviada" || s == "aplicada" || s == "sent":
+	case s == "sent" || s == "bumped" || s == "contacted" || s == "followed_up" || strings.Contains(s, "applied"):
 		return "applied"
-	case strings.Contains(s, "rejected") || strings.Contains(s, "rechazado") || s == "rechazada":
+	case s == "lost" || s == "closed_lost" || strings.Contains(s, "rejected"):
 		return "rejected"
-	case strings.Contains(s, "discarded") || strings.Contains(s, "descartado") || s == "descartada" || s == "cerrada" || s == "cancelada" ||
-		strings.HasPrefix(s, "duplicado") || strings.HasPrefix(s, "dup"):
+	case strings.Contains(s, "discarded") || strings.HasPrefix(s, "dup"):
 		return "discarded"
-	case strings.Contains(s, "evaluated") || strings.Contains(s, "evaluada") || s == "condicional" || s == "hold" || s == "monitor" || s == "evaluar" || s == "verificar":
+	case s == "new" || s == "inbox" || s == "graded" || s == "queued" || s == "drafted" || strings.Contains(s, "evaluated") || s == "hold":
 		return "evaluated"
 	default:
 		return s

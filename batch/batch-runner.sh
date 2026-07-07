@@ -18,7 +18,7 @@ STATE_FILE="$BATCH_DIR/batch-state.tsv"
 PROMPT_FILE="$BATCH_DIR/batch-prompt.md"
 LOGS_DIR="$BATCH_DIR/logs"
 TRACKER_DIR="$BATCH_DIR/tracker-additions"
-REPORTS_DIR="$PROJECT_DIR/reports"
+REPORTS_DIR="$PROJECT_DIR/data/dossiers"
 APPLICATIONS_FILE="$PROJECT_DIR/data/leads.md"
 LOCK_FILE="$BATCH_DIR/batch-runner.pid"
 PAUSE_FILE="$BATCH_DIR/batch-runner.paused"
@@ -35,7 +35,7 @@ RESUME_PAUSED=false
 START_FROM=0
 MAX_RETRIES=2
 MIN_SCORE=0
-SKIP_PDF=false
+SKIP_PDF=true   # outreach-ops: dossier PDFs are optional, off in batch by default
 MODEL=""  # empty = let claude -p use the Claude Max default
 RATE_LIMIT_SLEEP=300
 BATCH_PAUSED=false
@@ -426,10 +426,10 @@ process_offer() {
   # Build the prompt with placeholders replaced
   local prompt
   if [[ "$SKIP_PDF" == "true" ]]; then
-    prompt="Procesa esta oferta de empleo. Ejecuta el pipeline: evaluación A-F + report .md + tracker line. NO generes PDF; en el tracker escribe ❌ en la columna PDF y en el JSON final establece \"pdf\": null."
-    echo "    ⏭️  --skip-pdf set — skipping PDF generation for #$id ($url)"
+    prompt="Grade this prospect with the outreach-ops A-G rubric: dossier .md + ledger TSV line. Do NOT render a PDF; set \"pdf\": null in the final JSON."
+    echo "    ⏭️  --skip-pdf set — no dossier PDF for #$id ($url)"
   else
-    prompt="Procesa esta oferta de empleo. Ejecuta el pipeline completo: evaluación A-F + report .md + PDF + tracker line."
+    prompt="Grade this prospect with the outreach-ops A-G rubric: dossier .md + ledger TSV line + dossier PDF (engine/render-dossier.mjs)."
   fi
   prompt="$prompt URL: $url"
   prompt="$prompt JD file: $jd_file"
@@ -461,7 +461,7 @@ process_offer() {
   # Inject user-layer personalization into the temporary worker prompt.
   # The resolved prompt is gitignored runtime state, so user profile data stays
   # out of the system layer while batch scoring matches interactive scoring.
-  for context_file in "$PROJECT_DIR/modes/_profile.md" "$PROJECT_DIR/config/profile.yml"; do
+  for context_file in "$PROJECT_DIR/profile/background.md" "$PROJECT_DIR/profile/offer.yml" "$PROJECT_DIR/profile/icp.yml" "$PROJECT_DIR/profile/preferences.yml" "$PROJECT_DIR/profile/voice-dna.md"; do
     if [[ -f "$context_file" ]]; then
       {
         printf '\n\n---\n\n'

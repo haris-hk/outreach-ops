@@ -104,6 +104,7 @@ const (
 	filterRejected  = "rejected"
 	filterDiscarded = "discarded"
 	filterTop       = "top"
+	filterTop2      = "responded"
 )
 
 type pipelineTab struct {
@@ -113,13 +114,13 @@ type pipelineTab struct {
 
 var pipelineTabs = []pipelineTab{
 	{filterAll, "ALL"},
-	{filterEvaluated, "EVALUATED"},
-	{filterApplied, "APPLIED"},
-	{filterInterview, "INTERVIEW"},
-	{filterTop, "TOP ≥4"},
-	{filterSkip, "SKIP"},
-	{filterRejected, "REJECTED"},
-	{filterDiscarded, "DISCARDED"},
+	{filterTop, "PRIORITY ≥4.2"},
+	{filterEvaluated, "PIPELINE"},
+	{filterApplied, "SENT"},
+	{filterInterview, "CALLS"},
+	{filterTop2, "REPLIED"},
+	{filterSkip, "NURTURE/DQ"},
+	{filterRejected, "LOST"},
 }
 
 var sortCycle = []string{sortScore, sortDate, sortCompany, sortStatus, sortLocation, sortPay, sortLast}
@@ -757,7 +758,7 @@ func (m *PipelineModel) applyFilterAndSort() {
 		case filterAll:
 			filtered = append(filtered, app)
 		case filterTop:
-			if app.Score >= 4.0 && norm != "skip" {
+			if app.Score >= 4.2 && norm != "skip" {
 				filtered = append(filtered, app)
 			}
 		default:
