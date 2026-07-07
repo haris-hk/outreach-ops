@@ -41,7 +41,7 @@ if (!argv.includes('--refresh') && existsSync(CACHE)) {
 
 const { discoverPlugins, pluginRoots, pluginStatus, loadDotenvOnce } = await import('../plugins/_engine.mjs');
 await loadDotenvOnce();
-const yaml = (await import('js-yaml')).default;
+const yaml = await import('js-yaml'); // namespace: v4 + v5 compatible
 const cfgPath = join(ROOT, 'config', 'plugins.yml');
 const cfg = existsSync(cfgPath) ? (yaml.load(readFileSync(cfgPath, 'utf-8')) || {}) : {};
 const manifests = discoverPlugins(pluginRoots(ROOT)).filter((m) => (m.hooks || []).includes('enrich'));

@@ -13,7 +13,7 @@ import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSy
 import { join, dirname, resolve } from 'path';
 import { tmpdir } from 'os';
 import { fileURLToPath, pathToFileURL } from 'url';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml'; // namespace import: works on js-yaml v4 (CJS interop) and v5 (pure ESM, no default)
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
 const PROVIDERS_DIR = join(ROOT, 'providers');

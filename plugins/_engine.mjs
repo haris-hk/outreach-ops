@@ -110,7 +110,7 @@ export async function loadPluginConfig(root) {
   const file = pluginsConfigPath(root);
   if (!existsSync(file)) return {};
   try {
-    const yaml = (await import('js-yaml')).default;
+    const yaml = await import('js-yaml'); // namespace: v4 + v5 compatible
     const parsed = yaml.load(readFileSync(file, 'utf8'));
     return parsed && typeof parsed === 'object' ? parsed : {};
   } catch (err) {

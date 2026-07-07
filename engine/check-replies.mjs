@@ -61,7 +61,7 @@ if (!contacts.length) {
 // 3. fan out to replies-hook plugins (two-gate enforced by pluginStatus)
 const { discoverPlugins, pluginRoots, pluginStatus, loadDotenvOnce } = await import('../plugins/_engine.mjs');
 await loadDotenvOnce();
-const yaml = (await import('js-yaml')).default;
+const yaml = await import('js-yaml'); // namespace: v4 + v5 compatible
 const cfgPath = join(ROOT, 'config', 'plugins.yml');
 const cfg = existsSync(cfgPath) ? (yaml.load(readFileSync(cfgPath, 'utf-8')) || {}) : {};
 const detectors = discoverPlugins(pluginRoots(ROOT)).filter((m) => (m.hooks || []).includes('replies')).filter((m) => pluginStatus(m, cfg).enabled);

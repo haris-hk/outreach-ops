@@ -335,7 +335,7 @@ try {
 // Canonical states and aliases
 // Canonical states + aliases from templates/states.yml — single source of
 // truth shared with normalize.mjs / verify-ledger.mjs / the dashboard.
-import yamlPkg from 'js-yaml';
+import * as yamlPkg from 'js-yaml'; // namespace import: v4 + v5 compatible
 import { readFileSync as _readStates, existsSync as _statesExists } from 'fs';
 const _statesPath = join(OUTREACH_OPS, 'templates', 'states.yml');
 const _statesDoc = _statesExists(_statesPath) ? yamlPkg.load(_readStates(_statesPath, 'utf-8')) : null;

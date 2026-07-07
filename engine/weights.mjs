@@ -4,7 +4,7 @@
 import { readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml'; // namespace import: works on js-yaml v4 (CJS interop) and v5 (pure ESM, no default)
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 

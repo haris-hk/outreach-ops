@@ -8,7 +8,7 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml'; // namespace import: works on js-yaml v4 (CJS interop) and v5 (pure ESM, no default)
 import { discoverPlugins, pluginRoots, pluginStatus } from '../plugins/_engine.mjs';
 
 const __dirname = dirname(dirname(fileURLToPath(import.meta.url))); // repo root (script lives in engine/)

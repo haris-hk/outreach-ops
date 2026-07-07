@@ -30,7 +30,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from 'fs';
 import { pathToFileURL } from 'url';
 import path from 'path';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml'; // namespace import: works on js-yaml v4 (CJS interop) and v5 (pure ESM, no default)
 
 import { makeHttpCtx, fetchJson } from '../providers/_http.mjs';
 import greenhouse from '../providers/ats/greenhouse.mjs';

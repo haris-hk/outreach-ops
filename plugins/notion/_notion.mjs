@@ -16,7 +16,7 @@
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml'; // namespace import: works on js-yaml v4 (CJS interop) and v5 (pure ESM, no default)
 
 const DIR = dirname(fileURLToPath(import.meta.url));
 const STATES_PATH = join(DIR, '..', '..', 'templates', 'states.yml');

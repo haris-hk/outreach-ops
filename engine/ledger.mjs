@@ -38,7 +38,7 @@ import { readFileSync, writeFileSync, copyFileSync, existsSync, mkdirSync, statS
 import { createHash } from 'crypto';
 import { dirname, resolve, join, basename } from 'path';
 import { pathToFileURL } from 'url';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml'; // namespace import: works on js-yaml v4 (CJS interop) and v5 (pure ESM, no default)
 import { resolveColumns } from './tracker-parse.mjs';
 
 const MD_PATH = process.env.OUTREACH_OPS_TRACKER || 'data/leads.md';

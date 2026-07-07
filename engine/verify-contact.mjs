@@ -35,7 +35,7 @@ if (cache[email] && !process.argv.includes('--refresh')) {
 
 const { discoverPlugins, pluginRoots, pluginStatus, loadDotenvOnce } = await import('../plugins/_engine.mjs');
 await loadDotenvOnce();
-const yaml = (await import('js-yaml')).default;
+const yaml = await import('js-yaml'); // namespace: v4 + v5 compatible
 const cfgPath = join(ROOT, 'config', 'plugins.yml');
 const cfg = existsSync(cfgPath) ? (yaml.load(readFileSync(cfgPath, 'utf-8')) || {}) : {};
 const verifiers = discoverPlugins(pluginRoots(ROOT))

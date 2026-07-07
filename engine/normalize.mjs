@@ -16,7 +16,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { rebuildRow } from './tracker-utils.mjs';
 
-import yamlPkg from 'js-yaml';
+import * as yamlPkg from 'js-yaml'; // namespace import: v4 + v5 compatible
 let _statesCache = null;
 function loadStates() {
   if (_statesCache) return _statesCache;

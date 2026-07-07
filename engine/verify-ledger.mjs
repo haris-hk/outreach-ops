@@ -42,7 +42,7 @@ mkdirSync(REPORTS_DIR, { recursive: true });
 
 // Canonical statuses + aliases come from templates/states.yml — single source
 // of truth shared with normalize-statuses and the dashboard.
-import yamlPkg from 'js-yaml';
+import * as yamlPkg from 'js-yaml'; // namespace import: v4 + v5 compatible
 const statesDoc = existsSync(STATES_FILE) ? yamlPkg.load(readFileSync(STATES_FILE, 'utf-8')) : null;
 const CANONICAL_STATUSES = (statesDoc?.states || []).map((st) => st.id);
 const ALIASES = Object.fromEntries((statesDoc?.states || []).flatMap((st) => (st.aliases || []).map((a) => [String(a).toLowerCase(), st.id])));
