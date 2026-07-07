@@ -2,8 +2,8 @@
  * tracker-links.mjs — Shared report-link normalization for the tracker.
  *
  * Markdown links resolve relative to the file that contains them, so a report
- * link in applications.md must be relative to wherever that tracker file lives:
- * `../reports/...` when the tracker is at `data/applications.md`, or
+ * link in leads.md must be relative to wherever that tracker file lives:
+ * `../reports/...` when the tracker is at `data/leads.md`, or
  * `reports/...` when it sits at the repo root.
  *
  * Report files canonically live in `<repoRoot>/reports/`, so we resolve the
@@ -19,7 +19,7 @@ import { join, relative, sep } from 'path';
  * Rewrite every report link in a string so its path is relative to trackerDir.
  *
  * @param {string} reportField  Text containing one or more `[label](path)` links.
- * @param {string} trackerDir   Absolute dir of the tracker file (dirname of applications.md).
+ * @param {string} trackerDir   Absolute dir of the tracker file (dirname of leads.md).
  * @param {string} repoRoot     Absolute repo root where `reports/` lives.
  * @returns {string} The same text with report links normalized.
  */

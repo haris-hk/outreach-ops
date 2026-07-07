@@ -5,7 +5,7 @@
  *
  * "Apply to #13" is ambiguous: report numbers and tracker row numbers diverge,
  * and mapping company ↔ report# ↔ tracker# ↔ PDF used to require opening three
- * files (applications.md, reports/, data/pdf-index.tsv). This read-only tool
+ * files (leads.md, reports/, data/pdf-index.tsv). This read-only tool
  * answers it in one lookup.
  *
  * Usage:
@@ -19,7 +19,7 @@
  * the shared fuzzy matcher (role-matcher.mjs) as fallback for multi-word
  * phrases.
  *
- * Zero dependencies and strictly read-only: parses data/applications.md via
+ * Zero dependencies and strictly read-only: parses data/leads.md via
  * the shared header-aware column mapping (tracker-parse.mjs) and the PDF
  * manifest data/pdf-index.tsv (written by generate-pdf.mjs).
  */
@@ -45,11 +45,11 @@ const cleanStatus = (s) =>
  * Parse the tracker markdown into lookup rows.
  *
  * The report number and path come from the Report cell's markdown link. The
- * path is normalized to be root-relative: trackers at `data/applications.md`
+ * path is normalized to be root-relative: trackers at `data/leads.md`
  * carry `../reports/...` links (relative to the tracker file, see #760), which
  * would be misleading when printed from the outreach-ops root.
  *
- * @param {string} text - Full contents of applications.md.
+ * @param {string} text - Full contents of leads.md.
  * @returns {Array<{trackerNum:number,date:string,company:string,role:string,score:string,status:string,reportNum:string|null,reportPath:string|null}>}
  */
 export function parseTrackerRows(text) {
@@ -135,7 +135,7 @@ function main() {
     return;
   }
 
-  const trackerPath = process.env.OUTREACH_OPS_TRACKER || resolve(ROOT, 'data', 'applications.md');
+  const trackerPath = process.env.OUTREACH_OPS_TRACKER || resolve(ROOT, 'data', 'leads.md');
   if (!existsSync(trackerPath)) {
     console.error(`Error: ${trackerPath} not found — nothing to search.`);
     process.exitCode = 1;

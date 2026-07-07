@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * dedup-tracker.mjs — Remove duplicate entries from applications.md
+ * dedup-tracker.mjs — Remove duplicate entries from leads.md
  *
  * Groups by normalized company, then merges only rows whose full role title
  * matches exactly (case- and whitespace-normalized). Keeps entry with highest
@@ -17,14 +17,14 @@ import { rebuildRow } from './tracker-utils.mjs';
 import { resolveColumns, parseTrackerRow } from './tracker-parse.mjs';
 
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
-// Support both layouts: data/applications.md (boilerplate) and applications.md
+// Support both layouts: data/leads.md (boilerplate) and leads.md
 // (original). OUTREACH_OPS_TRACKER lets tests point the script at an isolated
 // fixture so the real user tracker is never touched.
 const APPS_FILE = process.env.OUTREACH_OPS_TRACKER
   ? process.env.OUTREACH_OPS_TRACKER
-  : existsSync(join(OUTREACH_OPS, 'data/applications.md'))
-    ? join(OUTREACH_OPS, 'data/applications.md')
-    : join(OUTREACH_OPS, 'applications.md');
+  : existsSync(join(OUTREACH_OPS, 'data/leads.md'))
+    ? join(OUTREACH_OPS, 'data/leads.md')
+    : join(OUTREACH_OPS, 'leads.md');
 const DRY_RUN = process.argv.includes('--dry-run');
 
 // Ensure the target tracker directory exists in both normal and fixture mode.
@@ -64,7 +64,7 @@ const STATUS_RANK = {
  * differences while keeping the alphanumeric company identity that determines
  * which rows are safe to compare for duplicate roles.
  *
- * @param {string} name - Company name from an applications.md row.
+ * @param {string} name - Company name from an leads.md row.
  * @returns {string} Lowercase company key used for same-company grouping.
  */
 function normalizeCompany(name) {
@@ -82,7 +82,7 @@ function normalizeCompany(name) {
  * to the status cell. Dedup needs the canonical status word only, in lowercase,
  * so advanced-state protection works the same for old and new tracker rows.
  *
- * @param {string} status - Raw status cell from applications.md.
+ * @param {string} status - Raw status cell from leads.md.
  * @returns {string} Lowercase status key with Markdown/date noise removed.
  */
 function normalizeStatus(status) {
@@ -129,7 +129,7 @@ function isAdvancedStatus(status) {
  * stable report identity used to distinguish exact duplicates from merely
  * similar fuzzy-title matches.
  *
- * @param {string} reportStr - Raw report cell from applications.md.
+ * @param {string} reportStr - Raw report cell from leads.md.
  * @returns {number|null} Parsed report number, or null when no link number exists.
  */
 function extractReportNum(reportStr) {
@@ -144,8 +144,8 @@ function extractReportNum(reportStr) {
  * same tracker number or bracketed report number, dedup may treat them as the
  * same record even when an advanced status is present.
  *
- * @param {object} a - First parsed applications.md row.
- * @param {object} b - Second parsed applications.md row.
+ * @param {object} a - First parsed leads.md row.
+ * @param {object} b - Second parsed leads.md row.
  * @returns {boolean} True when both rows represent the same report identity.
  */
 function sameReportIdentity(a, b) {
@@ -162,8 +162,8 @@ function sameReportIdentity(a, b) {
  * Sorting the row numbers produces the same key regardless of comparison order,
  * which keeps the warning output readable and avoids repeated noise.
  *
- * @param {object} a - First parsed applications.md row.
- * @param {object} b - Second parsed applications.md row.
+ * @param {object} a - First parsed leads.md row.
+ * @param {object} b - Second parsed leads.md row.
  * @returns {string} Stable pair key in ascending tracker-number order.
  */
 function pairKey(a, b) {
@@ -182,7 +182,7 @@ const protectedTitlePairs = new Set();
  * team suffix ("Data Infrastructure" vs "Agent Infrastructure") are preserved,
  * so sibling roles at one company are never merged.
  *
- * @param {string} role - Role title from an applications.md row.
+ * @param {string} role - Role title from an leads.md row.
  * @returns {string} Lowercase, whitespace-collapsed role key.
  */
 function normalizeRole(role) {
@@ -207,8 +207,8 @@ function normalizeRole(role) {
  * status, report link, and notes unless the rows are the exact same report
  * identity.
  *
- * @param {object} a - First parsed applications.md row.
- * @param {object} b - Second parsed applications.md row.
+ * @param {object} a - First parsed leads.md row.
+ * @param {object} b - Second parsed leads.md row.
  * @returns {boolean} True when dedup may cluster the two rows as duplicates.
  */
 function roleMatch(a, b) {
@@ -247,14 +247,14 @@ function parseScore(s) {
 }
 
 /**
- * Parse one Markdown table row from applications.md into a tracker object.
+ * Parse one Markdown table row from leads.md into a tracker object.
  *
  * Header and separator rows return null because they either lack enough cells
  * or do not have a numeric tracker id. Valid data rows keep the raw line; the
  * caller attaches the physical line index after parsing so later updates and
  * removals never depend on tracker numbers being globally unique.
  *
- * @param {string} line - One line from applications.md.
+ * @param {string} line - One line from leads.md.
  * @returns {object|null} Parsed tracker row, or null for non-application lines.
  */
 function parseAppLine(line) {
@@ -263,7 +263,7 @@ function parseAppLine(line) {
 
 // Read
 if (!existsSync(APPS_FILE)) {
-  console.log('No applications.md found. Nothing to dedup.');
+  console.log('No leads.md found. Nothing to dedup.');
   process.exit(0);
 }
 const content = readFileSync(APPS_FILE, 'utf-8');
@@ -367,7 +367,7 @@ console.log(`\n📊 ${removed} duplicates removed`);
 if (!DRY_RUN && removed > 0) {
   copyFileSync(APPS_FILE, APPS_FILE + '.bak');
   writeFileSync(APPS_FILE, lines.join('\n'));
-  console.log('✅ Written to applications.md (backup: applications.md.bak)');
+  console.log('✅ Written to leads.md (backup: leads.md.bak)');
 } else if (DRY_RUN) {
   console.log('(dry-run — no changes written)');
 } else {

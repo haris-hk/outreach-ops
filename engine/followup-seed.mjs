@@ -3,7 +3,7 @@
  * followup-seed.mjs — Seed data/follow-ups.md when a row is marked Applied (#1430)
  *
  * WHY: the follow-up system was "born dead". Marking a tracker row Applied only
- * updated applications.md — data/follow-ups.md stayed empty until the user ran
+ * updated leads.md — data/follow-ups.md stayed empty until the user ran
  * the `followup` mode by hand and it happened to notice the row. In practice
  * that meant most applications never got a scheduled next-follow-up date at
  * all, silently defeating the entire cadence feature. This script closes that
@@ -151,9 +151,9 @@ export function formatPinLine(appNum, nextDate, setDate) {
 function resolveTrackerPath(override) {
   if (override) return override;
   if (process.env.OUTREACH_OPS_TRACKER) return process.env.OUTREACH_OPS_TRACKER;
-  return existsSync(join(OUTREACH_OPS, 'data/applications.md'))
-    ? join(OUTREACH_OPS, 'data/applications.md')
-    : join(OUTREACH_OPS, 'applications.md');
+  return existsSync(join(OUTREACH_OPS, 'data/leads.md'))
+    ? join(OUTREACH_OPS, 'data/leads.md')
+    : join(OUTREACH_OPS, 'leads.md');
 }
 
 function resolveFollowupsPath(override) {

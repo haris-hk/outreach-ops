@@ -9,7 +9,7 @@
 //
 // Built on the Notion backend contributed by @pcomans in #959 (with thanks),
 // reshaped per the plugin contract. The decisive change: Notion is an OPT-IN
-// MIRROR, not a replacement backend. data/applications.md stays the canonical
+// MIRROR, not a replacement backend. data/leads.md stays the canonical
 // source of truth (the web reads it); `export` pushes a read-only snapshot of it
 // to the user's own Notion DB. The core never writes to Notion as primary, and
 // modes are not edited — this lives entirely behind `node plugins.mjs run notion`.
@@ -41,7 +41,7 @@ async function applicationsDb(client) {
 /**
  * Parse a tracker score cell into a numeric value for the Notion DB Score property.
  *
- * Scores in applications.md may be formatted like `4.2/5`, `**4.2/5**`, `4.25`, etc.
+ * Scores in leads.md may be formatted like `4.2/5`, `**4.2/5**`, `4.25`, etc.
  * Strips formatting and extracts the first numeric value so slash-formatted
  * scores (e.g. 4.2/5) are not mangled into 4.25 (#1414).
  *

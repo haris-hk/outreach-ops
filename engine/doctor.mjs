@@ -259,18 +259,18 @@ Paste job URLs below as \`- [ ] {url}\` then run \`/outreach-ops pipeline\`.
 `;
 
 function checkPipelineFile() {
-  const filePath = join(projectRoot, 'data', 'pipeline.md');
+  const filePath = join(projectRoot, 'data', 'inbox.md');
   if (existsSync(filePath)) {
-    return { pass: true, label: 'data/pipeline.md ready' };
+    return { pass: true, label: 'data/inbox.md ready' };
   }
   try {
     writeFileSync(filePath, PIPELINE_SKELETON, 'utf-8');
-    return { pass: true, label: 'data/pipeline.md ready (auto-created)' };
+    return { pass: true, label: 'data/inbox.md ready (auto-created)' };
   } catch {
     return {
       pass: false,
-      label: 'data/pipeline.md could not be created',
-      fix: 'Run: mkdir -p data && touch data/pipeline.md',
+      label: 'data/inbox.md could not be created',
+      fix: 'Run: mkdir -p data && touch data/inbox.md',
     };
   }
 }

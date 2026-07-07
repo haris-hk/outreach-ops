@@ -1,0 +1,18 @@
+# Default grading weights. DO NOT EDIT — override in profile/_weights.yml
+# (same keys; partial overrides fine). Effective weights: node engine/weights.mjs
+weights:
+  fit: 0.30
+  timing: 0.25
+  reachability: 0.15
+  budget_proxy: 0.15
+  personalization_depth: 0.15
+red_flags:
+  never_contact_match: -5.0    # instant disqualify
+  dead_company: -5.0
+  wrong_person_risk: -1.0
+  stale_signals: -0.5
+  region_compliance: -0.5
+thresholds:
+  priority: 4.2
+  contact: 3.5      # overridden by preferences.yml contact_threshold
+  nurture_floor: 3.0

@@ -2,7 +2,7 @@
 /**
  * analyze-patterns.mjs — Rejection Pattern Detector for outreach-ops
  *
- * Parses applications.md + all linked reports, extracts dimensions
+ * Parses leads.md + all linked reports, extracts dimensions
  * (archetype, seniority, remote, gaps, scores), classifies outcomes,
  * and outputs structured JSON with actionable patterns.
  *
@@ -20,9 +20,9 @@ import { load as yamlLoad } from 'js-yaml';
 import { resolveColumns, parseTrackerRow } from './tracker-parse.mjs';
 
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
-const APPS_FILE = existsSync(join(OUTREACH_OPS, 'data/applications.md'))
-  ? join(OUTREACH_OPS, 'data/applications.md')
-  : join(OUTREACH_OPS, 'applications.md');
+const APPS_FILE = existsSync(join(OUTREACH_OPS, 'data/leads.md'))
+  ? join(OUTREACH_OPS, 'data/leads.md')
+  : join(OUTREACH_OPS, 'leads.md');
 const REPORTS_DIR = join(OUTREACH_OPS, 'reports');
 
 const MACHINE_SUMMARY_FIELDS = new Set([
@@ -180,7 +180,7 @@ next_action: "Follow up on ticket #42 with tailored CV"
   process.exit(0);
 }
 
-// --- Parse applications.md ---
+// --- Parse leads.md ---
 function parseTracker() {
   if (!existsSync(APPS_FILE)) return [];
   const content = readFileSync(APPS_FILE, 'utf-8');

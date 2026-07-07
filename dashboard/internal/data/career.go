@@ -46,14 +46,14 @@ func resolveReportPath(careerOpsPath, trackerPath, link string) string {
 	return link
 }
 
-// ParseApplications reads applications.md and returns parsed applications.
-// It tries both {path}/applications.md and {path}/data/applications.md for compatibility.
+// ParseApplications reads leads.md and returns parsed applications.
+// It tries both {path}/leads.md and {path}/data/leads.md for compatibility.
 func ParseApplications(careerOpsPath string) []model.CareerApplication {
-	filePath := filepath.Join(careerOpsPath, "applications.md")
+	filePath := filepath.Join(careerOpsPath, "leads.md")
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		// Fallback: try data/ subdirectory
-		filePath = filepath.Join(careerOpsPath, "data", "applications.md")
+		filePath = filepath.Join(careerOpsPath, "data", "leads.md")
 		content, err = os.ReadFile(filePath)
 		if err != nil {
 			return nil
@@ -649,12 +649,12 @@ func resolveTrackerColumns(lines []string) map[string]int {
 	return legacyTrackerColumns
 }
 
-// UpdateApplicationStatus updates the status of an application in applications.md.
+// UpdateApplicationStatus updates the status of an application in leads.md.
 func UpdateApplicationStatus(careerOpsPath string, app model.CareerApplication, newStatus string) error {
-	filePath := filepath.Join(careerOpsPath, "applications.md")
+	filePath := filepath.Join(careerOpsPath, "leads.md")
 	content, err := os.ReadFile(filePath)
 	if err != nil {
-		filePath = filepath.Join(careerOpsPath, "data", "applications.md")
+		filePath = filepath.Join(careerOpsPath, "data", "leads.md")
 		content, err = os.ReadFile(filePath)
 		if err != nil {
 			return err

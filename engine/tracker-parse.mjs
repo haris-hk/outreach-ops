@@ -1,5 +1,5 @@
 /**
- * tracker-parse.mjs — shared header-aware column mapping for `data/applications.md`.
+ * tracker-parse.mjs — shared header-aware column mapping for `data/leads.md`.
  *
  * The tracker is a markdown table that several scripts read. #946/#954 made the
  * column layout customizable (e.g. an inserted Location column) by mapping
@@ -19,9 +19,11 @@ export const LEGACY_COLMAP = {
 
 /** Header text (lowercased) → canonical field name. Includes ES aliases. */
 export const HEADER_ALIASES = {
-  '#': 'num', 'num': 'num', 'date': 'date', 'company': 'company', 'empresa': 'company',
-  'role': 'role', 'puesto': 'role', 'location': 'location', 'score': 'score',
-  'status': 'status', 'pdf': 'pdf', 'report': 'report', 'notes': 'notes',
+  '#': 'num', 'num': 'num', 'date': 'date', 'company': 'company',
+  'role': 'role', 'location': 'location', 'score': 'score', 'grade': 'score',
+  'status': 'status', 'pdf': 'pdf', 'report': 'report', 'dossier': 'report',
+  'notes': 'notes', 'contact': 'contact', 'segment': 'segment', 'channel': 'channel',
+  'next action': 'next_action', 'last touch': 'last_touch',
 };
 
 /**
@@ -43,7 +45,7 @@ export function looksLikeScoreCell(v) {
  * identify which is which by content — the score cell is recognizable by
  * pattern (`looksLikeScoreCell`), statuses never are. This lets TSV ingestion
  * tolerate the two known column orders (batch TSV writes status-then-score;
- * `applications.md` is score-then-status) instead of trusting position.
+ * `leads.md` is score-then-status) instead of trusting position.
  *
  * Returns null when the order is undecidable — neither cell, or BOTH cells, look
  * like a score — so callers can fail loudly rather than merge a silent swap.
@@ -65,7 +67,7 @@ export function resolveScoreStatus(a, b) {
  * LEGACY_COLMAP — unless the essential columns are all present, so a stray pipe
  * line can't yield a bogus mapping.
  *
- * @param {string[]} lines - All lines of applications.md.
+ * @param {string[]} lines - All lines of leads.md.
  * @returns {Object<string,number>|null}
  */
 export function detectColumns(lines) {
@@ -95,7 +97,7 @@ export function resolveColumns(lines) {
  * Header and separator rows (non-numeric `num` cell) and malformed rows return
  * null. The raw line is preserved so callers can locate/replace the exact line.
  *
- * @param {string} line - One line from applications.md.
+ * @param {string} line - One line from leads.md.
  * @param {Object<string,number>} [colmap] - From resolveColumns(); defaults to legacy.
  * @returns {object|null} `{num,date,company,role,score,status,pdf,report,notes,location?,raw}`.
  */

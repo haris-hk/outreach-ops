@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * merge-tracker.mjs — Merge batch tracker additions into applications.md
+ * merge-tracker.mjs — Merge batch tracker additions into leads.md
  *
  * Handles multiple TSV formats:
  * - 9-col: num\tdate\tcompany\trole\tstatus\tscore\tpdf\treport\tnotes
@@ -25,13 +25,13 @@ import { roleFuzzyMatch } from './role-matcher.mjs';
 import { LEGACY_COLMAP, detectColumns, resolveScoreStatus } from './tracker-parse.mjs';
 
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
-// Support both layouts: data/applications.md (boilerplate) and applications.md (original).
+// Support both layouts: data/leads.md (boilerplate) and leads.md (original).
 // OUTREACH_OPS_TRACKER overrides the path (used by tests and non-standard layouts).
 const APPS_FILE_RAW = process.env.OUTREACH_OPS_TRACKER
   ? process.env.OUTREACH_OPS_TRACKER
-  : existsSync(join(OUTREACH_OPS, 'data/applications.md'))
-    ? join(OUTREACH_OPS, 'data/applications.md')
-    : join(OUTREACH_OPS, 'applications.md');
+  : existsSync(join(OUTREACH_OPS, 'data/leads.md'))
+    ? join(OUTREACH_OPS, 'data/leads.md')
+    : join(OUTREACH_OPS, 'leads.md');
 const APPS_FILE = canonicalizeTrackerPath(APPS_FILE_RAW);
 const TRACKER_DIR = dirname(APPS_FILE);
 // OUTREACH_OPS_ADDITIONS overrides the additions dir (used by tests, mirrors OUTREACH_OPS_TRACKER).
@@ -49,14 +49,14 @@ const trackerLockKey = createHash('sha256').update(APPS_FILE).digest('hex').slic
 const TRACKER_LOCK_DIR = resolveTrackerLockDir(process.env.OUTREACH_OPS_TRACKER_LOCK, trackerLockKey);
 
 // The reports/ dir sits at the repo root, which is the tracker's parent in the
-// data/ layout (data/applications.md) and the tracker's own dir at root layout.
+// data/ layout (data/leads.md) and the tracker's own dir at root layout.
 const REPORTS_ROOT = basename(TRACKER_DIR) === 'data' ? dirname(TRACKER_DIR) : TRACKER_DIR;
 
 /**
  * Normalize report links before writing them into the tracker file.
  *
  * TSV additions use root-relative report links so they are easy for agents to
- * generate. The tracker may live either at `data/applications.md` or at the
+ * generate. The tracker may live either at `data/leads.md` or at the
  * repository root, so this wrapper binds the correct tracker and reports
  * directories before delegating to the shared link normalizer.
  *
@@ -137,7 +137,7 @@ function resolveTrackerLockDir(envValue, lockKey) {
  * - the lock retry loop, where waiting briefly avoids a tight CPU spin while
  *   another `merge-tracker.mjs` process owns the tracker lock;
  * - the regression test hook (`OUTREACH_OPS_MERGE_HOLD_MS`), which deliberately
- *   holds the first merge after it reads `applications.md` so a second merge can
+ *   holds the first merge after it reads `leads.md` so a second merge can
  *   try to enter the same critical section.
  *
  * @param {number} ms - Milliseconds to wait before resolving.
@@ -297,7 +297,7 @@ async function acquireTrackerLock(lockDir, options = {}) {
  * Replace a tracker file atomically using a same-directory temporary file.
  *
  * Writing into the same directory keeps the final `renameSync` atomic on normal
- * filesystems and avoids exposing a partially written `applications.md` to other
+ * filesystems and avoids exposing a partially written `leads.md` to other
  * readers. If the write or rename fails, the temporary file is cleaned up before
  * the original error is rethrown.
  *
@@ -340,7 +340,7 @@ const CANONICAL_STATES = ['Evaluated', 'Applied', 'Responded', 'Interview', 'Off
  *
  * Batch workers and older tracker additions may emit Spanish labels, bold
  * Markdown, legacy date suffixes, or repost markers. The merge script normalizes
- * all of those variants here so applications.md keeps the states defined by
+ * all of those variants here so leads.md keeps the states defined by
  * templates/states.yml.
  *
  * @param {string} status - Raw status string from a TSV or pipe-delimited row.
@@ -399,7 +399,7 @@ function normalizeCompany(name) {
  * equality is confirmed by the caller. This helper reads links such as
  * `[123](../reports/123-company-role-date.md)` and returns the numeric id.
  *
- * @param {string} reportStr - Raw report cell from applications.md or TSV input.
+ * @param {string} reportStr - Raw report cell from leads.md or TSV input.
  * @returns {number|null} Parsed report number, or null when absent.
  */
 function extractReportNum(reportStr) {
@@ -450,7 +450,7 @@ function parseScore(s) {
   return m ? parseFloat(m[1]) : 0;
 }
 
-// Column layout for the applications.md table. The tracker may use the original
+// Column layout for the leads.md table. The tracker may use the original
 // 9-column layout, or a customized one with an extra/reordered column (e.g. a
 // Location column after Role). We map columns by header NAME rather than fixed
 // position so both work — fixed-position indexing would otherwise read, say,
@@ -462,7 +462,7 @@ function parseScore(s) {
 // the detected layout once the table is read (below).
 let COLMAP = LEGACY_COLMAP;
 
-// Neutralize characters that would corrupt the applications.md table. Both this
+// Neutralize characters that would corrupt the leads.md table. Both this
 // file and tracker-parse.mjs read rows with a raw `line.split('|')`, so a literal
 // pipe or a newline in a free-text value (company/role/location/notes) would shift
 // every later column. Replace rather than backslash-escape: `\|` would still split
@@ -482,13 +482,13 @@ function buildRow(o) {
 }
 
 /**
- * Parse one Markdown applications.md table row into a tracker object.
+ * Parse one Markdown leads.md table row into a tracker object.
  *
  * Header/separator rows and malformed rows return null. Valid rows preserve the
  * original raw line so the merge logic can locate and replace the exact tracker
  * line when a higher-scored re-evaluation arrives.
  *
- * @param {string} line - One line from applications.md.
+ * @param {string} line - One line from leads.md.
  * @returns {object|null} Parsed tracker row, or null for non-data rows.
  */
 function parseAppLine(line) {
@@ -518,7 +518,7 @@ function parseAppLine(line) {
  * Handles 9-column TSV, 8-column TSV, and pipe-delimited Markdown rows. The
  * parser also tolerates old score/status column ordering, validates status, and
  * rejects additions without a usable tracker number so malformed batch output
- * cannot corrupt applications.md.
+ * cannot corrupt leads.md.
  *
  * @param {string} content - Raw file content from batch/tracker-additions.
  * @param {string} filename - Source filename used in warning messages.
@@ -568,7 +568,7 @@ function parseTsvContent(content, filename) {
       return null;
     }
 
-    // Column order varies: batch TSVs write (status, score), applications.md is
+    // Column order varies: batch TSVs write (status, score), leads.md is
     // (score, status). Identify each by content — the score cell is recognizable
     // by pattern, a status never is — so a reordered TSV merges correctly and an
     // undecidable row is skipped loudly instead of merging swapped data (#1427).
@@ -605,9 +605,9 @@ function parseTsvContent(content, filename) {
 
 // ---- Main ----
 
-// Read applications.md
+// Read leads.md
 if (!existsSync(APPS_FILE)) {
-  console.log('No applications.md found. Nothing to merge into.');
+  console.log('No leads.md found. Nothing to merge into.');
   process.exit(0);
 }
 const appContent = readFileSync(APPS_FILE, 'utf-8');
@@ -693,7 +693,7 @@ for (const file of tsvFiles) {
 
   // Normalize the report link to be relative to the tracker file's directory.
   // The TSV convention carries a root-relative `reports/...` link; rewrite it
-  // so it resolves correctly when clicked from applications.md (see #760).
+  // so it resolves correctly when clicked from leads.md (see #760).
   addition.report = normalizeReportLink(addition.report);
 
   // Check for duplicate by:

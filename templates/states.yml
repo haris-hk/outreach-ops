@@ -1,56 +1,79 @@
-# Outreach-Ops — Canonical States
-# Source of truth for outreach-ops (writer) and dashboard (reader).
-# Both systems MUST use these exact states.
+# Outreach-Ops — Canonical Lead States
+# Source of truth for the ledger (writer) and dashboard (reader).
 #
-# Rule: The status field in applications.md must contain EXACTLY
-# one of these values (case-insensitive). No markdown bold (**),
-# no dates, no extra text. Dates go in the date column.
+# Rule: the Status cell in data/leads.md must contain EXACTLY one of these
+# values (case-insensitive). No markdown bold, no dates, no extra text.
+# dashboard_group values are the TUI's grouping buckets.
 
 states:
-  - id: evaluated
-    label: Evaluated
-    aliases: [evaluada]
-    description: Offer evaluated with report, pending decision
+  - id: new
+    label: New
+    aliases: [inbox]
+    description: Surfaced by a scan or added manually; not yet graded
     dashboard_group: evaluated
 
-  - id: applied
-    label: Applied
-    aliases: [aplicado, enviada, aplicada, sent]
-    description: Application submitted
+  - id: graded
+    label: Graded
+    aliases: [evaluated, evaluada]
+    description: A-G grade complete; awaiting go/no-go decision
+    dashboard_group: evaluated
+
+  - id: queued
+    label: Queued
+    aliases: [ready]
+    description: Passed threshold + contact verified + spam preflight; ready for human review
+    dashboard_group: evaluated
+
+  - id: drafted
+    label: Drafted
+    aliases: []
+    description: Outreach drafts written, not yet approved for the queue
+    dashboard_group: evaluated
+
+  - id: sent
+    label: Sent
+    aliases: [applied, contacted]
+    description: Human reviewed and sent the first touch
     dashboard_group: applied
 
-  - id: responded
-    label: Responded
-    aliases: [respondido]
-    description: Company has responded (not yet interview)
+  - id: bumped
+    label: Bumped
+    aliases: [followed_up, followup]
+    description: Follow-up touch sent per cadence
+    dashboard_group: applied
+
+  - id: replied
+    label: Replied
+    aliases: [responded, respondido]
+    description: Prospect responded (any sentiment)
     dashboard_group: responded
 
-  - id: interview
-    label: Interview
-    aliases: [entrevista]
-    description: Active interview process
+  - id: call
+    label: Call
+    aliases: [meeting, interview]
+    description: Call or meeting booked / in progress
     dashboard_group: interview
 
-  - id: offer
-    label: Offer
-    aliases: [oferta]
-    description: Offer received
+  - id: won
+    label: Won
+    aliases: [offer, closed_won, hired]
+    description: Deal closed / role landed
     dashboard_group: offer
 
-  - id: rejected
-    label: Rejected
-    aliases: [rechazado, rechazada]
-    description: Rejected by company
+  - id: lost
+    label: Lost
+    aliases: [rejected, closed_lost]
+    description: Explicit no, or went with someone else
     dashboard_group: rejected
 
-  - id: discarded
-    label: Discarded
-    aliases: [descartado, descartada, cerrada, cancelada]
-    description: Discarded by candidate or offer closed
-    dashboard_group: discarded
+  - id: nurture
+    label: Nurture
+    aliases: [monitor, watch]
+    description: Graded 3.0-3.4 — watch for a better trigger, do not contact
+    dashboard_group: skip
 
-  - id: skip
-    label: SKIP
-    aliases: [no_aplicar, no aplicar, skip, monitor]
-    description: Doesn't fit, don't apply
+  - id: disqualified
+    label: Disqualified
+    aliases: [skip, no_contact, descartado]
+    description: Below threshold or never-contact; do not draft
     dashboard_group: skip

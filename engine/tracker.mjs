@@ -3,7 +3,7 @@
 /**
  * tracker.mjs — SQLite derived index for the applications tracker (RFC #918, phase 1).
  *
- * data/applications.md stays the source of truth. The SQLite DB is a derived
+ * data/leads.md stays the source of truth. The SQLite DB is a derived
  * index, built and rebuilt from the markdown — safe to delete at any time, it
  * regenerates on the next sync. Tools and agents READ through the index for
  * schema-validated, model-independent results; all writes keep going to the
@@ -22,15 +22,15 @@
  * Zero new dependencies — uses node:sqlite (built into Node >= 22.5).
  *
  * Usage:
- *   node tracker.mjs sync [--check]             # (re)build applications.db from applications.md
+ *   node tracker.mjs sync [--check]             # (re)build applications.db from leads.md
  *                                               # --check: diagnose only, no write; exit 1 if issues found
  *   node tracker.mjs query [--status Applied] [--company acme] [--role designer]
  *                          [--since 2026-01-01] [--id N] [--limit 20] [--json]
  *   node tracker.mjs history --id N             # status transition log observed across syncs
  *   node tracker.mjs export [--out FILE]        # inverse: applications.db → canonical markdown (stdout by default)
- *   node tracker.mjs delete --num N [--dry-run] # remove one application row from applications.md + reindex
+ *   node tracker.mjs delete --num N [--dry-run] # remove one application row from leads.md + reindex
  *
- * query/history auto-resync when applications.md changed since the last sync,
+ * query/history auto-resync when leads.md changed since the last sync,
  * so the index can never serve stale reads.
  */
 
@@ -40,7 +40,7 @@ import { dirname, resolve, join, basename } from 'path';
 import { pathToFileURL } from 'url';
 import yaml from 'js-yaml';
 
-const MD_PATH = process.env.OUTREACH_OPS_TRACKER || 'data/applications.md';
+const MD_PATH = process.env.OUTREACH_OPS_TRACKER || 'data/leads.md';
 const DB_PATH = process.env.OUTREACH_OPS_TRACKER_DB
   || (MD_PATH.endsWith('.md') ? MD_PATH.slice(0, -3) + '.db' : MD_PATH + '.db');
 
@@ -419,7 +419,7 @@ async function history(args) {
 // The inverse of sync: regenerates the canonical table from the index. Used by
 // the round-trip tests (md → db → md must be lossless for clean input), and as
 // a repaired copy the user can review and adopt by hand. It never touches
-// applications.md unless explicitly asked to via --out.
+// leads.md unless explicitly asked to via --out.
 
 async function exportMd(args) {
   const DatabaseSync = await loadSqlite();
@@ -457,7 +457,7 @@ async function exportMd(args) {
 // ── Main ────────────────────────────────────────────────────────────
 
 // Atomic file replace via a same-directory temp file + rename, so a reader never
-// sees a partially written applications.md (mirrors merge-tracker's writer).
+// sees a partially written leads.md (mirrors merge-tracker's writer).
 function writeFileAtomic(filePath, content) {
   const tmp = join(dirname(filePath), `.${basename(filePath)}.${process.pid}.${Date.now()}.tmp`);
   try {
@@ -469,9 +469,9 @@ function writeFileAtomic(filePath, content) {
   }
 }
 
-// `delete --num N` removes one application row from applications.md and rebuilds
+// `delete --num N` removes one application row from leads.md and rebuilds
 // the derived index. The markdown stays the source of truth: callers (incl. the
-// web) orchestrate this script rather than editing applications.md directly, so
+// web) orchestrate this script rather than editing leads.md directly, so
 // the write-gate holds. The write is atomic; callers should still avoid running
 // a delete concurrently with a scan-merge (they share the same file — serialize
 // at the orchestration layer; a shared lock is a follow-up once merge-tracker is

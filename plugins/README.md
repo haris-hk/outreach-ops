@@ -56,7 +56,7 @@ plugins/<id>/
 
 Producers (`provider`/`ingest`/`search`) **return** `Job[]`
 (`{title, url, company, location}`); the engine — never the plugin — writes them
-to `data/pipeline.md` through the canonical writer, so a plugin can't break the
+to `data/inbox.md` through the canonical writer, so a plugin can't break the
 data formats the web reads. Non-provider hooks run explicitly:
 
 ```bash

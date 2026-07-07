@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * normalize-statuses.mjs — Clean non-canonical states in applications.md
+ * normalize-statuses.mjs — Clean non-canonical states in leads.md
  *
  * Maps all non-canonical statuses to canonical ones per states.yml:
  *   Evaluada, Aplicado, Respondido, Entrevista, Oferta, Rechazado, Descartado, NO APLICAR
@@ -17,10 +17,10 @@ import { fileURLToPath } from 'url';
 import { rebuildRow } from './tracker-utils.mjs';
 
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
-// Support both layouts: data/applications.md (boilerplate) and applications.md (original)
-const APPS_FILE = existsSync(join(OUTREACH_OPS, 'data/applications.md'))
-  ? join(OUTREACH_OPS, 'data/applications.md')
-  : join(OUTREACH_OPS, 'applications.md');
+// Support both layouts: data/leads.md (boilerplate) and leads.md (original)
+const APPS_FILE = existsSync(join(OUTREACH_OPS, 'data/leads.md'))
+  ? join(OUTREACH_OPS, 'data/leads.md')
+  : join(OUTREACH_OPS, 'leads.md');
 const DRY_RUN = process.argv.includes('--dry-run');
 
 // Ensure required directories exist (fresh setup)
@@ -87,9 +87,9 @@ function normalizeStatus(raw) {
   return { status: null, unknown: true };
 }
 
-// Read applications.md
+// Read leads.md
 if (!existsSync(APPS_FILE)) {
-  console.log('No applications.md found. Nothing to normalize.');
+  console.log('No leads.md found. Nothing to normalize.');
   process.exit(0);
 }
 const content = readFileSync(APPS_FILE, 'utf-8');
@@ -160,7 +160,7 @@ if (!DRY_RUN && changes > 0) {
   // Backup first
   copyFileSync(APPS_FILE, APPS_FILE + '.bak');
   writeFileSync(APPS_FILE, lines.join('\n'));
-  console.log('✅ Written to applications.md (backup: applications.md.bak)');
+  console.log('✅ Written to leads.md (backup: leads.md.bak)');
 } else if (DRY_RUN) {
   console.log('(dry-run — no changes written)');
 } else {

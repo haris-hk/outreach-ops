@@ -55,8 +55,8 @@ const parseYaml = yaml.load;
 const PORTALS_PATH = process.env.OUTREACH_OPS_PORTALS || 'portals.yml';
 const PROFILE_PATH = process.env.OUTREACH_OPS_PROFILE || 'config/profile.yml';
 const SCAN_HISTORY_PATH = 'data/scan-history.tsv';
-const PIPELINE_PATH = 'data/pipeline.md';
-const APPLICATIONS_PATH = 'data/applications.md';
+const PIPELINE_PATH = 'data/inbox.md';
+const APPLICATIONS_PATH = 'data/leads.md';
 const PROVIDERS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'providers', 'ats');
 
 // Ensure required directories exist (fresh setup)
@@ -491,7 +491,7 @@ export function loadSeenUrls(policy = {}) {
     }
   }
 
-  // applications.md — extract URLs from report links and any inline URLs
+  // leads.md — extract URLs from report links and any inline URLs
   if (existsSync(APPLICATIONS_PATH)) {
     const text = readFileSync(APPLICATIONS_PATH, 'utf-8');
     for (const match of text.matchAll(/https?:\/\/[^\s|)]+/g)) {

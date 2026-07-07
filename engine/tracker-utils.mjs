@@ -1,5 +1,5 @@
 /**
- * tracker-utils.mjs — shared helpers for rewriting `data/applications.md` rows.
+ * tracker-utils.mjs — shared helpers for rewriting `data/leads.md` rows.
  *
  * The tracker is a markdown table that several scripts mutate in place
  * (`dedup-tracker.mjs`, `normalize-statuses.mjs`). Keeping the row-rewrite logic

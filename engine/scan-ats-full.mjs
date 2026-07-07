@@ -43,7 +43,7 @@ import { SEED_SOURCES, toPortalEntry } from './seeds/vc-portfolios.mjs';
 // ── Config ──────────────────────────────────────────────────────────
 
 const PORTALS_PATH = process.env.OUTREACH_OPS_PORTALS || 'portals.yml';
-const PIPELINE_PATH = 'data/pipeline.md';
+const PIPELINE_PATH = 'data/inbox.md';
 const CACHE_DIR = 'data/cache/ats-companies';
 const CACHE_TTL_HOURS = 24;
 // Tracks `main` deliberately: the dataset's value is freshness (new boards

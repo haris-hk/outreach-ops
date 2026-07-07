@@ -2,7 +2,7 @@
 /**
  * followup-cadence.mjs — Follow-up Cadence Tracker for outreach-ops
  *
- * Parses applications.md + follow-ups.md, calculates follow-up cadence
+ * Parses leads.md + follow-ups.md, calculates follow-up cadence
  * for active applications, extracts contacts, and flags overdue entries.
  *
  * Run: node followup-cadence.mjs             (JSON to stdout)
@@ -18,9 +18,9 @@ import yaml from 'js-yaml';
 import { resolveColumns, parseTrackerRow } from './tracker-parse.mjs';
 
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
-const APPS_FILE = existsSync(join(OUTREACH_OPS, 'data/applications.md'))
-  ? join(OUTREACH_OPS, 'data/applications.md')
-  : join(OUTREACH_OPS, 'applications.md');
+const APPS_FILE = existsSync(join(OUTREACH_OPS, 'data/leads.md'))
+  ? join(OUTREACH_OPS, 'data/leads.md')
+  : join(OUTREACH_OPS, 'leads.md');
 const FOLLOWUPS_FILE = join(OUTREACH_OPS, 'data/follow-ups.md');
 const PROFILE_FILE = process.env.OUTREACH_OPS_PROFILE || join(OUTREACH_OPS, 'config/profile.yml');
 
@@ -136,7 +136,7 @@ export function addDays(date, days) {
   return result.toISOString().split('T')[0];
 }
 
-// --- Parse applications.md ---
+// --- Parse leads.md ---
 function parseTracker() {
   if (!existsSync(APPS_FILE)) return [];
   const content = readFileSync(APPS_FILE, 'utf-8');
@@ -235,7 +235,7 @@ export function resolveReportPath(reportField, appsFile = APPS_FILE, repoRoot = 
   // Report links in the tracker are normalized relative to the tracker file's
   // own directory (see PR #760 — `merge-tracker.mjs --migrate`). Resolve against
   // dirname(APPS_FILE), not the project root, otherwise relative paths like
-  // `../reports/...` (the data/applications.md layout) escape above the project.
+  // `../reports/...` (the data/leads.md layout) escape above the project.
   const fullPath = join(dirname(appsFile), match[1]);
   const repoRelative = relative(repoRoot, fullPath).split(sep).join('/');
   if (repoRelative.startsWith('../') || repoRelative === '..' || !repoRelative.startsWith('reports/')) return null;

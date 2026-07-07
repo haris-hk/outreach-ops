@@ -3,7 +3,7 @@
 /**
  * tracker-columns-tests.mjs — regression tests for header-name column mapping.
  *
- * merge-tracker.mjs and verify-pipeline.mjs used to parse applications.md by
+ * merge-tracker.mjs and verify-pipeline.mjs used to parse leads.md by
  * fixed column position. Inserting a column (e.g. a Location column after Role)
  * shifted every later index by one — Location was read as Score, Score as
  * Status — so verify-pipeline flagged false errors and merge-tracker wrote
@@ -53,7 +53,7 @@ function runScript(script, args, sandbox) {
 // Create a sandbox dir holding a tracker file and an additions dir.
 function makeSandbox(trackerContent, additions = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'co-cols-'));
-  const tracker = join(dir, 'applications.md');
+  const tracker = join(dir, 'leads.md');
   const additionsDir = join(dir, 'tracker-additions');
   const lock = join(dir, 'lock');
   mkdirSync(additionsDir, { recursive: true });

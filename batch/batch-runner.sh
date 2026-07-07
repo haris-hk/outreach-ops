@@ -19,7 +19,7 @@ PROMPT_FILE="$BATCH_DIR/batch-prompt.md"
 LOGS_DIR="$BATCH_DIR/logs"
 TRACKER_DIR="$BATCH_DIR/tracker-additions"
 REPORTS_DIR="$PROJECT_DIR/reports"
-APPLICATIONS_FILE="$PROJECT_DIR/data/applications.md"
+APPLICATIONS_FILE="$PROJECT_DIR/data/leads.md"
 LOCK_FILE="$BATCH_DIR/batch-runner.pid"
 PAUSE_FILE="$BATCH_DIR/batch-runner.paused"
 STATE_LOCK_DIR="$BATCH_DIR/.batch-state.lock"
@@ -568,7 +568,7 @@ process_offer() {
   fi
 }
 
-# Merge tracker additions into applications.md
+# Merge tracker additions into leads.md
 merge_tracker() {
   echo ""
   echo "=== Merging tracker additions ==="

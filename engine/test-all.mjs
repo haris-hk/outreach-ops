@@ -87,6 +87,10 @@ const REQUIRED = [
   'templates/profile/icp.example.yml', 'templates/profile/preferences.example.yml',
   'templates/profile/background.example.md',
   'batch/batch-runner.sh', 'docs/ARCHITECTURE.md', 'docs/DECISIONS.md',
+  'AGENTS.md', 'modes/_shared.md', 'modes/_weights.default.yml', 'modes/grade.md',
+  'modes/dm.md', 'modes/email.md', 'modes/dossier.md', 'modes/onboard.md',
+  'modes/ledger.md', 'engine/weights.mjs', '.agents/skills/outreach-ops/SKILL.md',
+  'test/fixtures/prospects/01-hot-seed-startup.md',
 ];
 let reqBad = 0;
 for (const f of REQUIRED) if (!existsSync(join(ROOT, f))) { fail(`missing ${f}`); reqBad++; }

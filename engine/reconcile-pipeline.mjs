@@ -4,7 +4,7 @@
  *
  * THE PROBLEM
  * batch-runner.sh records every evaluated offer in batch/batch-state.tsv, but
- * it never writes back to data/pipeline.md. Offers processed via batch mode
+ * it never writes back to data/inbox.md. Offers processed via batch mode
  * therefore stay in the "Pendientes" section forever — the next scan and the
  * next `/outreach-ops pipeline` run both re-surface them, and they get evaluated
  * again (duplicate reports, duplicate tracker rows).
@@ -70,9 +70,9 @@ function resolveInsideRepo(inputPath, fallbackPath, flag) {
   return abs;
 }
 
-const defaultPipeline = existsSync(join(OUTREACH_OPS, 'data/pipeline.md'))
-  ? join(OUTREACH_OPS, 'data/pipeline.md')
-  : join(OUTREACH_OPS, 'pipeline.md');
+const defaultPipeline = existsSync(join(OUTREACH_OPS, 'data/inbox.md'))
+  ? join(OUTREACH_OPS, 'data/inbox.md')
+  : join(OUTREACH_OPS, 'inbox.md');
 const PIPELINE_FILE = resolveInsideRepo(argValue('--pipeline'), defaultPipeline, '--pipeline');
 const STATE_FILE = resolveInsideRepo(argValue('--state'), join(OUTREACH_OPS, 'batch/batch-state.tsv'), '--state');
 const REPORTS_DIR = join(OUTREACH_OPS, 'reports');

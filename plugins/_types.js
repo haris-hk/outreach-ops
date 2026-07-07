@@ -67,7 +67,7 @@
  *   provider only fires on an explicit `provider: <id>` portals.yml entry —
  *   never via auto-detection (no surprise paid/keyed network during a scan).
  * - ingest:  pull postings from a service (email, a Notion board) → Job[]. The
- *   engine appends them to data/pipeline.md canonically.
+ *   engine appends them to data/inbox.md canonically.
  * - search:  Job[] for a query string → engine writes canonically to pipeline.
  * - export:  receives a frozen read-only snapshot of the user's tracker and
  *   pushes it to the user's OWN external store; returns {pushed}. No file handle.

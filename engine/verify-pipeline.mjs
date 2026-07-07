@@ -22,13 +22,13 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
-// Support both layouts: data/applications.md (boilerplate) and applications.md (original).
+// Support both layouts: data/leads.md (boilerplate) and leads.md (original).
 // OUTREACH_OPS_TRACKER overrides the path (used by tests and non-standard layouts).
 const APPS_FILE = process.env.OUTREACH_OPS_TRACKER
   ? process.env.OUTREACH_OPS_TRACKER
-  : existsSync(join(OUTREACH_OPS, 'data/applications.md'))
-    ? join(OUTREACH_OPS, 'data/applications.md')
-    : join(OUTREACH_OPS, 'applications.md');
+  : existsSync(join(OUTREACH_OPS, 'data/leads.md'))
+    ? join(OUTREACH_OPS, 'data/leads.md')
+    : join(OUTREACH_OPS, 'leads.md');
 const ADDITIONS_DIR = join(OUTREACH_OPS, 'batch/tracker-additions');
 // OUTREACH_OPS_REPORTS overrides the reports dir (used by tests, mirrors OUTREACH_OPS_TRACKER).
 const REPORTS_DIR = process.env.OUTREACH_OPS_REPORTS || join(OUTREACH_OPS, 'reports');
@@ -63,9 +63,9 @@ function error(msg) { console.log(`❌ ${msg}`); errors++; }
 function warn(msg) { console.log(`⚠️  ${msg}`); warnings++; }
 function ok(msg) { console.log(`✅ ${msg}`); }
 
-// --- Read applications.md ---
+// --- Read leads.md ---
 if (!existsSync(APPS_FILE)) {
-  console.log('\n📊 No applications.md found. This is normal for a fresh setup.');
+  console.log('\n📊 No leads.md found. This is normal for a fresh setup.');
   console.log('   The file will be created when you evaluate your first offer.\n');
   process.exit(0);
 }
@@ -118,7 +118,7 @@ for (const line of lines) {
   });
 }
 
-console.log(`\n📊 Checking ${entries.length} entries in applications.md\n`);
+console.log(`\n📊 Checking ${entries.length} entries in leads.md\n`);
 
 // --- Check 1: Canonical statuses ---
 let badStatuses = 0;

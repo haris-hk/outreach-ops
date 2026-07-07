@@ -396,11 +396,11 @@ Formato TSV (una sola línea, sin header, 9 columnas tab-separated):
 | 8 | report | md link | `[647](reports/647-...)` | Link root-relative; merge-tracker.mjs lo normaliza relativo al tracker (ej. `../reports/...`, #760) |
 | 9 | notes | string | `APPLY HIGH...` | Resumen 1 frase |
 
-**IMPORTANTE:** El orden TSV tiene status ANTES de score (col 5→status, col 6→score). En applications.md el orden es inverso (col 5→score, col 6→status). merge-tracker.mjs maneja la conversión.
+**IMPORTANTE:** El orden TSV tiene status ANTES de score (col 5→status, col 6→score). En leads.md el orden es inverso (col 5→score, col 6→status). merge-tracker.mjs maneja la conversión.
 
 **Estados canónicos válidos:** `Evaluada`, `Aplicado`, `Respondido`, `Entrevista`, `Oferta`, `Rechazado`, `Descartado`, `NO APLICAR`
 
-Donde `{next_num}` se calcula leyendo la última línea de `data/applications.md`.
+Donde `{next_num}` se calcula leyendo la última línea de `data/leads.md`.
 
 ### Paso 6 — Output final
 

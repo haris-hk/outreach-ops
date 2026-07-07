@@ -23,7 +23,7 @@ func TestUpdateApplicationStatusOnlyRewritesStatusColumn(t *testing.T) {
 |---|------|---------|------|-------|--------|-----|--------|-------|
 | 7 | 2026-06-23 | Applied Materials | Staff Android Engineer | 4.2/5 | Applied | ✅ | [7](reports/007.md) | substring trap |
 `
-	path := filepath.Join(dataDir, "applications.md")
+	path := filepath.Join(dataDir, "leads.md")
 	if err := os.WriteFile(path, []byte(applications), 0o644); err != nil {
 		t.Fatalf("failed to write tracker: %v", err)
 	}
@@ -77,7 +77,7 @@ func TestParseApplicationsUsesTrackerNumberColumn(t *testing.T) {
 | 143 | 2026-04-16 | Arize AI | AI Sales Engineer, US | 4.1/5 | Evaluated | ❌ | [143](reports/143-arize-ai-sales-engineer-us-2026-04-16.md) | Good fit |
 `
 
-	applicationsPath := filepath.Join(dataDir, "applications.md")
+	applicationsPath := filepath.Join(dataDir, "leads.md")
 	if err := os.WriteFile(applicationsPath, []byte(applications), 0o644); err != nil {
 		t.Fatalf("failed to write applications tracker: %v", err)
 	}
@@ -120,7 +120,7 @@ func TestParseApplicationsResolvesTrackerRelativeReportLinks(t *testing.T) {
 | 2 | 2026-06-03 | Legacy Co | Engineer | 3.0/5 | Evaluated | ❌ | [2](reports/002-legacy-2026-06-03.md) | Legacy root-relative link |
 `
 
-	if err := os.WriteFile(filepath.Join(dataDir, "applications.md"), []byte(applications), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dataDir, "leads.md"), []byte(applications), 0o644); err != nil {
 		t.Fatalf("failed to write applications tracker: %v", err)
 	}
 	for _, name := range []string{"001-acme-2026-06-03.md", "002-legacy-2026-06-03.md"} {
@@ -152,7 +152,7 @@ func TestParseApplicationsResolvesTrackerRelativeReportLinks(t *testing.T) {
 	}
 }
 
-// writeTracker writes applications.md under data/ and returns the temp root and
+// writeTracker writes leads.md under data/ and returns the temp root and
 // the tracker path.
 func writeTracker(t *testing.T, body string) (string, string) {
 	t.Helper()
@@ -161,7 +161,7 @@ func writeTracker(t *testing.T, body string) (string, string) {
 	if err := os.MkdirAll(dataDir, 0o755); err != nil {
 		t.Fatalf("mkdir: %v", err)
 	}
-	path := filepath.Join(dataDir, "applications.md")
+	path := filepath.Join(dataDir, "leads.md")
 	if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
 		t.Fatalf("write tracker: %v", err)
 	}
