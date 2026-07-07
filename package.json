@@ -55,7 +55,7 @@
     "js-yaml": "^4.1.0"
   },
   "optionalDependencies": {
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.4.2",
     "playwright": "^1.49.0"
   }
 }
