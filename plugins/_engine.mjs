@@ -32,7 +32,7 @@ import { readLock, writeLockEntry, diffPlugin, hashPluginTree, consentSurface } 
 import { loadRegistry } from './_registry.mjs';
 
 /** The complete, closed set of hook kinds. Anything else (apply/submit/…) is rejected. */
-export const HOOK_KINDS = ['provider', 'ingest', 'search', 'notify', 'export'];
+export const HOOK_KINDS = ['provider', 'ingest', 'search', 'notify', 'export', 'enrich', 'verify', 'replies'];
 
 /**
  * Env var names a plugin may NOT declare in requiredEnv/optionalEnv: core-owned

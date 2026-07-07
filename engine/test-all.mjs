@@ -53,6 +53,7 @@ const UNIT = [
   'engine/followup-cadence.test.mjs',
   'engine/detect-reposts.test.mjs',
   'engine/test-trust-validator.mjs',
+  'engine/signal-scan.test.mjs',
 ];
 for (const t of UNIT) {
   if (!existsSync(join(ROOT, t))) { warn(`missing unit test ${t}`); continue; }
@@ -91,6 +92,10 @@ const REQUIRED = [
   'modes/dm.md', 'modes/email.md', 'modes/dossier.md', 'modes/onboard.md',
   'modes/ledger.md', 'engine/weights.mjs', '.agents/skills/outreach-ops/SKILL.md',
   'test/fixtures/prospects/01-hot-seed-startup.md',
+  'providers/hiring-signals.mjs', 'providers/github-orgs.mjs', 'providers/news-rss.mjs',
+  'providers/funding.mjs', 'providers/hn-launches.mjs', 'providers/directories.mjs',
+  'engine/enrich.mjs', 'engine/verify-contact.mjs', 'engine/scan-ats.mjs',
+  'plugins/explorium/manifest.json', 'plugins/hunter/manifest.json', 'docs/ADDING_PROVIDERS.md',
 ];
 let reqBad = 0;
 for (const f of REQUIRED) if (!existsSync(join(ROOT, f))) { fail(`missing ${f}`); reqBad++; }

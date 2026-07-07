@@ -1,0 +1,14 @@
+{
+  "id": "explorium",
+  "name": "Explorium enrichment",
+  "version": "0.1.0",
+  "apiVersion": 1,
+  "description": "Company firmographics + contact enrichment via the Explorium API (paid credits; lazy, per-lead only).",
+  "hooks": ["enrich"],
+  "costTier": "paid",
+  "requiredEnv": ["EXPLORIUM_API_KEY"],
+  "allowedHosts": ["api.explorium.ai"],
+  "skill": "skill.md",
+  "humanInTheLoop": true,
+  "homepage": "https://developers.explorium.ai"
+}

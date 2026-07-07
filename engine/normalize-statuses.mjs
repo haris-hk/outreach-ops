@@ -16,6 +16,16 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { rebuildRow } from './tracker-utils.mjs';
 
+import yamlPkg from 'js-yaml';
+let _statesCache = null;
+function loadStates() {
+  if (_statesCache) return _statesCache;
+  const p = join(OUTREACH_OPS, 'templates', 'states.yml');
+  const doc = existsSync(p) ? yamlPkg.load(readFileSync(p, 'utf-8')) : null;
+  _statesCache = doc?.states || [];
+  return _statesCache;
+}
+
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
 // Support both layouts: data/leads.md (boilerplate) and leads.md (original)
 const APPS_FILE = existsSync(join(OUTREACH_OPS, 'data/leads.md'))
@@ -65,23 +75,11 @@ function normalizeStatus(raw) {
   // "—" (em dash, no status) → Discarded
   if (s === '—' || s === '-' || s === '') return { status: 'Discarded' };
 
-  // Already canonical (English, per states.yml) — just fix casing/bold
-  const canonical = [
-    'Evaluated', 'Applied', 'Responded', 'Interview',
-    'Offer', 'Rejected', 'Discarded', 'SKIP',
-  ];
-  for (const c of canonical) {
-    if (lower === c.toLowerCase()) return { status: c };
+  // Canonical labels + aliases from templates/states.yml (single source of truth)
+  for (const st of loadStates()) {
+    if (lower === st.label.toLowerCase() || lower === st.id.toLowerCase()) return { status: st.label };
+    if ((st.aliases || []).some((a) => String(a).toLowerCase() === lower)) return { status: st.label };
   }
-
-  // Spanish aliases → English canonicals
-  if (['evaluada'].includes(lower)) return { status: 'Evaluated' };
-  if (['aplicado', 'enviada', 'aplicada', 'applied', 'sent'].includes(lower)) return { status: 'Applied' };
-  if (['respondido'].includes(lower)) return { status: 'Responded' };
-  if (['entrevista'].includes(lower)) return { status: 'Interview' };
-  if (['oferta'].includes(lower)) return { status: 'Offer' };
-  if (['cerrada', 'descartada'].includes(lower)) return { status: 'Discarded' };
-  if (['no aplicar', 'no_aplicar', 'skip'].includes(lower)) return { status: 'SKIP' };
 
   // Unknown — flag it
   return { status: null, unknown: true };

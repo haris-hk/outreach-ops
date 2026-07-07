@@ -119,3 +119,33 @@
  */
 
 export {};
+
+/**
+ * Normalized prospect signal — the unit of currency of the SIGNAL layer
+ * (top-level providers/*.mjs). Replaces Job for prospect-hunting: every
+ * signal answers "which company should be on my radar, and why now?".
+ *
+ * @typedef {object} Signal
+ * @property {string} company      Required, non-empty after trim.
+ * @property {string} [company_url] Company homepage if the source exposes it.
+ * @property {'hiring'|'funding'|'launch'|'news'|'oss'|'listing'|'stack'} signal_type Required.
+ * @property {string} headline     Required — one line, e.g. "hiring ML Engineer",
+ *                                 "raised $8M Series A", "Show HN launch".
+ * @property {string} [detail]     Optional longer context from the source.
+ * @property {string} source_url   Required, absolute URL — the dedup key.
+ * @property {number} [observed_at] Epoch ms the event happened/was published
+ *                                  (falls back to scan time downstream).
+ * @property {string} [contact_hint] Role or name surfaced by the source
+ *                                   (e.g. "founder: Jane Ray").
+ * @property {string[]} [hiring_for] For signal_type 'hiring': normalized role
+ *                                   buckets (ml, ai, backend, frontend, data,
+ *                                   devops, product, sales, design, other).
+ * @property {string[]} [segment_match] Filled by engine/scan.mjs trigger
+ *                                      matching — NOT by the provider.
+ *
+ * A SIGNAL provider is one providers/*.mjs file default-exporting
+ * `{ id, detect(entry), fetch(entry, ctx) → Signal[] }` — the same registry
+ * contract as ATS providers (providers/ats/), different record type.
+ * Rules: HTTPS-only, hostname allowlist hardcoded in the module, respect
+ * ctx budgets, never throw on empty results (return []).
+ */

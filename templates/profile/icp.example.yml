@@ -15,5 +15,12 @@ segments:
     notes: "hiring for ML but no ML lead = strongest signal"
 
 watchlists:
-  companies: []            # named accounts to monitor every scan
-  sources: []              # extra provider entries (see templates/portals.example.yml format)
+  companies:               # named accounts monitored every scan
+    # - { name: NovaStack, careers_url: "https://jobs.ashbyhq.com/novastack", github_org: novastack, domain: novastack.io }
+    []
+  sources:                 # provider-driven discovery (docs/ADDING_PROVIDERS.md)
+    # - { provider: hn-launches, query: "ai agents" }
+    # - { provider: directories, seed: yc, batch: W26, keyword: ai }
+    # - { provider: funding, feeds: ["https://example-tradepress.com/funding/feed"] }
+    # - { provider: news-rss, rss: "https://blog.targetco.com/feed", company: TargetCo }
+    []

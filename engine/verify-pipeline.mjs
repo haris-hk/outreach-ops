@@ -31,7 +31,7 @@ const APPS_FILE = process.env.OUTREACH_OPS_TRACKER
     : join(OUTREACH_OPS, 'leads.md');
 const ADDITIONS_DIR = join(OUTREACH_OPS, 'batch/tracker-additions');
 // OUTREACH_OPS_REPORTS overrides the reports dir (used by tests, mirrors OUTREACH_OPS_TRACKER).
-const REPORTS_DIR = process.env.OUTREACH_OPS_REPORTS || join(OUTREACH_OPS, 'reports');
+const REPORTS_DIR = process.env.OUTREACH_OPS_REPORTS || join(OUTREACH_OPS, 'data', 'dossiers');
 const STATES_FILE = existsSync(join(OUTREACH_OPS, 'templates/states.yml'))
   ? join(OUTREACH_OPS, 'templates/states.yml')
   : join(OUTREACH_OPS, 'states.yml');
@@ -40,21 +40,13 @@ const STATES_FILE = existsSync(join(OUTREACH_OPS, 'templates/states.yml'))
 mkdirSync(join(OUTREACH_OPS, 'data'), { recursive: true });
 mkdirSync(REPORTS_DIR, { recursive: true });
 
-const CANONICAL_STATUSES = [
-  'evaluated', 'applied', 'responded', 'interview',
-  'offer', 'rejected', 'discarded', 'skip',
-];
-
-const ALIASES = {
-  'evaluada': 'evaluated', 'condicional': 'evaluated', 'hold': 'evaluated', 'evaluar': 'evaluated', 'verificar': 'evaluated',
-  'aplicado': 'applied', 'enviada': 'applied', 'aplicada': 'applied', 'applied': 'applied', 'sent': 'applied',
-  'respondido': 'responded',
-  'entrevista': 'interview',
-  'oferta': 'offer',
-  'rechazado': 'rejected', 'rechazada': 'rejected',
-  'descartado': 'discarded', 'descartada': 'discarded', 'cerrada': 'discarded', 'cancelada': 'discarded',
-  'no aplicar': 'skip', 'no_aplicar': 'skip', 'monitor': 'skip', 'geo blocker': 'skip',
-};
+// Canonical statuses + aliases come from templates/states.yml — single source
+// of truth shared with normalize-statuses and the dashboard.
+import yamlPkg from 'js-yaml';
+const statesDoc = existsSync(STATES_FILE) ? yamlPkg.load(readFileSync(STATES_FILE, 'utf-8')) : null;
+const CANONICAL_STATUSES = (statesDoc?.states || []).map((st) => st.id);
+const ALIASES = Object.fromEntries((statesDoc?.states || []).flatMap((st) => (st.aliases || []).map((a) => [String(a).toLowerCase(), st.id])));
+if (!CANONICAL_STATUSES.length) { console.error('FATAL: templates/states.yml missing or empty'); process.exit(1); }
 
 let errors = 0;
 let warnings = 0;
@@ -79,9 +71,11 @@ const lines = content.split('\n');
 // legacy fixed layout when no recognizable header row is found.
 const LEGACY_COLMAP = { num: 1, date: 2, company: 3, role: 4, score: 5, status: 6, pdf: 7, report: 8, notes: 9 };
 const HEADER_ALIASES = {
-  '#': 'num', 'num': 'num', 'date': 'date', 'company': 'company', 'empresa': 'company',
-  'role': 'role', 'puesto': 'role', 'location': 'location', 'score': 'score',
-  'status': 'status', 'pdf': 'pdf', 'report': 'report', 'notes': 'notes',
+  '#': 'num', 'num': 'num', 'date': 'date', 'company': 'company',
+  'role': 'role', 'location': 'location', 'score': 'score', 'grade': 'score',
+  'status': 'status', 'pdf': 'pdf', 'report': 'report', 'dossier': 'report',
+  'notes': 'notes', 'contact': 'contact', 'segment': 'segment', 'channel': 'channel',
+  'next action': 'next_action', 'last touch': 'last_touch',
 };
 function detectColumns(allLines) {
   for (const line of allLines) {

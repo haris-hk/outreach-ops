@@ -28,7 +28,7 @@ import {
 import { loadRegistry, findInRegistry, classifySource, sourceBadge, successorFor } from './plugins/_registry.mjs';
 import { readLock, writeLockEntry, removeLockEntry, hashPluginTree, consentSurface } from './plugins/_lock.mjs';
 import { installFromRepo, scaffoldNew, parseRepoArg } from './plugin-install.mjs';
-import { appendToPipeline } from './scan.mjs';
+import { appendToPipeline } from './engine/scan-ats.mjs';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const APPLICATIONS_PATH = path.join(ROOT, 'data', 'applications.md');

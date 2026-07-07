@@ -37,8 +37,8 @@ import greenhouse from '../providers/ats/greenhouse.mjs';
 import lever from '../providers/ats/lever.mjs';
 import ashby from '../providers/ats/ashby.mjs';
 import workday from '../providers/ats/workday.mjs';
-import { buildTitleFilter, buildLocationFilter, loadSeenUrls, appendToPipeline, appendToScanHistory } from './scan.mjs';
-import { SEED_SOURCES, toPortalEntry } from './seeds/vc-portfolios.mjs';
+import { buildTitleFilter, buildLocationFilter, loadSeenUrls, appendToPipeline, appendToScanHistory } from './scan-ats.mjs';
+import { SEED_SOURCES, toPortalEntry } from '../seeds/vc-portfolios.mjs';
 
 // ── Config ──────────────────────────────────────────────────────────
 

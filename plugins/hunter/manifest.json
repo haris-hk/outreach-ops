@@ -1,0 +1,14 @@
+{
+  "id": "hunter",
+  "name": "Hunter email find + verify",
+  "version": "0.1.0",
+  "apiVersion": 1,
+  "description": "Email finder + deliverability verification via the Hunter.io API (gates Drafted-to-Queued).",
+  "hooks": ["enrich", "verify"],
+  "costTier": "paid",
+  "requiredEnv": ["HUNTER_API_KEY"],
+  "allowedHosts": ["api.hunter.io"],
+  "skill": "skill.md",
+  "humanInTheLoop": true,
+  "homepage": "https://hunter.io/api-documentation"
+}
