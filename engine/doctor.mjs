@@ -315,7 +315,7 @@ async function main() {
     checkAutoDir('data'),
     checkPipelineFile(),
     checkAutoDir('output'),
-    checkAutoDir('reports'),
+    checkAutoDir('data/dossiers'),
     checkPlugins(projectRoot),
   ];
 
