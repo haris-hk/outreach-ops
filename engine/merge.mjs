@@ -22,7 +22,7 @@ import { createHash, randomUUID } from 'crypto';
 import { tmpdir } from 'os';
 import { normalizeReportLink as normalizeLink } from './tracker-links.mjs';
 import { roleFuzzyMatch } from './role-matcher.mjs';
-import { LEGACY_COLMAP, detectColumns, resolveScoreStatus } from './tracker-parse.mjs';
+import { LEGACY_COLMAP, detectColumns, resolveScoreStatus, looksLikeScoreCell } from './tracker-parse.mjs';
 
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
 // Support both layouts: data/leads.md (boilerplate) and leads.md (original).
@@ -333,7 +333,18 @@ try {
 }
 
 // Canonical states and aliases
-const CANONICAL_STATES = ['Evaluated', 'Applied', 'Responded', 'Interview', 'Offer', 'Rejected', 'Discarded', 'SKIP'];
+// Canonical states + aliases from templates/states.yml — single source of
+// truth shared with normalize.mjs / verify-ledger.mjs / the dashboard.
+import yamlPkg from 'js-yaml';
+import { readFileSync as _readStates, existsSync as _statesExists } from 'fs';
+const _statesPath = join(OUTREACH_OPS, 'templates', 'states.yml');
+const _statesDoc = _statesExists(_statesPath) ? yamlPkg.load(_readStates(_statesPath, 'utf-8')) : null;
+const CANONICAL_STATES = (_statesDoc?.states || []).map((st) => st.label);
+const STATE_ALIASES = Object.fromEntries((_statesDoc?.states || []).flatMap((st) => [
+  [st.id.toLowerCase(), st.label],
+  ...(st.aliases || []).map((a) => [String(a).toLowerCase(), st.label]),
+]));
+if (!CANONICAL_STATES.length) { console.error('FATAL: templates/states.yml missing or empty'); process.exit(1); }
 
 /**
  * Convert raw addition status text into one canonical tracker state.
@@ -354,27 +365,13 @@ function validateStatus(status) {
     if (valid.toLowerCase() === lower) return valid;
   }
 
-  // Aliases
-  const aliases = {
-    // Spanish → English
-    'evaluada': 'Evaluated', 'condicional': 'Evaluated', 'hold': 'Evaluated', 'evaluar': 'Evaluated', 'verificar': 'Evaluated',
-    'aplicado': 'Applied', 'enviada': 'Applied', 'aplicada': 'Applied', 'applied': 'Applied', 'sent': 'Applied',
-    'respondido': 'Responded',
-    'entrevista': 'Interview',
-    'oferta': 'Offer',
-    'rechazado': 'Rejected', 'rechazada': 'Rejected',
-    'descartado': 'Discarded', 'descartada': 'Discarded', 'cerrada': 'Discarded', 'cancelada': 'Discarded',
-    'no aplicar': 'SKIP', 'no_aplicar': 'SKIP', 'skip': 'SKIP', 'monitor': 'SKIP',
-    'geo blocker': 'SKIP',
-  };
+  if (STATE_ALIASES[lower]) return STATE_ALIASES[lower];
 
-  if (aliases[lower]) return aliases[lower];
+  // DUPLICADO/Repost → Disqualified
+  if (/^(duplicado|dup|repost)/i.test(lower)) return 'Disqualified';
 
-  // DUPLICADO/Repost → Discarded
-  if (/^(duplicado|dup|repost)/i.test(lower)) return 'Discarded';
-
-  console.warn(`⚠️  Non-canonical status "${status}" → defaulting to "Evaluated"`);
-  return 'Evaluated';
+  console.warn(`⚠️  Non-canonical status "${status}" → defaulting to "Graded"`);
+  return 'Graded';
 }
 
 /**
@@ -472,13 +469,30 @@ function cell(v) {
   return String(v ?? '').replace(/[\r\n]+/g, ' ').replace(/\s*\|\s*/g, ' / ').trim();
 }
 
-// Build a tracker row string matching the detected layout (with or without the
-// optional Location column) so writes round-trip through the same schema.
+// Build a tracker row string matching the detected layout — header-driven, so
+// the legacy 9-col, 10-col-with-location, and 11-col lead layouts all
+// round-trip through the same schema.
 function buildRow(o) {
-  if (COLMAP.location != null) {
-    return `| ${o.num} | ${o.date} | ${cell(o.company)} | ${cell(o.role)} | ${cell(o.location) || '—'} | ${o.score} | ${o.status} | ${o.pdf} | ${o.report} | ${cell(o.notes)} |`;
-  }
-  return `| ${o.num} | ${o.date} | ${cell(o.company)} | ${cell(o.role)} | ${o.score} | ${o.status} | ${o.pdf} | ${o.report} | ${cell(o.notes)} |`;
+  const maxIdx = Math.max(...Object.values(COLMAP));
+  const cells = new Array(maxIdx).fill('');
+  const put = (name, value, escape = true) => {
+    if (COLMAP[name] == null) return;
+    cells[COLMAP[name] - 1] = escape ? cell(value) : String(value ?? '').trim();
+  };
+  put('num', o.num, false);
+  put('date', o.date, false);
+  put('company', o.company);
+  put('role', o.role);
+  put('contact', o.contact ?? '');
+  put('segment', o.segment ?? '');
+  put('channel', o.channel ?? '');
+  put('location', o.location || '—');
+  put('score', o.score, false);
+  put('status', o.status, false);
+  put('pdf', o.pdf ?? '❌', false);
+  put('report', o.report, false);
+  put('notes', o.notes);
+  return `| ${cells.join(' | ')} |`;
 }
 
 /**
@@ -505,9 +519,12 @@ function parseAppLine(line) {
     location: COLMAP.location != null ? parts[COLMAP.location] : '',
     score: parts[COLMAP.score],
     status: parts[COLMAP.status],
-    pdf: parts[COLMAP.pdf],
+    pdf: COLMAP.pdf != null ? parts[COLMAP.pdf] : '',
     report: parts[COLMAP.report],
     notes: COLMAP.notes != null ? (parts[COLMAP.notes] || '') : '',
+    contact: COLMAP.contact != null ? (parts[COLMAP.contact] || '') : '',
+    segment: COLMAP.segment != null ? (parts[COLMAP.segment] || '') : '',
+    channel: COLMAP.channel != null ? (parts[COLMAP.channel] || '') : '',
     raw: line,
   };
 }
@@ -568,6 +585,27 @@ function parseTsvContent(content, filename) {
       return null;
     }
 
+    // Lead-ledger TSV (batch/batch-prompt.md contract, 11 fields):
+    // id, date, company, contact, role, segment, grade, channel, status, dossier, notes.
+    // Recognizable unambiguously: the grade sits at index 6 and parses as a
+    // score cell while index 4 (role) does not.
+    if (parts.length >= 10 && looksLikeScoreCell(parts[6].trim()) && !looksLikeScoreCell(parts[4].trim())) {
+      return finalizeAddition({
+        num: parseInt(parts[0]),
+        date: parts[1].trim(),
+        company: parts[2].trim(),
+        contact: parts[3].trim(),
+        role: parts[4].trim(),
+        segment: parts[5].trim(),
+        score: parts[6].replace(/\*\*/g, '').trim(),
+        channel: parts[7].trim(),
+        status: validateStatus(parts[8].trim()),
+        report: parts[9].trim(),
+        notes: (parts[10] || '').trim(),
+        pdf: '',
+      }, filename);
+    }
+
     // Column order varies: batch TSVs write (status, score), leads.md is
     // (score, status). Identify each by content — the score cell is recognizable
     // by pattern, a status never is — so a reordered TSV merges correctly and an
@@ -595,11 +633,14 @@ function parseTsvContent(content, filename) {
     };
   }
 
+  return finalizeAddition(addition, filename);
+}
+
+function finalizeAddition(addition, filename) {
   if (isNaN(addition.num) || addition.num === 0) {
     console.warn(`⚠️  Skipping ${filename}: invalid entry number`);
     return null;
   }
-
   return addition;
 }
 
@@ -758,6 +799,9 @@ for (const file of tsvFiles) {
       if (lineIdx >= 0) {
         const updatedLine = buildRow({
           num: duplicate.num, date: addition.date, company: addition.company, role: addition.role,
+          contact: addition.contact || duplicate.contact || '',
+          segment: addition.segment || duplicate.segment || '',
+          channel: addition.channel || duplicate.channel || '',
           location: addition.location || duplicate.location || '—',
           score: addition.score, status: duplicate.status, pdf: duplicate.pdf,
           report: addition.report,
@@ -777,6 +821,7 @@ for (const file of tsvFiles) {
 
     const newLine = buildRow({
       num: entryNum, date: addition.date, company: addition.company, role: addition.role,
+      contact: addition.contact || '', segment: addition.segment || '', channel: addition.channel || '',
       location: addition.location || '—',
       score: addition.score, status: addition.status, pdf: addition.pdf,
       report: addition.report, notes: addition.notes,

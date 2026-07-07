@@ -21,7 +21,7 @@
  *
  * Zero dependencies and strictly read-only: parses data/leads.md via
  * the shared header-aware column mapping (tracker-parse.mjs) and the PDF
- * manifest data/pdf-index.tsv (written by generate-pdf.mjs).
+ * manifest data/pdf-index.tsv (written by engine/render-dossier.mjs when used).
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -33,7 +33,7 @@ import { roleFuzzyMatch } from './role-matcher.mjs';
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
 
 // "008" and "8" are the same report — zero-padded report-link form vs unpadded
-// tracker-# form (same normalization as the manifest writer in generate-pdf.mjs).
+// tracker-# form (same normalization as the dossier manifest writer).
 const normNum = (s) => String(s ?? '').trim().replace(/^0+(?=\d)/, '');
 
 // Same status hygiene as tracker.mjs: strip markdown bold and stray dates so a

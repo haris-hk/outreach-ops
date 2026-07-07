@@ -448,7 +448,7 @@ func (m PipelineModel) handleKey(msg tea.KeyMsg) (PipelineModel, tea.Cmd) {
 			manifest := data.LoadPDFManifest(m.repoPath)
 			candidates := data.ResolvePDFs(m.repoPath, app, manifest)
 			if len(candidates) == 0 {
-				m.flash = "No CV PDF found for this application — generate one with /outreach-ops pdf"
+				m.flash = "No dossier PDF found for this lead — press D to render one"
 			} else {
 				return m, m.openPDFCmd(candidates[0]) // newest first
 			}
@@ -456,39 +456,31 @@ func (m PipelineModel) handleKey(msg tea.KeyMsg) (PipelineModel, tea.Cmd) {
 
 	case "D":
 		if app, ok := m.CurrentApp(); ok {
-			manifest := data.LoadPDFManifest(m.repoPath)
-			entry, found := manifest.Lookup(app)
-			// Manifest lookup requires a report number; fall back to PDF-path
-			// index when the manifest was written without --report (common case).
-			if !found || entry.HTMLPath == "" {
-				byPath := data.LoadPDFEntriesByPath(m.repoPath)
-				candidates := data.ResolvePDFs(m.repoPath, app, manifest)
-				for _, c := range candidates {
-					if e, ok := byPath[c]; ok && e.HTMLPath != "" {
-						entry = e
-						found = true
-						break
-					}
-				}
-			}
-			if !found || entry.HTMLPath == "" {
-				m.flash = "No source HTML found for this application — run /outreach-ops pdf first"
+			// Render the lead's dossier (Dossier column) to a one-page PDF via
+			// engine/render-dossier.mjs. The dossier markdown IS the source of
+			// truth — no HTML manifest indirection needed.
+			if app.ReportPath == "" {
+				m.flash = "No dossier linked on this row — grade the lead first"
 				return m, nil
 			}
-			if _, err := os.Stat(filepath.Join(m.repoPath, filepath.FromSlash(entry.HTMLPath))); err != nil {
-				m.flash = "Source HTML missing: " + entry.HTMLPath
+			dossier := filepath.FromSlash(app.ReportPath)
+			if _, err := os.Stat(filepath.Join(m.repoPath, "data", dossier)); err == nil {
+				dossier = filepath.Join("data", dossier) // ledger links are data/-relative
+			} else if _, err := os.Stat(filepath.Join(m.repoPath, dossier)); err != nil {
+				m.flash = "Dossier file missing: " + app.ReportPath
 				return m, nil
 			}
-			m.flash = "Regenerating PDF via generate-pdf.mjs — this takes a few seconds..."
-			path, report := m.repoPath, entry.ReportNumber
-			html, pdf, format := entry.HTMLPath, entry.PDFPath, entry.Format
+			m.flash = "Rendering dossier PDF via engine/render-dossier.mjs — a few seconds..."
+			path := m.repoPath
+			pdf := filepath.ToSlash(filepath.Join("output", strings.TrimSuffix(filepath.Base(dossier), ".md")+".pdf"))
+			src := filepath.ToSlash(dossier)
 			return m, func() tea.Msg {
 				return PipelineGeneratePDFMsg{
-					RepoPath: path,
-					ReportNumber:  report,
-					HTMLPath:      html,
-					PDFPath:       pdf,
-					Format:        format,
+					RepoPath:     path,
+					ReportNumber: "",
+					HTMLPath:     src, // source path field (dossier md)
+					PDFPath:      pdf,
+					Format:       "",
 				}
 			}
 		}

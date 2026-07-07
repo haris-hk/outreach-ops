@@ -16,7 +16,8 @@ Which files belong to the **system** (auto-updatable) and which belong to the **
 | `data/leads.md` | Lead ledger — single source of truth |
 | `data/leads.db` | Derived SQLite index (rebuildable; safe to delete) |
 | `data/inbox.md` | Scanner output awaiting triage |
-| `data/scan-history.tsv` | Scan dedup memory |
+| `data/signal-history.tsv` | Prospect-signal scan dedup memory |
+| `data/scan-history.tsv` | ATS job-scan dedup memory (individual mode) |
 | `data/outcomes.tsv` | Outreach event log (learning-loop input) |
 | `data/dossiers/` | Per-prospect research reports |
 | `campaigns/` | Business mode: per-campaign icp/preferences/ledger/voice |

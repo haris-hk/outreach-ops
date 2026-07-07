@@ -104,7 +104,7 @@ const TSV_NO_LOCATION = '2\t2026-02-02\tGlobex\tManager\tApplied\tN/A\t✅\t—\
     else fail(`Location column populated — got "${cells[5]}" in row: ${row}`);
     if (cells[6] === 'N/A') pass('Score sits in the Score column');
     else fail(`Score in Score column — got "${cells[6]}" in row: ${row}`);
-    if (cells[7] === 'Applied') pass('Status sits in the Status column');
+    if (cells[7] === 'Sent') pass('Status sits in the Status column (alias Applied canonicalized to Sent)');
     else fail(`Status in Status column — got "${cells[7]}" in row: ${row}`);
   }
   rmSync(sb.dir, { recursive: true, force: true });
@@ -130,7 +130,7 @@ const TSV_NO_LOCATION = '2\t2026-02-02\tGlobex\tManager\tApplied\tN/A\t✅\t—\
   const row = dataRows(sb.tracker).find(l => l.includes('Globex'));
   const cells = row ? row.split('|').map(s => s.trim()) : [];
   // cells: ['', num, date, company, role, score, status, pdf, report, notes, '']
-  if (merge.code === 0 && cells[5] === 'N/A' && cells[6] === 'Applied') {
+  if (merge.code === 0 && cells[5] === 'N/A' && cells[6] === 'Sent') {
     pass('9-col tracker still merges into correct columns');
   } else {
     fail(`9-col tracker merge (code ${merge.code}) row: ${row}`);

@@ -846,7 +846,7 @@ async function main() {
 
   // 2. Read portals.yml
   if (!existsSync(PORTALS_PATH)) {
-    console.error('Error: portals.yml not found. Run onboarding first.');
+    console.error('Error: portals.yml not found. The ATS job scanner is optional — copy templates/portals.example.yml to portals.yml to use it. (Prospect scanning: node engine/scan.mjs uses profile/icp.yml.)');
     process.exit(1);
   }
 

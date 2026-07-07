@@ -51,7 +51,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(dirname(fileURLToPath(import.meta.url))); // repo root (script lives in engine/)
-const REPORTS_DIR = process.env.OUTREACH_OPS_REPORTS_DIR || join(__dirname, 'reports');
+const REPORTS_DIR = process.env.OUTREACH_OPS_REPORTS || join(__dirname, 'data', 'dossiers');
 
 // Sentinels older than this are considered stale and may be GC'd.
 // 4 hours covers any reasonable interactive or batch session.

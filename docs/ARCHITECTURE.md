@@ -94,7 +94,7 @@ outreach-ops/
 │
 ├── data/                       # ══ USER LAYER ══
 │   ├── leads.md (+ leads.db derived index)  inbox.md
-│   ├── scan-history.tsv  outcomes.tsv  dossiers/
+│   ├── signal-history.tsv  scan-history.tsv (ats)  outcomes.tsv  dossiers/
 ├── campaigns/{name}/           # business mode: per-campaign icp/preferences/ledger/voice
 ├── batch/                      # headless worker orchestration (TSV state machine)
 ├── dashboard/                  # Go TUI  ·  web/  # Next.js local UI
@@ -151,7 +151,7 @@ export default {
 | `directories.mjs` | Niche directories, award lists, accelerator portfolios (YC/a16z-style seed lists ported) | Segment seeding for `scan --seeds` |
 | `tech-stack.mjs` | Public stack fingerprints | "They run X, you specialize in X" fit signals |
 
-**Scan flow** (`engine/scan.mjs`, ported skeleton): per-segment seeds → provider fan-out (parallel, budgeted) → trigger-match against `icp.yml` → dedup vs `data/scan-history.tsv` → write `data/inbox.md`, each lead with a one-line **"why now"**. Optional `--verify` runs liveness checks (Playwright) on source URLs before they hit the inbox. Zero LLM tokens end-to-end.
+**Scan flow** (`engine/scan.mjs`, ported skeleton): per-segment seeds → provider fan-out (parallel, budgeted) → trigger-match against `icp.yml` → dedup vs `data/signal-history.tsv` → write `data/inbox.md`, each lead with a one-line **"why now"**. Optional `--verify` runs liveness checks (Playwright) on source URLs before they hit the inbox. Zero LLM tokens end-to-end.
 
 **Community contribution path:** `_types.js` + the provider template + `docs/ADDING_PROVIDERS.md` recipe (contract, allowlist rules, fixture-test requirement). A niche provider (e.g. "Shopify app store new listings", a regional business registry, a vertical directory) is ~100–200 lines against a stable contract — contributors point the scanner at their own hunting grounds without touching the engine, and every merged provider improves the scanner for everyone. This network effect is the project's moat as an open-source repo.
 

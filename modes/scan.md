@@ -2,7 +2,7 @@
 
 Zero-token discovery: `node engine/scan.mjs` fans out across the signal
 providers, trigger-matches against `profile/icp.yml`, dedups against
-`data/scan-history.tsv`, and appends new leads to `data/inbox.md` — each with
+`data/signal-history.tsv`, and appends new leads to `data/inbox.md` — each with
 a one-line "why now".
 
 ## Run

@@ -52,8 +52,8 @@ if (resolve(MD_PATH) === resolve(DB_PATH)) {
   process.exit(1);
 }
 const STATES_PATH = 'templates/states.yml';
-const HEADER = '| # | Date | Company | Role | Score | Status | PDF | Report | Notes |';
-const SEPARATOR = '|---|------|---------|------|-------|--------|-----|--------|-------|';
+const HEADER = '| # | Date | Company | Contact | Role | Segment | Grade | Channel | Status | Dossier | Notes |';
+const SEPARATOR = '|---|------|---------|---------|------|---------|-------|---------|--------|---------|-------|';
 
 // ── node:sqlite loading ─────────────────────────────────────────────
 
@@ -93,7 +93,10 @@ function openDb(DatabaseSync) {
       status  TEXT NOT NULL,
       pdf     TEXT NOT NULL DEFAULT '❌',
       report  TEXT NOT NULL DEFAULT '—',
-      notes   TEXT NOT NULL DEFAULT ''
+      notes   TEXT NOT NULL DEFAULT '',
+      contact TEXT NOT NULL DEFAULT '',
+      segment TEXT NOT NULL DEFAULT '',
+      channel TEXT NOT NULL DEFAULT ''
     );
     CREATE TABLE IF NOT EXISTS status_events (
       id     INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -181,8 +184,7 @@ function parseMarkdownRows(text, diag) {
       idRaw: cell('num'), date: cell('date'), company: cell('company'),
       role: cell('role') || cell('contact'), score: cell('score'), status: cell('status'),
       pdf: cell('pdf'), report: cell('report'),
-      notes: [cell('segment') && `segment: ${cell('segment')}`, cell('channel') && `channel: ${cell('channel')}`, cell('notes')]
-        .filter(Boolean).join(' · '),
+      notes: cell('notes'),
       contact: cell('contact'), segment: cell('segment'), channel: cell('channel'),
     });
   }
@@ -265,7 +267,7 @@ function parseTracker(states) {
 
     if (!DATE_RE.test(date)) diag.badDate++; // kept as-is — flagged, not destroyed
 
-    apps.push({ id, pos: apps.length, date, company, role, score: score || '—', status, pdf: pdf || '❌', report: report || '—', notes });
+    apps.push({ id, pos: apps.length, date, company, role, score: score || '—', status, pdf: pdf || '❌', report: report || '—', notes, contact: cells.contact || '', segment: cells.segment || '', channel: cells.channel || '' });
   }
   for (const app of apps) if (app.id === 0) app.id = ++maxId;
 
@@ -303,8 +305,8 @@ function syncIndex(db, states) {
   db.exec('PRAGMA defer_foreign_keys = ON'); // full rebuild — FKs settle at commit
   try {
     db.exec('DELETE FROM applications');
-    const insertApp = db.prepare('INSERT INTO applications (id, pos, date, company, role, score, status, pdf, report, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    for (const a of apps) insertApp.run(a.id, a.pos, a.date, a.company, a.role, a.score, a.status, a.pdf, a.report, a.notes);
+    const insertApp = db.prepare('INSERT INTO applications (id, pos, date, company, role, score, status, pdf, report, notes, contact, segment, channel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    for (const a of apps) insertApp.run(a.id, a.pos, a.date, a.company, a.role, a.score, a.status, a.pdf, a.report, a.notes, a.contact || '', a.segment || '', a.channel || '');
 
     // Status history: events persist across rebuilds, keyed by id. An app whose
     // status changed since the last sync gets a new event; rows that left the
@@ -374,7 +376,11 @@ function flagValue(args, flag) {
 
 function rowToMarkdown(r) {
   const clean = (v) => String(v ?? '').replace(/\|/g, '│').replace(/\r?\n/g, ' ');
-  return `| ${r.id} | ${clean(r.date)} | ${clean(r.company)} | ${clean(r.role)} | ${clean(r.score)} | ${clean(r.status)} | ${clean(r.pdf)} | ${clean(r.report)} | ${clean(r.notes)} |`;
+  // Strip the sync-time folding of segment/channel back out of notes — those
+  // fields are exported as first-class columns, so keeping the folded copy
+  // would duplicate them on every export/sync round-trip.
+  const notes = clean(r.notes).replace(/^(segment: [^·]+· )?(channel: [^·]+· )?/, '').trim();
+  return `| ${r.id} | ${clean(r.date)} | ${clean(r.company)} | ${clean(r.contact)} | ${clean(r.role)} | ${clean(r.segment)} | ${clean(r.score)} | ${clean(r.channel)} | ${clean(r.status)} | ${clean(r.report)} | ${notes} |`;
 }
 
 async function query(args) {
@@ -403,7 +409,7 @@ async function query(args) {
   const id = flagValue(args, '--id');
   if (id) { where.push('id = ?'); params.push(parseInt(id, 10)); }
 
-  let sql = 'SELECT id, date, company, role, score, status, pdf, report, notes FROM applications'
+  let sql = 'SELECT id, date, company, contact, role, segment, score, status, channel, report, notes FROM applications'
     + (where.length ? ' WHERE ' + where.join(' AND ') : '') + ' ORDER BY id DESC';
   const limit = parseInt(flagValue(args, '--limit') || '0', 10);
   if (limit > 0) { sql += ' LIMIT ?'; params.push(limit); }
@@ -445,7 +451,7 @@ async function exportMd(args) {
   ensureFresh(db, loadStates());
   const rows = db.prepare('SELECT * FROM applications ORDER BY pos').all();
   const out = [
-    '# Applications Tracker',
+    '# Lead Ledger',
     '',
     HEADER,
     SEPARATOR,

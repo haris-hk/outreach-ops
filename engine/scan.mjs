@@ -36,7 +36,7 @@ const val = (n, d) => { const i = argv.indexOf(n); return i !== -1 && argv[i + 1
 
 const ICP_PATH = resolve(val('--icp', join(ROOT, 'profile', 'icp.yml')));
 const INBOX_PATH = resolve(val('--inbox', join(ROOT, 'data', 'inbox.md')));
-const HISTORY_PATH = resolve(val('--history', join(ROOT, 'data', 'scan-history.tsv')));
+const HISTORY_PATH = resolve(val('--history', join(ROOT, 'data', 'signal-history.tsv')));
 const PROVIDERS_DIR = resolve(val('--providers-dir', join(ROOT, 'providers')));
 const ONLY_SEGMENT = val('--segment', null);
 const DRY = flag('--dry-run');

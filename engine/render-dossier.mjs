@@ -98,7 +98,13 @@ async function main() {
     return;
   }
   const pdfPath = outArg ? resolve(outArg) : htmlPath.replace(/\.html$/, '.pdf');
-  const browser = await chromium.launch({ headless: true });
+  let browser;
+  try {
+    browser = await chromium.launch({ headless: true });
+  } catch (err) {
+    console.log(JSON.stringify({ html: htmlPath, pdf: null, note: `chromium unavailable (${err.message.split('\n')[0]}) — HTML written; run: npx playwright install chromium` }));
+    return;
+  }
   try {
     const page = await browser.newPage();
     await page.goto(pathToFileURL(htmlPath).href, { waitUntil: 'networkidle' });
