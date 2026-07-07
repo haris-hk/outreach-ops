@@ -30,7 +30,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Publish scaffolder to npm
         if: ${{ steps.release.outputs.release_created }}
-        run: npm publish --provenance --access public
+        run: echo 'npm publish disabled — add NPM_TOKEN secret and re-enable when publishing the scaffolder package'  # npm publish --provenance --access public
         working-directory: scaffolder
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
