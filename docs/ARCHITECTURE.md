@@ -150,6 +150,8 @@ export default {
 | `news-rss.mjs` | Company blogs, press RSS, niche trade feeds | Personalization raw material with citable sources |
 | `directories.mjs` | Niche directories, award lists, accelerator portfolios (YC/a16z-style seed lists ported) | Segment seeding for `scan --seeds` |
 | `tech-stack.mjs` | Public stack fingerprints | "They run X, you specialize in X" fit signals |
+| `sec-edgar.mjs` | US Form D fundraising filings (public SEC API) | Structured funding signal, zero keys |
+| `producthunt.mjs` / `github-search.mjs` | Launches via public RSS · new in-space repos | Discovery beyond the watchlist |
 
 **Scan flow** (`engine/scan.mjs`, ported skeleton): per-segment seeds → provider fan-out (parallel, budgeted) → trigger-match against `icp.yml` → dedup vs `data/signal-history.tsv` → write `data/inbox.md`, each lead with a one-line **"why now"**. Optional `--verify` runs liveness checks (Playwright) on source URLs before they hit the inbox. Zero LLM tokens end-to-end.
 

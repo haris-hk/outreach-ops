@@ -91,6 +91,7 @@ const SYSTEM_PATHS = [
   'scaffolder/',
   'docs/',
   'test/',
+  'web/',
   '.agents/',
   '.claude/skills/',
   '.opencode/',

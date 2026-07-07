@@ -31,7 +31,9 @@
     "outcomes": "node engine/outcomes.mjs",
     "campaign": "node engine/campaign.mjs",
     "preflight": "node engine/spam-preflight.mjs",
-    "deliverability": "node engine/deliverability-doctor.mjs"
+    "deliverability": "node engine/deliverability-doctor.mjs",
+    "eval:grading": "node engine/eval-grading.mjs",
+    "web": "node web/server.mjs"
   },
   "keywords": [
     "ai",
@@ -44,7 +46,7 @@
     "agent",
     "local-first"
   ],
-  "author": "Haris Hussain Khan <harishussainkhan.124@gmail.com>",
+  "author": "Haris Hussain Khan (https://github.com/haris-hk)",
   "license": "MIT",
   "engines": {
     "node": ">=20"

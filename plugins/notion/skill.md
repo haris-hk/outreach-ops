@@ -1,6 +1,6 @@
 ---
 name: outreach-ops-plugin-notion
-description: How to mirror the outreach-ops tracker to a Notion database and read records back as job leads.
+description: How to mirror the outreach-ops lead ledger to a Notion database and read records back as leads.
 license: MIT
 ---
 
@@ -16,7 +16,7 @@ truth — Notion is an additive mirror.
   status / score) to the "Applications" database under your Career Ops page.
   Add `--dry-run` to preview without writing.
 - `node plugins.mjs run notion search "<query>"` — return Notion records that
-  carry a job URL, matching the query, and append them to the pipeline.
+  carry a posting URL, matching the query, and append them to the scan pipeline.
 
 ## Setup
 

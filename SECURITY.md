@@ -4,7 +4,6 @@
 
 Please report vulnerabilities privately via **GitHub Security Advisories**:
 https://github.com/haris-hk/outreach-ops/security/advisories/new
-(or email harishussainkhan.124@gmail.com with subject `SECURITY: outreach-ops`).
 
 Do NOT open a public issue for security reports. You'll get an acknowledgment
 within 7 days. Coordinated disclosure preferred; credit given unless you

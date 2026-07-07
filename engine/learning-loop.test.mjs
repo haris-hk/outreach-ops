@@ -75,6 +75,14 @@ ok(html.includes('<h1>NovaStack</h1>') && html.includes('4.6/5'), 'dossier heade
 ok(html.includes('<table>') && html.includes('<a href="https://example.com/raise">'), 'tables + source links rendered');
 ok(parseFrontMatter(dossier).meta.contact === 'Jane Ray' && mdToHtml('**x**').includes('<strong>'), 'front-matter + inline md helpers');
 
+// ── 7. Eval harness pure functions (offline) ───────────────────────
+const { loadFixtures, inRange, parseModelReply } = await import('./eval-grading.mjs');
+const fxs = loadFixtures();
+ok(fxs.length === 5 && fxs[0].lo === 4.2 && fxs[0].hi === 5.0, `eval: 5 fixtures with ranges loaded (got ${fxs.length})`);
+ok(inRange(4.5, fxs[0]) && !inRange(4.0, fxs[0]), 'eval: range check');
+ok(parseModelReply('noise {"score": 3.7, "verdict": "standard"} trailing').score === 3.7, 'eval: JSON extracted from noisy reply');
+ok(parseModelReply('no json here') === null && parseModelReply('{"score":"abc"}') === null, 'eval: garbage replies → null');
+
 rmSync(tmp, { recursive: true, force: true });
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

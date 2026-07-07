@@ -42,6 +42,21 @@ const round = parseRound('Acme raises $8M Series A to fix widgets');
 ok(round && round.company === 'Acme' && round.amount === '$8M' && round.series === 'a', 'parseRound: company/amount/series');
 ok(parseRound('Acme ships new dashboard') === null, 'parseRound: non-funding → null');
 
+// ── Unit: SEC EDGAR hit mapping ─────────────────────────────────────
+const { hitToSignal } = await import('../providers/sec-edgar.mjs');
+const edgarHit = { _id: '0001234567-26-000123:formd.xml', _source: { display_names: ['NovaStack Inc (CIK 0001234567)'], ciks: ['0001234567'], file_date: '2026-07-01' } };
+const edgarSig = hitToSignal(edgarHit);
+ok(edgarSig && edgarSig.company === 'NovaStack Inc' && edgarSig.signal_type === 'funding'
+   && edgarSig.source_url === 'https://www.sec.gov/Archives/edgar/data/1234567/000123456726000123',
+   'sec-edgar: hit maps to funding signal with archive URL');
+ok(hitToSignal({ _source: {} }) === null, 'sec-edgar: empty hit → null');
+
+// ── Unit: producthunt + github-search detect contracts ─────────────
+const ph = (await import('../providers/producthunt.mjs')).default;
+ok(ph.detect({ provider: 'producthunt' }) !== null && ph.detect({ provider: 'news-rss' }) === null, 'producthunt: detect only claims its own entries');
+const ghs = (await import('../providers/github-search.mjs')).default;
+ok(ghs.detect({ provider: 'github-search', query: 'llm agents' }) !== null && ghs.detect({ provider: 'github-search' }) === null, 'github-search: requires a query');
+
 // ── Integration: scan over 3 mock providers, then dedup on re-run ──
 const tmp = mkdtempSync(join(tmpdir(), 'oo-scan-'));
 const provDir = join(tmp, 'providers');

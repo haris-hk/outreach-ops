@@ -16,6 +16,8 @@ sourced dossier, an honest 1–5 grade, a channel call, and personalized drafts
 > and signal engine are original work on that battle-tested foundation: your AI
 > coding CLI is the brain; deterministic zero-token scripts do everything repeatable.
 
+![outreach-ops demo — grade a lead, get sourced hooks and drafts, watch it refuse a weak one](docs/demo.gif)
+
 ## How it works
 
 ```
@@ -49,8 +51,10 @@ funding feeds, Show HN, YC/a16z lists) · persona-aware DM/email/call drafting
 with anti-slop voice rules · verified-email + spam-preflight + deliverability
 gates · reply-aware sequencing (read-only Gmail detection) · a learning loop
 that mines your outcomes and proposes rubric tuning · multi-campaign business
-mode · batch grading with headless workers · Go terminal dashboard ·
-self-updater that never touches your data (see `DATA_CONTRACT.md`).
+mode · batch grading with headless workers · Go terminal dashboard · a read-only
+local web board (`npm run web`) · an LLM eval harness for the grading rubric
+(`npm run eval:grading`) · self-updater that never touches your data (see
+`DATA_CONTRACT.md`).
 
 ## Extend it
 

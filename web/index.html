@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>outreach-ops — lead board</title>
+<style>
+  :root { --bg:#0f1216; --panel:#171b21; --ink:#e6e9ee; --muted:#8b94a1; --line:#262c35;
+          --green:#3ecf8e; --amber:#e5b567; --red:#e0685f; --blue:#6cb2f7; --chipbg:#1f2630; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:14px/1.5 ui-monospace,'SF Mono',Menlo,Consolas,monospace; }
+  header { display:flex; align-items:baseline; gap:14px; padding:18px 22px; border-bottom:1px solid var(--line); }
+  h1 { font-size:16px; margin:0; letter-spacing:.5px; }
+  h1 span { color:var(--green); }
+  .sub { color:var(--muted); font-size:12px; }
+  main { padding:18px 22px; display:grid; gap:18px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 14px; }
+  .card b { display:block; font-size:20px; }
+  .card small { color:var(--muted); }
+  .tabs { display:flex; gap:6px; flex-wrap:wrap; }
+  .tab { background:var(--chipbg); border:1px solid var(--line); color:var(--muted); border-radius:14px;
+         padding:3px 12px; cursor:pointer; font-size:12px; }
+  .tab.active { color:var(--ink); border-color:var(--green); }
+  table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  th,td { text-align:left; padding:8px 12px; border-bottom:1px solid var(--line); font-size:13px; }
+  th { color:var(--muted); font-weight:600; cursor:pointer; user-select:none; white-space:nowrap; }
+  tr:hover td { background:#1b212a; }
+  .grade { font-weight:700; }
+  .g-hi { color:var(--green); } .g-mid { color:var(--amber); } .g-lo { color:var(--red); }
+  .status { background:var(--chipbg); border-radius:10px; padding:1px 9px; font-size:12px; white-space:nowrap; }
+  .doss { color:var(--blue); cursor:pointer; text-decoration:underline; }
+  #viewer { display:none; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:18px 22px; }
+  #viewer.h2, #viewer h2 { color:var(--green); font-size:14px; }
+  #viewer table { background:transparent; }
+  #viewer a { color:var(--blue); }
+  .close { float:right; cursor:pointer; color:var(--muted); }
+  .empty { color:var(--muted); padding:26px; text-align:center; background:var(--panel); border:1px dashed var(--line); border-radius:8px; }
+  ul.inbox { list-style:none; padding:0; margin:0; }
+  ul.inbox li { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 14px; margin-bottom:6px; font-size:13px; }
+  ul.inbox li.done { opacity:.45; text-decoration:line-through; }
+  footer { color:var(--muted); font-size:11px; padding:8px 22px 20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>outreach-ops <span>· lead board</span></h1>
+  <span class="sub">read-only view — writes happen through your agent & engine scripts</span>
+</header>
+<main>
+  <div class="cards" id="cards"></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="leads"></div>
+  <div id="viewer"></div>
+  <h1 style="font-size:14px">inbox <span class="sub" style="color:var(--muted)">— scanner output awaiting triage</span></h1>
+  <div id="inbox"></div>
+</main>
+<footer>draft-only engine · grades below threshold get no drafts, and that's the point</footer>
+<script>
+const TABS = ['ALL','PRIORITY ≥4.2','PIPELINE','SENT','REPLIED','CALLS','WON','NURTURE/DQ','LOST'];
+const GROUP = { new:'PIPELINE', graded:'PIPELINE', queued:'PIPELINE', drafted:'PIPELINE',
+  sent:'SENT', bumped:'SENT', replied:'REPLIED', call:'CALLS', won:'WON',
+  nurture:'NURTURE/DQ', disqualified:'NURTURE/DQ', lost:'LOST' };
+let leads = [], active = 'ALL', sortKey = 'grade', sortDir = -1;
+
+const $ = (id) => document.getElementById(id);
+const gradeCls = (g) => g == null ? '' : g >= 4.2 ? 'g-hi' : g >= 3.5 ? 'g-mid' : 'g-lo';
+
+function renderTabs() {
+  $('tabs').innerHTML = TABS.map((t) => {
+    const n = t === 'ALL' ? leads.length
+      : t === 'PRIORITY ≥4.2' ? leads.filter((l) => (l.grade ?? 0) >= 4.2 && GROUP[l.status.toLowerCase()] !== 'NURTURE/DQ').length
+      : leads.filter((l) => GROUP[l.status.toLowerCase()] === t).length;
+    return `<span class="tab${t === active ? ' active' : ''}" onclick="setTab('${t}')">${t} · ${n}</span>`;
+  }).join('');
+}
+window.setTab = (t) => { active = t; renderTabs(); renderLeads(); };
+window.setSort = (k) => { sortDir = sortKey === k ? -sortDir : -1; sortKey = k; renderLeads(); };
+
+function renderLeads() {
+  let rows = leads.filter((l) => active === 'ALL'
+    || (active === 'PRIORITY ≥4.2' && (l.grade ?? 0) >= 4.2 && GROUP[l.status.toLowerCase()] !== 'NURTURE/DQ')
+    || GROUP[l.status.toLowerCase()] === active);
+  rows = rows.slice().sort((a, b) => {
+    const va = a[sortKey] ?? '', vb = b[sortKey] ?? '';
+    return (va < vb ? -1 : va > vb ? 1 : 0) * sortDir;
+  });
+  if (!rows.length) { $('leads').innerHTML = '<div class="empty">no leads here yet — grade one: paste a company URL to your agent</div>'; return; }
+  $('leads').innerHTML = `<table><tr>
+    <th onclick="setSort('num')">#</th><th onclick="setSort('company')">Company</th>
+    <th onclick="setSort('contact')">Contact</th><th onclick="setSort('segment')">Segment</th>
+    <th onclick="setSort('grade')">Grade</th><th onclick="setSort('channel')">Channel</th>
+    <th onclick="setSort('status')">Status</th><th onclick="setSort('date')">Date</th><th>Dossier</th></tr>` +
+    rows.map((l) => `<tr>
+      <td>${l.num}</td><td><b>${esc(l.company)}</b></td><td>${esc(l.contact)}</td>
+      <td>${esc(l.segment)}</td>
+      <td class="grade ${gradeCls(l.grade)}">${l.grade ?? '—'}</td>
+      <td>${esc(l.channel)}</td><td><span class="status">${esc(l.status)}</span></td>
+      <td>${esc(l.date)}</td>
+      <td>${l.dossier ? `<span class="doss" onclick="openDossier('${encodeURIComponent(l.dossier.replace(/^dossiers\\//, ''))}')">open</span>` : '—'}</td>
+    </tr>`).join('') + '</table>';
+}
+
+window.openDossier = async (rel) => {
+  const r = await fetch('/api/dossier?path=' + rel);
+  if (!r.ok) return;
+  const d = await r.json();
+  $('viewer').style.display = 'block';
+  $('viewer').innerHTML = `<span class="close" onclick="this.parentElement.style.display='none'">✕ close</span>
+    <h2>${esc(d.meta.company || 'dossier')} ${d.meta.grade ? '· ' + d.meta.grade + '/5' : ''}</h2>` + d.html;
+  $('viewer').scrollIntoView({ behavior: 'smooth' });
+};
+
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+async function load() {
+  leads = await (await fetch('/api/leads')).json();
+  const stats = await (await fetch('/api/stats')).json();
+  const inbox = await (await fetch('/api/inbox')).json();
+  const t = stats.totals || {};
+  $('cards').innerHTML = [
+    ['leads', leads.length], ['touches', t.touches ?? 0],
+    ['replies', t.replies ?? 0], ['wins', t.wins ?? 0],
+    ['reply rate', t.touches ? Math.round((t.replies / Math.max(1, leads.filter(l=>GROUP[l.status.toLowerCase()]==='SENT'||GROUP[l.status.toLowerCase()]==='REPLIED'||GROUP[l.status.toLowerCase()]==='CALLS'||GROUP[l.status.toLowerCase()]==='WON').length)) * 100) + '%' : '—'],
+  ].map(([k, v]) => `<div class="card"><b>${v}</b><small>${k}</small></div>`).join('');
+  renderTabs(); renderLeads();
+  $('inbox').innerHTML = inbox.length
+    ? '<ul class="inbox">' + inbox.map((i) => `<li class="${i.done ? 'done' : ''}">${i.text}</li>`).join('') + '</ul>'
+    : '<div class="empty">inbox empty — run: node engine/scan.mjs</div>';
+}
+load();
+</script>
+</body>
+</html>

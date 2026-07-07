@@ -1,6 +1,6 @@
 ---
 name: outreach-ops-plugin-apify
-description: How to scan a job source through an Apify actor as a keyed provider.
+description: How to scan a posting source through an Apify actor as a keyed provider (feeds the hiring-signal layer).
 license: MIT
 ---
 

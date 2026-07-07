@@ -23,6 +23,9 @@ Providers participating (see docs/ADDING_PROVIDERS.md to add more):
 | funding | raise headlines from user-supplied funding feeds | source `{provider: funding, feeds: [https://...]}` |
 | hn-launches | Show HN / Launch HN | source `{provider: hn-launches, query: "ai agents"}` |
 | directories | YC / a16z portfolio listings | source `{provider: directories, seed: yc, batch: W26}` |
+| sec-edgar | US fundraising via SEC Form D filings | source `{provider: sec-edgar, query: "software", days: 14}` |
+| producthunt | daily launches (public RSS) | source `{provider: producthunt, keyword: ai}` |
+| github-search | new in-space repos (discovery) | source `{provider: github-search, query: "llm agents", language: python}` |
 
 Individual mode: the raw job scanner survives as `node engine/scan-ats.mjs`
 (same providers, job-posting output) for literal job discovery.

@@ -22,7 +22,7 @@ const pass = (m) => { console.log(`  ✅ ${m}`); passed++; };
 const fail = (m) => { console.log(`  ❌ ${m}`); failed++; };
 const warn = (m) => { console.log(`  ⚠️  ${m}`); warnings++; };
 
-function walk(dir, exts, skip = ['node_modules', '.git', '.upstream', '.internal', 'web']) {
+function walk(dir, exts, skip = ['node_modules', '.git', '.upstream', '.internal']) {
   const out = [];
   for (const e of readdirSync(join(ROOT, dir || '.'), { withFileTypes: true })) {
     if (e.name === '.git') continue;
@@ -55,6 +55,7 @@ const UNIT = [
   'engine/test-trust-validator.mjs',
   'engine/signal-scan.test.mjs',
   'engine/learning-loop.test.mjs',
+  'engine/web.test.mjs',
 ];
 for (const t of UNIT) {
   if (!existsSync(join(ROOT, t))) { warn(`missing unit test ${t}`); continue; }
@@ -90,6 +91,8 @@ const REQUIRED = [
   'templates/profile/background.example.md',
   'batch/batch-runner.sh', 'docs/ARCHITECTURE.md', '.github/CODEOWNERS',
   'LEGAL.md', 'docs/SETUP.md', 'docs/FAQ.md', 'docs/RUNNING_ON_A_BUDGET.md',
+  'web/server.mjs', 'web/index.html', 'engine/eval-grading.mjs', 'docs/demo.gif',
+  'providers/sec-edgar.mjs', 'providers/producthunt.mjs', 'providers/github-search.mjs',
   'docs/SUPPORTED_CLIS.md', 'docs/PLUGINS.md', 'engine/campaign.mjs',
   'modes/campaign.md', 'batch/batch-prompt.md',
   'AGENTS.md', 'modes/_shared.md', 'modes/_weights.default.yml', 'modes/grade.md',
