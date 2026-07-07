@@ -1,0 +1,19 @@
+# Copy to profile/icp.yml. Who you hunt, and what makes NOW the right time.
+segments:
+  - id: seed-ai-startups
+    firmo:
+      size: [3, 50]
+      stage: [pre-seed, seed, series-a]
+      industry: [ai, saas, fintech]
+      geo: [us, eu, remote]
+    roles: [Founder, CTO, Head of Engineering]     # who to reach inside
+    triggers:                                       # what makes a lead timely
+      - raised_round
+      - hiring_for: [ml, ai, backend]
+      - launched_product
+    channel_default: email
+    notes: "hiring for ML but no ML lead = strongest signal"
+
+watchlists:
+  companies: []            # named accounts to monitor every scan
+  sources: []              # extra provider entries (see templates/portals.example.yml format)

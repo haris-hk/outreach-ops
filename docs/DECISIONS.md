@@ -1,0 +1,10 @@
+# Build Decisions Log
+
+- **.upstream reference clone** kept outside the repo (at /tmp during the initial build) rather than committed — 35MB of reference material; BUILD_PROMPT's intent (a reference copy) is met without bloating the repo. Re-clone with `git clone --depth 1 https://github.com/santifer/career-ops.git .upstream` when needed (gitignored).
+- **Scripts moved to `engine/`** per ARCHITECTURE §2. All ported scripts had their repo-root anchor patched (`dirname(__dirname)` style) and providers/plugins import paths adjusted. Provider board modules live under `providers/ats/`; their `_helper` imports were rewritten to `../`.
+- **`test-all.mjs` rewritten lean** rather than ported: upstream's 1,100-line suite is deeply coupled to the job-search tree (CV/PDF/apply/interview checks). The new suite keeps: syntax sweep, unit-test runner, paths-coverage, required-files, brand-purge guard, no-send-code guard, no-absolute-paths guard. Upstream's liveness/PDF deep tests to be re-added selectively in M2/M3 when those subsystems are reworked.
+- **Runner scripts** (gemini/openai/ollama/openrouter eval) NOT ported in M0 — they embed the job-evaluation prompt. To be recreated against the outreach grading rubric in M3+.
+- **`portals.yml` name kept** for the scanner's watch config in M0 (scan.mjs reads it); M2 renames to watchlists/icp wiring when the signal layer lands.
+- **Job-search scripts skipped**: cv-sync-check, application-answers, prepare-application, match-star, classify-tier, generate-cover-letter/latex, process-quality, agent-inbox, archive-posting. `role-matcher.mjs` WAS ported (dependency of dedup/find/merge fuzzy matching).
+- **Updater repo constants** point at `harishussainkhan/outreach-ops` (placeholder until the GitHub repo name is confirmed); checker degrades to `offline`/`no-remote-version` silently while the remote doesn't exist.
+- **Sandbox note:** the Cowork mounted folder forbids file deletion, so the build runs in a scratch dir and is synced into the folder per milestone; run `git init` locally if the .git dir doesn't survive the sync.

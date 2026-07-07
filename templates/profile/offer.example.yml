@@ -1,0 +1,22 @@
+# Copy to profile/offer.yml. What you sell — or the role you seek.
+mode: individual            # individual | business
+
+offer:
+  headline: "Fractional AI engineering for seed-stage startups"
+  deliverables:
+    - "LLM feature prototyping (idea → prod in 2-3 weeks)"
+    - "RAG / agent pipelines with evals"
+  pricing_band: "$X-Y/week or project-based"   # or target salary band in individual mode
+  differentiators:
+    - "Ships fast, shows working demos, no agency overhead"
+
+# Individual mode: the role you seek (used when grading employers/hiring managers)
+seeking:
+  roles: ["AI Engineer", "Founding Engineer"]
+  arrangement: "remote | hybrid | onsite"
+  availability: "immediate"
+
+proof_points:            # must mirror background.md — drafts may only cite these
+  - name: "Project Alpha"
+    evidence_url: "https://..."
+    hero_metric: "cut inference cost 40%"
