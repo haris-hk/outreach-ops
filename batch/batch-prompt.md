@@ -50,7 +50,7 @@ profile; claims about the prospect need a cited source.
 - Max 5 web searches TOTAL. No subagents. No PDF unless the orchestrator
   prompt asked for one.
 - Do not touch `data/leads.md` directly — the orchestrator merges TSVs via
-  `engine/merge-tracker.mjs` afterwards.
+  `engine/merge.mjs` afterwards.
 - Do not read files outside this project. Do not modify anything under
   `profile/` or `modes/`.
 - If the target is unreachable and no pre-fetched content exists, emit the

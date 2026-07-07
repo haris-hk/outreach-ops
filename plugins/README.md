@@ -61,7 +61,8 @@ data formats the web reads. Non-provider hooks run explicitly:
 
 ```bash
 node plugins.mjs list
-node plugins.mjs run gmail                       # ingest
+node plugins.mjs run notion export              # run one hook of an enabled plugin
+# (reply detection: use node engine/check-replies.mjs, not a bare hook run)
 node plugins.mjs run notion search "platform"    # search
 node plugins.mjs run notion export [--dry-run]   # export
 ```
@@ -107,7 +108,6 @@ These don't belong in the plugin layer — they're a different direction:
 - **Centralized infrastructure** the project would operate — hosted job
   aggregation, a shared matching service, proxies/Workers. That's a **separate,
   opt-in service**, discussed in
-  [Where outreach-ops is going (#904)](https://github.com/santifer/outreach-ops/discussions/904) —
   not the open-core.
 - **Auto-submitting / blind-applying** to jobs. outreach-ops is a decision-support
   tool, not a spam bot — it drafts applications for **you** to review and submit.

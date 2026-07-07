@@ -5,7 +5,7 @@
  *
  *   node plugins.mjs list                       # discovered plugins + status
  *   node plugins.mjs run <id> [hook] [args…]    # run one hook of one plugin
- *   node plugins.mjs run gmail                  # ingest (the plugin's only hook)
+ *   node plugins.mjs run notion export          # run one hook of an enabled plugin
  *   node plugins.mjs run notion search "staff platform engineer"
  *   node plugins.mjs run notion export [--dry-run]
  *

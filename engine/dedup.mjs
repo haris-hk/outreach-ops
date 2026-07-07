@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * dedup-tracker.mjs — Remove duplicate entries from leads.md
+ * dedup.mjs — Remove duplicate entries from leads.md
  *
  * Groups by normalized company, then merges only rows whose full role title
  * matches exactly (case- and whitespace-normalized). Keeps entry with highest
  * score. If discarded entry had more advanced status, preserves that status.
  * Merges notes.
  *
- * Run: node outreach-ops/dedup-tracker.mjs [--dry-run]
+ * Run: node outreach-ops/dedup.mjs [--dry-run]
  */
 
 import { readFileSync, writeFileSync, copyFileSync, existsSync, mkdirSync } from 'fs';

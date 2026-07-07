@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * normalize-statuses.mjs — Clean non-canonical states in leads.md
+ * normalize.mjs — Clean non-canonical states in leads.md
  *
  * Maps all non-canonical statuses to canonical ones per states.yml:
  *   Evaluada, Aplicado, Respondido, Entrevista, Oferta, Rechazado, Descartado, NO APLICAR
@@ -8,7 +8,7 @@
  * Also strips markdown bold (**) and dates from the status field,
  * moving DUPLICADO info to the notes column.
  *
- * Run: node outreach-ops/normalize-statuses.mjs [--dry-run]
+ * Run: node outreach-ops/normalize.mjs [--dry-run]
  */
 
 import { readFileSync, writeFileSync, copyFileSync, existsSync, mkdirSync } from 'fs';

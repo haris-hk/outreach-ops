@@ -109,7 +109,7 @@ func TestParseApplicationsResolvesTrackerRelativeReportLinks(t *testing.T) {
 	}
 
 	// Tracker links are written relative to the tracker file itself
-	// (merge-tracker.mjs normalization): ../reports/... when the tracker
+	// (merge.mjs normalization): ../reports/... when the tracker
 	// lives under data/. Legacy trackers may still carry root-relative
 	// links; both must resolve to the same on-disk report.
 	applications := `# Applications Tracker
@@ -143,7 +143,7 @@ func TestParseApplicationsResolvesTrackerRelativeReportLinks(t *testing.T) {
 		t.Fatalf("expected legacy root-relative link to resolve to %q, got %q", wantSecond, apps[1].ReportPath)
 	}
 
-	// Every consumer joins ReportPath against careerOpsPath — both rows
+	// Every consumer joins ReportPath against repoPath — both rows
 	// must point at files that exist.
 	for i, app := range apps {
 		if _, err := os.Stat(filepath.Join(tempDir, app.ReportPath)); err != nil {

@@ -1,28 +1,12 @@
-# Getting Help
+# Support
 
-outreach-ops is an open source project maintained in limited time. Here's how to get help efficiently.
+- **Setup problems:** run `node engine/doctor.mjs` first — it lists exactly
+  what's missing and how to fix it. Then see docs/SETUP.md and docs/FAQ.md.
+- **Bugs:** open a GitHub issue with the bug template. Include your Node
+  version and the output of `node engine/test-all.mjs --quick`.
+- **Questions & ideas:** GitHub Discussions.
+- **Security:** see SECURITY.md — do not open public issues for
+  vulnerabilities.
 
-## Where to ask
-
-| Question type | Where |
-|---|---|
-| **Bug** (something is broken) | [GitHub Issues](https://github.com/haris-hk/outreach-ops/issues) — use the Bug Report template |
-| **Feature idea** | [GitHub Issues](https://github.com/haris-hk/outreach-ops/issues) — use the Feature Request template |
-| **How do I...?** | [GitHub Discussions](https://github.com/haris-hk/outreach-ops/discussions) or [Discord](https://discord.gg/8pRpHETxa4) |
-| **Setup help** | Check [docs/FAQ.md](docs/FAQ.md) for common questions, then [docs/SETUP.md](docs/SETUP.md), then ask in [Discord](https://discord.gg/8pRpHETxa4) |
-| **Security vulnerability** | Email hi@santifer.io — see [SECURITY.md](SECURITY.md) |
-
-## Before opening an issue
-
-1. Search existing issues — someone may have reported it already
-2. Run `npm run doctor` — it catches most setup problems
-3. Include your OS, Node.js version, and the CLI you're using (Claude Code, OpenCode, etc.)
-
-## What NOT to use GitHub Issues for
-
-- General questions about job searching
-- Requests for personal career advice
-- Support for modified forks or unofficial distributions
-- Asking the maintainer to review your CV
-
-These will be closed and redirected to the appropriate channel.
+outreach-ops is maintained on a best-effort basis. No SLA — but doctor +
+the FAQ resolve most setup issues without waiting for a human.

@@ -12,7 +12,7 @@
  * never a table row, because a table row in follow-ups.md means "a follow-up
  * was SENT", which seeding must not claim.
  *
- * Pin format (parsed by `parseNextOverrides` in followup-cadence.mjs):
+ * Pin format (parsed by `parseNextOverrides` in cadence.mjs):
  *   - next #<appNum> <YYYY-MM-DD> (set <YYYY-MM-DD>)
  * First date = seeded next-follow-up date. `(set …)` = the day the pin was
  * written. The LAST pin per application wins, so re-seeding with --force is
@@ -38,7 +38,7 @@
  *   2 row not found (or tracker missing)
  *   4 lock timeout
  *
- * Env overrides (mirroring merge-tracker.mjs / followup-cadence.mjs):
+ * Env overrides (mirroring merge.mjs / cadence.mjs):
  *   OUTREACH_OPS_TRACKER                     tracker path
  *   OUTREACH_OPS_FOLLOWUPS                   follow-ups path
  *   OUTREACH_OPS_PROFILE                     profile.yml path (cadence overrides)
@@ -61,7 +61,7 @@ import {
   parseNextOverrides,
   parseDate,
   addDays,
-} from './followup-cadence.mjs';
+} from './cadence.mjs';
 
 const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
 
@@ -91,7 +91,7 @@ function todayStr() {
 /**
  * Validate a `YYYY-MM-DD` string is both well-formed AND a real calendar date.
  *
- * `parseDate` (followup-cadence.mjs) happily accepts `2026-02-31` because the
+ * `parseDate` (cadence.mjs) happily accepts `2026-02-31` because the
  * underlying `Date` constructor silently rolls invalid days over into the next
  * month. Round-tripping the parsed date back through `toISOString` catches
  * that: a real date always survives the round trip unchanged.
@@ -110,7 +110,7 @@ export function isValidCalendarDate(str) {
  * Resolve the date an application was actually submitted, in strict priority
  * order: explicit `--date` > "Applied YYYY-MM-DD" in the tracker row's notes >
  * today. The tracker's `date` column is never consulted — it is usually the
- * evaluation date, not the submission date (see followup-cadence.mjs).
+ * evaluation date, not the submission date (see cadence.mjs).
  *
  * A notes date that isn't a real calendar date (e.g. "Applied 2026-02-31")
  * throws rather than falling through: `parseDate` would return null for it and
@@ -126,7 +126,7 @@ export function resolveAppliedDate(row, explicitDate) {
   const notesDate = parseAppliedDate(row?.notes);
   if (notesDate) {
     if (!isValidCalendarDate(notesDate)) {
-      throw new SeedError('INVALID_DATE', `Application #${row?.num ?? '?'} notes carry an impossible "Applied ${notesDate}" date; fix the notes or pass --date`);
+      throw new SeedError('INVALID_DATE', `Lead #${row?.num ?? '?'} notes carry an impossible "Sent ${notesDate}" date; fix the notes or pass --date`);
     }
     return notesDate;
   }
@@ -135,7 +135,7 @@ export function resolveAppliedDate(row, explicitDate) {
 
 /**
  * Format one pin directive line. The parser side lives in
- * followup-cadence.mjs's `OVERRIDE_RE` / `parseNextOverrides`.
+ * cadence.mjs's `OVERRIDE_RE` / `parseNextOverrides`.
  *
  * @param {number} appNum
  * @param {string} nextDate - YYYY-MM-DD
@@ -185,7 +185,7 @@ function readTrackerRows(trackerPath) {
 
 // --- Idempotency: pin OR follow-up table row already exists for appNum ----
 
-// Mirrors followup-cadence.mjs's parseFollowups: a `|`-delimited row whose 3rd
+// Mirrors cadence.mjs's parseFollowups: a `|`-delimited row whose 3rd
 // cell (index 2 after split('|').map(trim) — index 0 is the empty cell before
 // the leading pipe, index 1 is the follow-up's own `num`) is the appNum.
 function hasFollowupTableRow(content, appNum) {
@@ -205,7 +205,7 @@ function isAlreadySeeded(content, appNum) {
   return hasFollowupTableRow(content, appNum);
 }
 
-// --- Locking (mirrors merge-tracker.mjs's tracker lock, scoped to follow-ups) --
+// --- Locking (mirrors merge.mjs's tracker lock, scoped to follow-ups) --
 
 function pathIsInside(childPath, parentDir) {
   const relativePath = relative(parentDir, childPath);
@@ -265,7 +265,7 @@ function lockCanRecover(lockDir, staleMs) {
 
 /**
  * Acquire an exclusive filesystem lock covering the read-check-append
- * critical section for data/follow-ups.md. Mirrors merge-tracker.mjs's
+ * critical section for data/follow-ups.md. Mirrors merge.mjs's
  * tracker lock: atomic `mkdirSync`, an `owner.json` with pid/timestamp,
  * pid-alive detection, stale-lock recovery, and retry/backoff.
  *
@@ -332,7 +332,7 @@ async function acquireFollowupsLock(lockDir, followupsPath, options = {}) {
   throw new SeedError('LOCK_TIMEOUT', `Timed out waiting for follow-ups lock at ${lockDir}`);
 }
 
-// --- Atomic write (mirrors writeFileAtomic in tracker.mjs / merge-tracker.mjs) --
+// --- Atomic write (mirrors writeFileAtomic in ledger.mjs / merge.mjs) --
 
 function writeFileAtomic(filePath, content) {
   const tmpPath = join(dirname(filePath), `.${basename(filePath)}.${process.pid}.${Date.now()}.${randomUUID()}.tmp`);
@@ -398,7 +398,7 @@ export async function seedFollowup(appNum, options = {}) {
 
   const normalized = normalizeStatus(row.status);
   if (normalized !== 'applied' && !options.force) {
-    throw new SeedError('NOT_APPLIED', `Application #${appNum} is not Applied (status: "${row.status.trim()}"); use --force to seed anyway`);
+    throw new SeedError('NOT_APPLIED', `Lead #${appNum} is not Sent (status: "${row.status.trim()}"); use --force to seed anyway`);
   }
 
   const appliedDate = resolveAppliedDate(row, options.date);

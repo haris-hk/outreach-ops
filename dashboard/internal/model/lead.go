@@ -52,7 +52,7 @@ type ProgressMetrics struct {
 	// Rates
 	ResponseRate  float64 // Responded / Applied
 	InterviewRate float64 // Interview / Applied
-	OfferRate     float64 // Offer / Applied
+	OfferRate     float64 // Won / Sent
 
 	// Averages
 	AvgScore    float64
@@ -61,7 +61,7 @@ type ProgressMetrics struct {
 	ActiveApps  int // not skip/rejected/discarded
 }
 
-// FunnelStage represents one stage of the application funnel.
+// FunnelStage represents one stage of the outreach funnel.
 type FunnelStage struct {
 	Label string
 	Count int

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * followup-cadence.mjs — Follow-up Cadence Tracker for outreach-ops
+ * cadence.mjs — Follow-up Cadence Tracker for outreach-ops
  *
  * Parses leads.md + follow-ups.md, calculates follow-up cadence
  * for active applications, extracts contacts, and flags overdue entries.
  *
- * Run: node followup-cadence.mjs             (JSON to stdout)
- *      node followup-cadence.mjs --summary   (human-readable dashboard)
- *      node followup-cadence.mjs --overdue-only
- *      node followup-cadence.mjs --applied-days 10
+ * Run: node cadence.mjs             (JSON to stdout)
+ *      node cadence.mjs --summary   (human-readable dashboard)
+ *      node cadence.mjs --overdue-only
+ *      node cadence.mjs --applied-days 10
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -82,7 +82,7 @@ export function resolveCadenceConfig({ profilePath = PROFILE_FILE, appliedDays =
 
 const CADENCE = resolveCadenceConfig();
 
-// --- Status normalization (mirrors verify-pipeline.mjs) ---
+// --- Status normalization (mirrors verify-ledger.mjs) ---
 const ALIASES = {
   'evaluada': 'evaluated', 'condicional': 'evaluated', 'hold': 'evaluated',
   'evaluar': 'evaluated', 'verificar': 'evaluated',
@@ -116,13 +116,13 @@ export function parseDate(dateStr) {
 }
 
 // The tracker `date` column is often the evaluation date, while the real
-// submission date is recorded in the notes as "Applied YYYY-MM-DD" (or
+// send date is recorded in the notes as "Sent YYYY-MM-DD" ("Applied" accepted for compat) (or
 // "APPLIED ..."). Prefer that so cadence reflects when the application actually
 // went out, not when the role was evaluated. Returns the first such date, or
 // null when the notes don't carry one (caller falls back to the date column).
 export function parseAppliedDate(notes) {
   if (!notes) return null;
-  const m = String(notes).match(/\bapplied\s+(\d{4}-\d{2}-\d{2})/i);
+  const m = String(notes).match(/\b(?:applied|sent)\s+(\d{4}-\d{2}-\d{2})/i);
   return m ? m[1] : null;
 }
 
@@ -233,7 +233,7 @@ export function resolveReportPath(reportField, appsFile = APPS_FILE, repoRoot = 
   const match = reportField.match(/\]\(([^)]+)\)/);
   if (!match) return null;
   // Report links in the tracker are normalized relative to the tracker file's
-  // own directory (see PR #760 — `merge-tracker.mjs --migrate`). Resolve against
+  // own directory (see PR #760 — `merge.mjs --migrate`). Resolve against
   // dirname(APPS_FILE), not the project root, otherwise relative paths like
   // `../reports/...` (the data/leads.md layout) escape above the project.
   const fullPath = join(dirname(appsFile), match[1]);
@@ -284,7 +284,7 @@ export function computeNextFollowupDate(status, appDate, lastFollowupDate, follo
 function analyze() {
   const apps = parseTracker();
   if (apps.length === 0) {
-    return { error: 'No applications found in tracker.' };
+    return { error: 'No leads found in the ledger.' };
   }
 
   const followups = parseFollowups();
@@ -400,7 +400,7 @@ function printSummary(result) {
   console.log(`${'='.repeat(70)}\n`);
 
   if (entries.length === 0) {
-    console.log('  No active applications to track. Apply to some roles first.\n');
+    console.log('  No active sequences to track. Send a first touch to a graded lead, then log it (outcomes.mjs).\n');
     return;
   }
 

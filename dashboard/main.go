@@ -29,13 +29,13 @@ type appModel struct {
 	viewer          screens.ViewerModel
 	progress        screens.ProgressModel
 	state           viewState
-	careerOpsPath   string
+	repoPath   string
 	theme           theme.Theme
 	progressMetrics model.ProgressMetrics
 }
 
 func (m *appModel) reloadPipelineData() {
-	apps := data.ParseApplications(m.careerOpsPath)
+	apps := data.ParseApplications(m.repoPath)
 	metrics := data.ComputeMetrics(apps)
 	m.progressMetrics = data.ComputeProgressMetrics(apps)
 	m.pipeline = m.pipeline.WithReloadedData(apps, metrics)
@@ -63,12 +63,12 @@ func (m appModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 
 	case screens.PipelineLoadReportMsg:
-		archetype, tldr, remote, comp := data.LoadReportSummary(msg.CareerOpsPath, msg.ReportPath)
+		archetype, tldr, remote, comp := data.LoadReportSummary(msg.RepoPath, msg.ReportPath)
 		m.pipeline.EnrichReport(msg.ReportPath, archetype, tldr, remote, comp)
 		return m, nil
 
 	case screens.PipelineUpdateStatusMsg:
-		err := data.UpdateApplicationStatus(msg.CareerOpsPath, msg.App, msg.NewStatus)
+		err := data.UpdateApplicationStatus(msg.RepoPath, msg.App, msg.NewStatus)
 		if err != nil {
 			// Log the error but still reload data to keep UI consistent
 			fmt.Fprintf(os.Stderr, "WARN: status update failed: %v\n", err)
@@ -83,7 +83,7 @@ func (m appModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case screens.PipelineOpenReportMsg:
 		m.viewer = screens.NewViewerModel(
 			m.theme,
-			m.careerOpsPath,
+			m.repoPath,
 			msg.Path, msg.Title,
 			m.pipeline.Width(), m.pipeline.Height(),
 			msg.App,
@@ -105,7 +105,7 @@ func (m appModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case screens.ViewerUpdateStatusMsg:
-		err := data.UpdateApplicationStatus(m.careerOpsPath, msg.App, msg.NewStatus)
+		err := data.UpdateApplicationStatus(m.repoPath, msg.App, msg.NewStatus)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "WARN: status update failed: %v\n", err)
 		}
@@ -177,12 +177,12 @@ func runGeneratePDF(msg screens.PipelineGeneratePDFMsg) tea.Cmd {
 			args = append(args, "--report="+msg.ReportNumber)
 		}
 		cmd := exec.Command("node", args...)
-		cmd.Dir = msg.CareerOpsPath
+		cmd.Dir = msg.RepoPath
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			return screens.PipelinePDFGeneratedMsg{Err: summarizeCmdError(err, out)}
 		}
-		pdfAbs := filepath.Join(msg.CareerOpsPath, filepath.FromSlash(msg.PDFPath))
+		pdfAbs := filepath.Join(msg.RepoPath, filepath.FromSlash(msg.PDFPath))
 		if err := openWithDefaultApp(pdfAbs); err != nil {
 			return screens.PipelinePDFGeneratedMsg{Err: fmt.Sprintf("PDF generated but could not open: %v", err)}
 		}
@@ -218,12 +218,12 @@ func main() {
 	pathFlag := flag.String("path", ".", "Path to outreach-ops directory")
 	flag.Parse()
 
-	careerOpsPath := *pathFlag
+	repoPath := *pathFlag
 
 	// Load applications
-	apps := data.ParseApplications(careerOpsPath)
+	apps := data.ParseApplications(repoPath)
 	if apps == nil {
-		fmt.Fprintf(os.Stderr, "Error: could not find leads.md in %s or %s/data/\n", careerOpsPath, careerOpsPath)
+		fmt.Fprintf(os.Stderr, "Error: could not find leads.md in %s or %s/data/\n", repoPath, repoPath)
 		os.Exit(1)
 	}
 
@@ -233,13 +233,13 @@ func main() {
 
 	// Batch-load all report summaries
 	t := theme.NewTheme("auto")
-	pm := screens.NewPipelineModel(t, apps, metrics, careerOpsPath, 120, 40)
+	pm := screens.NewPipelineModel(t, apps, metrics, repoPath, 120, 40)
 
 	for _, app := range apps {
 		if app.ReportPath == "" {
 			continue
 		}
-		archetype, tldr, remote, comp := data.LoadReportSummary(careerOpsPath, app.ReportPath)
+		archetype, tldr, remote, comp := data.LoadReportSummary(repoPath, app.ReportPath)
 		if archetype != "" || tldr != "" || remote != "" || comp != "" {
 			pm.EnrichReport(app.ReportPath, archetype, tldr, remote, comp)
 		}
@@ -247,7 +247,7 @@ func main() {
 
 	m := appModel{
 		pipeline:        pm,
-		careerOpsPath:   careerOpsPath,
+		repoPath:   repoPath,
 		theme:           t,
 		progressMetrics: progressMetrics,
 	}

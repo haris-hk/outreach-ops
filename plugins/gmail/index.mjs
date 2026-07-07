@@ -68,3 +68,7 @@ export async function replies(contacts, ctx) {
   }
   return out;
 }
+
+// Hook table for the generic plugin runner (node plugins.mjs run ...).
+// Named exports remain the primary API for the engine orchestrators.
+export default { replies };

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * reconcile-pipeline.mjs — Sync pipeline.md "Pendientes" with batch-state.tsv
+ * reconcile.mjs — Sync pipeline.md "Pendientes" with batch-state.tsv
  *
  * THE PROBLEM
  * batch-runner.sh records every evaluated offer in batch/batch-state.tsv, but
@@ -18,7 +18,7 @@
  * an entry already present in Procesadas is dropped from Pendientes without a
  * second copy. Safe to run after every batch.
  *
- * Run: node reconcile-pipeline.mjs [--dry-run] [--state <path>] [--pipeline <path>]
+ * Run: node reconcile.mjs [--dry-run] [--state <path>] [--pipeline <path>]
  */
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, copyFileSync, realpathSync, statSync } from 'fs';
@@ -30,7 +30,7 @@ const OUTREACH_OPS = dirname(dirname(fileURLToPath(import.meta.url))); // repo r
 const DRY_RUN = process.argv.includes('--dry-run');
 
 if (process.argv.includes('-h') || process.argv.includes('--help')) {
-  console.log('Usage: node reconcile-pipeline.mjs [--dry-run] [--state <path>] [--pipeline <path>]');
+  console.log('Usage: node reconcile.mjs [--dry-run] [--state <path>] [--pipeline <path>]');
   console.log('  Moves batch-processed offers out of pipeline.md "Pendientes" into "Procesadas".');
   process.exit(0);
 }

@@ -22,10 +22,10 @@ const pass = (m) => { console.log(`  ✅ ${m}`); passed++; };
 const fail = (m) => { console.log(`  ❌ ${m}`); failed++; };
 const warn = (m) => { console.log(`  ⚠️  ${m}`); warnings++; };
 
-function walk(dir, exts, skip = ['node_modules', '.git', '.upstream', 'web', 'dashboard']) {
+function walk(dir, exts, skip = ['node_modules', '.git', '.upstream', '.internal', 'web']) {
   const out = [];
   for (const e of readdirSync(join(ROOT, dir || '.'), { withFileTypes: true })) {
-    if (e.name.startsWith('.git')) continue;
+    if (e.name === '.git') continue;
     const rel = dir ? `${dir}/${e.name}` : e.name;
     if (e.isDirectory()) {
       if (!skip.includes(e.name)) out.push(...walk(rel, exts, skip));
@@ -50,7 +50,7 @@ const UNIT = [
   'engine/updater-migration-tests.mjs',
   'engine/tracker-columns-tests.mjs',
   'engine/followup-seed-tests.mjs',
-  'engine/followup-cadence.test.mjs',
+  'engine/cadence.test.mjs',
   'engine/detect-reposts.test.mjs',
   'engine/test-trust-validator.mjs',
   'engine/signal-scan.test.mjs',
@@ -88,7 +88,7 @@ const REQUIRED = [
   'templates/states.yml', 'templates/profile/offer.example.yml',
   'templates/profile/icp.example.yml', 'templates/profile/preferences.example.yml',
   'templates/profile/background.example.md',
-  'batch/batch-runner.sh', 'docs/ARCHITECTURE.md', 'docs/DECISIONS.md',
+  'batch/batch-runner.sh', 'docs/ARCHITECTURE.md', '.github/CODEOWNERS',
   'LEGAL.md', 'docs/SETUP.md', 'docs/FAQ.md', 'docs/RUNNING_ON_A_BUDGET.md',
   'docs/SUPPORTED_CLIS.md', 'docs/PLUGINS.md', 'engine/campaign.mjs',
   'modes/campaign.md', 'batch/batch-prompt.md',
@@ -110,15 +110,16 @@ if (!reqBad) pass(`${REQUIRED.length} required files present`);
 
 // ── 5. Brand purge ────────────────────────────────────────────────
 console.log('\n5) Brand purge (career-ops only allowed in LICENSE/attribution docs)');
-const ALLOW = new Set(['LICENSE', 'README.md', 'CLAUDE.md', 'AGENTS.md', 'CHANGELOG.md', 'LEGAL.md', 'docs/DECISIONS.md', 'docs/ARCHITECTURE.md', 'docs/BUILD_PROMPT.md', 'engine/test-all.mjs']);
-const textFiles = walk('', ['.mjs', '.js', '.md', '.yml', '.json', '.sh', '.html']);
+const ALLOW = new Set(['LICENSE', 'README.md', 'CLAUDE.md', 'AGENTS.md', 'CHANGELOG.md', 'LEGAL.md', 'GOVERNANCE.md', 'CONTRIBUTING.md', 'docs/ARCHITECTURE.md', 'engine/test-all.mjs', 'scaffolder/README.md', 'TRADEMARK.md']);
+const textFiles = walk('', ['.mjs', '.js', '.md', '.yml', '.json', '.sh', '.html', '.go', '.mod', '.toml', 'Dockerfile']);
 let brandBad = 0;
 for (const f of textFiles) {
   if (ALLOW.has(f)) continue;
   const c = readFileSync(join(ROOT, f), 'utf-8');
   if (/career-ops|careerops|Career-Ops/i.test(c)) { fail(`brand string in ${f}`); brandBad++; }
+  if (/santifer/i.test(c)) { fail(`upstream identity string in ${f}`); brandBad++; }
 }
-if (!brandBad) pass('no career-ops brand strings outside attribution files');
+if (!brandBad) pass('no career-ops/santifer strings outside attribution files');
 
 // ── 6. Safety invariants ──────────────────────────────────────────
 console.log('\n6) Safety invariants');

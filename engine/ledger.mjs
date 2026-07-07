@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * tracker.mjs — SQLite derived index for the applications tracker (RFC #918, phase 1).
+ * ledger.mjs — SQLite derived index for the lead ledger (RFC #918, phase 1).
  *
  * data/leads.md stays the source of truth. The SQLite DB is a derived
  * index, built and rebuilt from the markdown — safe to delete at any time, it
  * regenerates on the next sync. Tools and agents READ through the index for
  * schema-validated, model-independent results; all writes keep going to the
- * markdown exactly as today (merge-tracker.mjs, hand edits).
+ * markdown exactly as today (merge.mjs, hand edits).
  *
  * Why: at hundreds of rows, a markdown table degrades structurally — encoding
  * corruption propagates, columns drift, a `|` inside a cell shifts every
@@ -22,13 +22,13 @@
  * Zero new dependencies — uses node:sqlite (built into Node >= 22.5).
  *
  * Usage:
- *   node tracker.mjs sync [--check]             # (re)build applications.db from leads.md
+ *   node engine/ledger.mjs sync [--check]             # (re)build leads.db from leads.md
  *                                               # --check: diagnose only, no write; exit 1 if issues found
- *   node tracker.mjs query [--status Applied] [--company acme] [--role designer]
+ *   node engine/ledger.mjs query [--status Applied] [--company acme] [--role designer]
  *                          [--since 2026-01-01] [--id N] [--limit 20] [--json]
- *   node tracker.mjs history --id N             # status transition log observed across syncs
- *   node tracker.mjs export [--out FILE]        # inverse: applications.db → canonical markdown (stdout by default)
- *   node tracker.mjs delete --num N [--dry-run] # remove one application row from leads.md + reindex
+ *   node engine/ledger.mjs history --id N             # status transition log observed across syncs
+ *   node engine/ledger.mjs export [--out FILE]        # inverse: leads.db → canonical markdown (stdout by default)
+ *   node engine/ledger.mjs delete --num N [--dry-run] # remove one lead row from leads.md + reindex
  *
  * query/history auto-resync when leads.md changed since the last sync,
  * so the index can never serve stale reads.
@@ -39,6 +39,7 @@ import { createHash } from 'crypto';
 import { dirname, resolve, join, basename } from 'path';
 import { pathToFileURL } from 'url';
 import yaml from 'js-yaml';
+import { resolveColumns } from './tracker-parse.mjs';
 
 const MD_PATH = process.env.OUTREACH_OPS_TRACKER || 'data/leads.md';
 const DB_PATH = process.env.OUTREACH_OPS_TRACKER_DB
@@ -69,7 +70,7 @@ async function loadSqlite() {
     const { DatabaseSync } = await import('node:sqlite');
     return DatabaseSync;
   } catch {
-    console.error('Error: node:sqlite is not available. tracker.mjs needs Node >= 22.5 (you are on ' + process.version + ').');
+    console.error('Error: node:sqlite is not available. ledger.mjs needs Node >= 22.5 (you are on ' + process.version + ').');
     console.error('The markdown tracker keeps working without it — the index is optional.');
     process.exit(1);
   } finally {
@@ -157,18 +158,33 @@ function repairPlaceholder(cell) {
 // ── Markdown parsing ────────────────────────────────────────────────
 
 function parseMarkdownRows(text, diag) {
+  // Header-aware: resolve columns by name via tracker-parse (grade→score,
+  // dossier→report aliases included), so the 11-column lead ledger and the
+  // legacy 9-column layout both parse correctly. Note: resolveColumns()
+  // indexes against line.split('|') where index 0 is the empty cell before
+  // the leading pipe.
+  const lines = text.split('\n');
+  const colmap = resolveColumns(lines);
+  const width = Math.max(...Object.values(colmap));
   const rows = [];
-  for (const line of text.split('\n')) {
+  for (const line of lines) {
     if (!line.trim().startsWith('|')) continue;
-    let cells = line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
-    if (cells.length < 2) continue;
-    if (cells[0] === '#' || /^[-: ]*$/.test(cells.join(''))) continue; // header / separator
-    if (cells.length > 9) {
-      cells = [...cells.slice(0, 8), cells.slice(8).join(' | ')]; // stray pipes → notes
+    const raw = line.trim().split('|').map((c) => c.trim());
+    if (raw.length < 3) continue;
+    const first = raw[1];
+    if (first === '#' || /^[-: ]*$/.test(raw.join(''))) continue; // header / separator
+    if (raw.length > width + 2) { // leading '' + cells + trailing ''
       if (diag) diag.strayPipes++;
     }
-    while (cells.length < 9) cells.push('');
-    rows.push(cells);
+    const cell = (name) => (colmap[name] != null ? (raw[colmap[name]] ?? '') : '');
+    rows.push({
+      idRaw: cell('num'), date: cell('date'), company: cell('company'),
+      role: cell('role') || cell('contact'), score: cell('score'), status: cell('status'),
+      pdf: cell('pdf'), report: cell('report'),
+      notes: [cell('segment') && `segment: ${cell('segment')}`, cell('channel') && `channel: ${cell('channel')}`, cell('notes')]
+        .filter(Boolean).join(' · '),
+      contact: cell('contact'), segment: cell('segment'), channel: cell('channel'),
+    });
   }
   return rows;
 }
@@ -181,16 +197,18 @@ function parseMarkdownRows(text, diag) {
 // duplicates are all removed.
 export function removeRowByNum(content, num) {
   const target = String(num).trim();
+  const lines = content.split('\n');
+  const colmap = resolveColumns(lines); // header-aware: dossier/report column by name
   let removedCount = 0;
   let report = null;
-  const kept = content.split('\n').filter((line) => {
+  const kept = lines.filter((line) => {
     const t = line.trim();
     if (!t.startsWith('|')) return true; // non-table line — keep verbatim
-    const cells = t.replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim());
-    if (cells[0] === '#' || /^[-: ]*$/.test(cells.join(''))) return true; // header / separator
-    if (cells[0] === target) {
+    const raw = t.split('|').map((c) => c.trim()); // index 0 = before leading pipe
+    if (raw[1] === '#' || /^[-: ]*$/.test(raw.join(''))) return true; // header / separator
+    if (raw[1] === target) {
       removedCount++;
-      if (report === null) report = cells[7] || null; // report column (index 7)
+      if (report === null) report = (colmap.report != null ? raw[colmap.report] : '') || null;
       return false;
     }
     return true;
@@ -200,8 +218,8 @@ export function removeRowByNum(content, num) {
 
 // Parse + normalize the markdown into index-ready rows. The markdown itself is
 // never modified — normalization lives only in the derived index, and the
-// diagnostics tell the user what to fix at the source (normalize-statuses.mjs,
-// dedup-tracker.mjs).
+// diagnostics tell the user what to fix at the source (normalize.mjs,
+// dedup.mjs).
 function parseTracker(states) {
   const diag = { mojibake: 0, scoreInStatus: 0, unknownStatus: 0, badId: 0, badDate: 0, strayPipes: 0 };
   const rows = parseMarkdownRows(readFileSync(MD_PATH, 'utf-8'), diag);
@@ -211,7 +229,7 @@ function parseTracker(states) {
   const apps = [];
 
   for (const cells of rows) {
-    let [idRaw, date, company, role, score, status, pdf, report, notes] = cells;
+    let { idRaw, date, company, role, score, status, pdf, report, notes } = cells;
 
     const before = [score, pdf, report].join('|');
     score = repairPlaceholder(score);
@@ -273,7 +291,7 @@ function reportDiagnostics(diag) {
   if (diag.badId) console.error(`  ${diag.badId} missing/duplicate id(s), reassigned in the index`);
   if (diag.badDate) console.error(`  ${diag.badDate} malformed date(s), kept as-is`);
   if (diag.strayPipes) console.error(`  ${diag.strayPipes} row(s) with stray pipes, folded into notes`);
-  console.error('Fix at the source with `node normalize-statuses.mjs` / `node dedup-tracker.mjs`, then re-sync.');
+  console.error('Fix at the source with `node normalize.mjs` / `node dedup.mjs`, then re-sync.');
   return total;
 }
 
@@ -479,7 +497,7 @@ function writeFileAtomic(filePath, content) {
 async function deleteApp(args) {
   const num = flagValue(args, '--num');
   if (!num) {
-    console.error('Usage: node tracker.mjs delete --num <N> [--dry-run]   (remove one application row by its number)');
+    console.error('Usage: node engine/ledger.mjs delete --num <N> [--dry-run]   (remove one lead row by its number)');
     process.exit(1);
   }
   if (!existsSync(MD_PATH)) {
@@ -516,7 +534,7 @@ async function main() {
   const [command, ...args] = process.argv.slice(2);
   const fn = COMMANDS[command];
   if (!fn) {
-    console.log('Usage: node tracker.mjs <sync|query|history|export|delete> [flags]');
+    console.log('Usage: node engine/ledger.mjs <sync|query|history|export|delete> [flags]');
     console.log('See the header comment of this file for examples, or docs/SCRIPTS.md.');
     process.exit(command ? 1 : 0);
   }

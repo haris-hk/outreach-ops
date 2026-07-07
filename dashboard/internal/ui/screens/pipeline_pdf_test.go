@@ -16,13 +16,13 @@ func keyMsg(s string) tea.KeyMsg {
 	return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(s)}
 }
 
-func newPDFTestModel(t *testing.T, careerOpsPath string, apps []model.CareerApplication) PipelineModel {
+func newPDFTestModel(t *testing.T, repoPath string, apps []model.CareerApplication) PipelineModel {
 	t.Helper()
 	pm := NewPipelineModel(
 		theme.NewTheme("catppuccin-mocha"),
 		apps,
 		model.PipelineMetrics{Total: len(apps)},
-		careerOpsPath,
+		repoPath,
 		120,
 		40,
 	)

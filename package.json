@@ -1,7 +1,7 @@
 {
   "name": "outreach-ops",
   "version": "0.1.0",
-  "description": "AI prospect research, grading & outreach engine — local-first, draft-only, works with any AI coding CLI (Claude Code, Codex, OpenCode, Qwen)",
+  "description": "AI prospect research, grading & outreach engine \u2014 local-first, draft-only, works with any AI coding CLI (Claude Code, Codex, OpenCode, Qwen)",
   "private": true,
   "scripts": {
     "doctor": "node engine/doctor.mjs",
@@ -9,16 +9,15 @@
     "test:quick": "node engine/test-all.mjs --quick",
     "scan": "node engine/scan.mjs",
     "scan:full": "node engine/scan-ats-full.mjs",
-    "ledger:verify": "node engine/verify-pipeline.mjs",
-    "ledger:normalize": "node engine/normalize-statuses.mjs",
-    "ledger:dedup": "node engine/dedup-tracker.mjs",
-    "ledger:merge": "node engine/merge-tracker.mjs",
-    "ledger:reconcile": "node engine/reconcile-pipeline.mjs",
-    "ledger": "node engine/tracker.mjs",
+    "ledger:verify": "node engine/verify-ledger.mjs",
+    "ledger:normalize": "node engine/normalize.mjs",
+    "ledger:dedup": "node engine/dedup.mjs",
+    "ledger:merge": "node engine/merge.mjs",
+    "ledger:reconcile": "node engine/reconcile.mjs",
+    "ledger": "node engine/ledger.mjs",
     "find": "node engine/find.mjs",
-    "add": "node engine/add-entry.mjs",
-    "patterns": "node engine/analyze-patterns.mjs",
-    "cadence": "node engine/followup-cadence.mjs",
+    "patterns": "node engine/patterns.mjs",
+    "cadence": "node engine/cadence.mjs",
     "reposts": "node engine/detect-reposts.mjs",
     "liveness": "node engine/check-liveness.mjs",
     "validate:watch": "node engine/validate-portals.mjs",
@@ -28,12 +27,33 @@
     "update": "node engine/update-system.mjs apply",
     "rollback": "node engine/update-system.mjs rollback",
     "build:dashboard": "node engine/build-dashboard.mjs",
-    "serve:dashboard": "cd dashboard && go run . --path .."
+    "serve:dashboard": "cd dashboard && go run . --path ..",
+    "outcomes": "node engine/outcomes.mjs",
+    "campaign": "node engine/campaign.mjs",
+    "preflight": "node engine/spam-preflight.mjs",
+    "deliverability": "node engine/deliverability-doctor.mjs"
   },
-  "keywords": ["ai", "outreach", "prospecting", "lead-generation", "sales", "job-search", "claude-code", "agent", "local-first"],
+  "keywords": [
+    "ai",
+    "outreach",
+    "prospecting",
+    "lead-generation",
+    "sales",
+    "job-search",
+    "claude-code",
+    "agent",
+    "local-first"
+  ],
   "author": "Haris Hussain Khan <harishussainkhan.124@gmail.com>",
   "license": "MIT",
-  "engines": { "node": ">=20" },
-  "dependencies": { "js-yaml": "^4.1.0" },
-  "optionalDependencies": { "dotenv": "^16.4.5", "playwright": "^1.49.0" }
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "optionalDependencies": {
+    "dotenv": "^16.4.5",
+    "playwright": "^1.49.0"
+  }
 }

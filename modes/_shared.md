@@ -90,7 +90,7 @@ Below threshold, the refusal is the product: state the grade, the reason, and wh
 
 ## Ledger Discipline
 
-`data/leads.md` is the single source of truth. Statuses: EXACTLY one canonical value from `templates/states.yml` (New → Graded → Queued → Drafted → Sent → Bumped → Replied → Call → Won/Lost/Nurture/Disqualified). Columns: `# | Date | Company | Contact | Role | Segment | Grade | Channel | Status | Dossier | Notes`. Grade cells are `N.N/5`. Writes go through `engine/` scripts or are followed by `node engine/verify-pipeline.mjs`.
+`data/leads.md` is the single source of truth. Statuses: EXACTLY one canonical value from `templates/states.yml` (New → Graded → Queued → Drafted → Sent → Bumped → Replied → Call → Won/Lost/Nurture/Disqualified). Columns: `# | Date | Company | Contact | Role | Segment | Grade | Channel | Status | Dossier | Notes`. Grade cells are `N.N/5`. Writes go through `engine/` scripts or are followed by `node engine/verify-ledger.mjs`.
 
 ## Fixture Regression (contributors)
 

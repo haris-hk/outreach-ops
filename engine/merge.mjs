@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * merge-tracker.mjs — Merge batch tracker additions into leads.md
+ * merge.mjs — Merge batch tracker additions into leads.md
  *
  * Handles multiple TSV formats:
  * - 9-col: num\tdate\tcompany\trole\tstatus\tscore\tpdf\treport\tnotes
@@ -11,7 +11,7 @@
  * If duplicate with higher score → update in-place, update report link
  * Validates status against states.yml (rejects non-canonical, logs warning)
  *
- * Run: node outreach-ops/merge-tracker.mjs [--dry-run] [--verify]
+ * Run: node outreach-ops/merge.mjs [--dry-run] [--verify]
  */
 
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, renameSync, existsSync, rmSync, statSync, realpathSync } from 'fs';
@@ -135,7 +135,7 @@ function resolveTrackerLockDir(envValue, lockKey) {
  *
  * This is used in two places:
  * - the lock retry loop, where waiting briefly avoids a tight CPU spin while
- *   another `merge-tracker.mjs` process owns the tracker lock;
+ *   another `merge.mjs` process owns the tracker lock;
  * - the regression test hook (`OUTREACH_OPS_MERGE_HOLD_MS`), which deliberately
  *   holds the first merge after it reads `leads.md` so a second merge can
  *   try to enter the same critical section.
@@ -622,7 +622,7 @@ if (MERGE_HOLD_MS > 0) {
 }
 
 // One-time migration: rewrite existing report links so they resolve relative
-// to the tracker file's directory (see #760). Run with: node merge-tracker.mjs --migrate
+// to the tracker file's directory (see #760). Run with: node merge.mjs --migrate
 if (MIGRATE) {
   const migrated = appContent
     .split('\n')
@@ -822,7 +822,7 @@ trackerLock.release();
 if (VERIFY && !DRY_RUN) {
   console.log('\n--- Running verification ---');
   try {
-    execFileSync('node', [join(OUTREACH_OPS, 'verify-pipeline.mjs')], { stdio: 'inherit' });
+    execFileSync('node', [join(OUTREACH_OPS, 'verify-ledger.mjs')], { stdio: 'inherit' });
   } catch (e) {
     process.exit(1);
   }

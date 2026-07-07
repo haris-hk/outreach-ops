@@ -19,7 +19,7 @@
  * `reports/`.  The caller (mode file or agent) must:
  *   1. Run this script to get a number.
  *   2. Write the real report file `NNN-{slug}-{date}.md`.
- *   3. Delete the sentinel (or let verify-pipeline.mjs GC it on next run).
+ *   3. Delete the sentinel (or let verify-ledger.mjs GC it on next run).
  *
  * ## Usage
  *
@@ -41,7 +41,7 @@
  *
  *   node reserve-report-num.mjs --gc
  *   # Removes all stale sentinels older than MAX_SENTINEL_AGE_MS.
- *   # Called automatically by verify-pipeline.mjs.
+ *   # Called automatically by verify-ledger.mjs.
  *
  * The script exits with code 0 on success, non-zero on fatal error.
  */

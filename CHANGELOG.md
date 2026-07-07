@@ -2,6 +2,8 @@
 
 ## 0.1.0 (unreleased)
 
+- Hardening pass (external code review): engine scripts renamed to the documented canonical names (ledger/merge/dedup/normalize/verify-ledger/reconcile/cadence) fixing AGENTS.md drift; header-aware parsing in ledger.mjs sync/delete (11-column layout was misread); npm run patterns wired to the real outcome miner and the legacy job-search analyzer + CV inserter removed; upstream identity scrubbed everywhere (SECURITY/CoC/SUPPORT/GOVERNANCE/CODEOWNERS/CONTRIBUTING, Go module path + TUI footer + funnel labels, scaffolder author/version/product text); plugin registry reset as a fresh trust root; dead upstream issue links removed; job-search issue templates replaced and no-user-data workflow retargeted; gmail/hunter/explorium plugins gained hook default-exports so plugins.mjs run works; internal build docs moved out of the published tree; profile seeds untracked; brand-purge test guard extended to Go/JSON/YAML/workflows and now also catches upstream identity strings.
+
 - Milestone 4: batch grading wired (self-contained A-G worker prompt, dossier/ledger outputs, dry-run verified state machine), multi-campaign business mode (campaign.mjs scaffolder + campaign-scoped integrity + sender profiles), Go TUI re-skinned to the lead lifecycle, LEGAL.md + public README + full docs suite (SETUP/FAQ/BUDGET/CLIS/PLUGINS), publish prep.
 
 - Milestone 3: learning loop — outcomes.tsv event log with reply-aware sequencing (outcomes.mjs), patterns.mjs outcome mining with evidence-backed observations, read-only Gmail reply detection + check-replies orchestrator, spam-preflight draft linter and deliverability-doctor DNS checks wired into the Drafted→Queued gate, dossier one-pager renderer (HTML/PDF), full sequence/review modes. 15-test loop suite.

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * verify-pipeline.mjs — Health check for outreach-ops pipeline integrity
+ * verify-ledger.mjs — Health check for outreach-ops pipeline integrity
  *
  * Checks:
  * 1. All statuses are canonical (per states.yml)
@@ -14,7 +14,7 @@
  * 9. No two report files cover the same company+role (warning — see #1425)
  * 10. Every report file has a tracker row referencing it (warning — see #1425)
  *
- * Run: node outreach-ops/verify-pipeline.mjs
+ * Run: node outreach-ops/verify-ledger.mjs
  */
 
 import { readFileSync, readdirSync, existsSync, mkdirSync, unlinkSync, statSync } from 'fs';
@@ -58,7 +58,7 @@ function ok(msg) { console.log(`✅ ${msg}`); }
 // --- Read leads.md ---
 if (!existsSync(APPS_FILE)) {
   console.log('\n📊 No leads.md found. This is normal for a fresh setup.');
-  console.log('   The file will be created when you evaluate your first offer.\n');
+  console.log('   The file will be created when you grade your first lead.\n');
   process.exit(0);
 }
 const content = readFileSync(APPS_FILE, 'utf-8');

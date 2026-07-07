@@ -10,10 +10,11 @@ running B2B outbound: paste a company URL, and your AI CLI turns it into a
 sourced dossier, an honest 1–5 grade, a channel call, and personalized drafts
 — or tells you *not* to contact them and why. Fewer, better messages.
 
-> Fork-rework of [santifer/career-ops](https://github.com/santifer/career-ops)
-> (MIT) — the job-search engine that trended on GitHub — repointed at prospect
-> outreach. Same architecture: your AI coding CLI is the brain; deterministic
-> zero-token scripts do everything repeatable.
+> Built by [Haris Hussain Khan](https://github.com/haris-hk) on the MIT-licensed
+> engine behind [career-ops](https://github.com/santifer/career-ops) — the
+> job-search tool that trended on GitHub. The outreach rework, grading rubric,
+> and signal engine are original work on that battle-tested foundation: your AI
+> coding CLI is the brain; deterministic zero-token scripts do everything repeatable.
 
 ## How it works
 
@@ -69,8 +70,7 @@ compliance posture (draft-first, no LinkedIn automation, licensed data only).
 
 [SETUP](docs/SETUP.md) · [FAQ](docs/FAQ.md) · [Budget guide](docs/RUNNING_ON_A_BUDGET.md) ·
 [Supported CLIs](docs/SUPPORTED_CLIS.md) · [Architecture](docs/ARCHITECTURE.md) ·
-[Adding providers](docs/ADDING_PROVIDERS.md) · [Plugins](docs/PLUGINS.md) ·
-[Decisions log](docs/DECISIONS.md)
+[Adding providers](docs/ADDING_PROVIDERS.md) · [Plugins](docs/PLUGINS.md)
 
 ## License
 

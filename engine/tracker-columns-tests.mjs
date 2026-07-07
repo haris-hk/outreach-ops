@@ -3,7 +3,7 @@
 /**
  * tracker-columns-tests.mjs — regression tests for header-name column mapping.
  *
- * merge-tracker.mjs and verify-pipeline.mjs used to parse leads.md by
+ * merge.mjs and verify-ledger.mjs used to parse leads.md by
  * fixed column position. Inserting a column (e.g. a Location column after Role)
  * shifted every later index by one — Location was read as Score, Score as
  * Status — so verify-pipeline flagged false errors and merge-tracker wrote
@@ -92,7 +92,7 @@ const TSV_NO_LOCATION = '2\t2026-02-02\tGlobex\tManager\tApplied\tN/A\t✅\t—\
 // ── Test 1: 10-column tracker merges into the correct columns ──────────────
 {
   const sb = makeSandbox(HEADER_10, { '2-globex.tsv': TSV_WITH_LOCATION });
-  const res = runScript('engine/merge-tracker.mjs', [], sb);
+  const res = runScript('engine/merge.mjs', [], sb);
   if (res.code !== 0) {
     fail(`merge into 10-col tracker exits 0 (got ${res.code})\n${res.stdout}`);
   } else {
@@ -113,7 +113,7 @@ const TSV_NO_LOCATION = '2\t2026-02-02\tGlobex\tManager\tApplied\tN/A\t✅\t—\
 // ── Test 2: verify-pipeline is clean on a 10-column tracker ────────────────
 {
   const sb = makeSandbox(HEADER_10);
-  const res = runScript('engine/verify-pipeline.mjs', [], sb);
+  const res = runScript('engine/verify-ledger.mjs', [], sb);
   if (res.code === 0 && /0 errors/.test(res.stdout)) {
     pass('verify-pipeline clean on 10-col tracker (no false column errors)');
   } else {
@@ -125,8 +125,8 @@ const TSV_NO_LOCATION = '2\t2026-02-02\tGlobex\tManager\tApplied\tN/A\t✅\t—\
 // ── Test 3: legacy 9-column layout still works (back-compat) ───────────────
 {
   const sb = makeSandbox(HEADER_9, { '2-globex.tsv': TSV_NO_LOCATION });
-  const merge = runScript('engine/merge-tracker.mjs', [], sb);
-  const verify = runScript('engine/verify-pipeline.mjs', [], sb);
+  const merge = runScript('engine/merge.mjs', [], sb);
+  const verify = runScript('engine/verify-ledger.mjs', [], sb);
   const row = dataRows(sb.tracker).find(l => l.includes('Globex'));
   const cells = row ? row.split('|').map(s => s.trim()) : [];
   // cells: ['', num, date, company, role, score, status, pdf, report, notes, '']

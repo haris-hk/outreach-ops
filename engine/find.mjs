@@ -155,7 +155,7 @@ function main() {
     return;
   }
   if (matches.length === 0) {
-    console.log(`No application matches "${query}" — try a report #, tracker #, or company fragment.`);
+    console.log(`No lead matches "${query}" — try a dossier #, ledger #, or company fragment.`);
     process.exitCode = 1;
     return;
   }

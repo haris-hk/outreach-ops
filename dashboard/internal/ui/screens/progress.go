@@ -295,13 +295,13 @@ func (m ProgressModel) renderRates() string {
 
 	sep := sepStyle.Render("  |  ")
 
-	rates := labelStyle.Render("Response Rate: ") +
+	rates := labelStyle.Render("Reply Rate: ") +
 		valueStyle.Foreground(responseColor).Render(fmt.Sprintf("%.1f%%", m.metrics.ResponseRate)) +
 		sep +
-		labelStyle.Render("Interview Rate: ") +
+		labelStyle.Render("Call Rate: ") +
 		valueStyle.Foreground(interviewColor).Render(fmt.Sprintf("%.1f%%", m.metrics.InterviewRate)) +
 		sep +
-		labelStyle.Render("Offer Rate: ") +
+		labelStyle.Render("Win Rate: ") +
 		valueStyle.Foreground(offerColor).Render(fmt.Sprintf("%.1f%%", m.metrics.OfferRate))
 
 	lines = append(lines, padStyle.Render(rates))
@@ -309,7 +309,7 @@ func (m ProgressModel) renderRates() string {
 	// Active summary
 	dimStyle := lipgloss.NewStyle().Foreground(m.theme.Subtext)
 	activeInfo := dimStyle.Render(fmt.Sprintf(
-		"%d active applications | %d total offers",
+		"%d active leads | %d wins",
 		m.metrics.ActiveApps, m.metrics.TotalOffers,
 	))
 	lines = append(lines, padStyle.Render(activeInfo))
@@ -383,7 +383,7 @@ func (m ProgressModel) renderHelp() string {
 	keyStyle := lipgloss.NewStyle().Bold(true).Foreground(m.theme.Text)
 	descStyle := lipgloss.NewStyle().Foreground(m.theme.Subtext)
 
-	brand := lipgloss.NewStyle().Foreground(m.theme.Overlay).Render("outreach-ops by santifer.io")
+	brand := lipgloss.NewStyle().Foreground(m.theme.Overlay).Render("outreach-ops · haris-hk")
 
 	keys := keyStyle.Render("\u2191\u2193") + descStyle.Render(" scroll  ") +
 		keyStyle.Render("PgUp/Dn") + descStyle.Render(" page  ") +

@@ -1,6 +1,6 @@
 # outreach-ops
 
-One-command installer for [**outreach-ops**](https://github.com/haris-hk/outreach-ops) — the AI-powered job search pipeline built on Claude Code.
+One-command installer for [**outreach-ops**](https://github.com/haris-hk/outreach-ops) — the AI prospect research, grading & outreach engine — local-first, draft-only, works with any AI coding CLI.
 
 ```bash
 npx @haris-hk/outreach-ops init
@@ -30,4 +30,4 @@ Prefer the manual route? `git clone` still works exactly as before — see the [
 
 ## License
 
-MIT © [Santiago Fernández de Valderrama](https://santifer.io)
+MIT © [Haris Hussain Khan](https://github.com/haris-hk) · engine forked from [santifer/career-ops](https://github.com/santifer/career-ops) (MIT)

@@ -29,12 +29,12 @@ const SUPPORTED_CLIS = [
   { name: "Grok Build CLI", cmd: "grok" },
 ];
 
-const USAGE = `outreach-ops — set up an AI job search workspace.
+const USAGE = `outreach-ops — set up an AI prospect research & outreach workspace.
 
 Usage:
   npx outreach-ops init [folder]    Create a new workspace (default: ./outreach-ops)
 
-After setup, open your AI coding tool inside the folder and paste a job offer.
+After setup, open your AI coding tool inside the folder and paste a company URL to grade your first lead.
 Docs: https://github.com/haris-hk/outreach-ops`;
 
 function die(msg) {
@@ -145,8 +145,8 @@ async function main() {
     console.log(`  2. Open your AI coding tool here, e.g.:  ${SUPPORTED_CLIS.map((c) => c.cmd).join(", ")}`);
   }
 
-  console.log("\nOn first launch it walks you through setup — your CV, profile and target");
-  console.log("roles — just by chatting. Nothing to configure by hand.");
+  console.log("\nOn first launch it walks you through setup — who you are, what you offer,");
+  console.log("and who you hunt — just by chatting. Nothing to configure by hand.");
   console.log("\noutreach-ops is AI-agnostic — Claude Code, Codex, Qwen, OpenCode, Copilot, Antigravity and Grok all work.");
   console.log("\nOptional (for PDF generation):");
   console.log("  npx playwright install chromium\n");

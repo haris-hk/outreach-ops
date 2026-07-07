@@ -13,7 +13,7 @@ filesystem-based (state TSV, PID lock, pause file) — resumable and 429-aware.
    pause by touching `batch/batch-runner.paused`, `--resume-paused` to continue;
    `--retry-failed` re-runs failures, max 2 retries).
 3. Workers write dossiers + per-lead TSVs to `batch/tracker-additions/`.
-4. Merge + integrity: `node engine/merge-tracker.mjs && node engine/dedup-tracker.mjs && node engine/verify-pipeline.mjs`.
+4. Merge + integrity: `node engine/merge.mjs && node engine/dedup.mjs && node engine/verify-ledger.mjs`.
 5. Triage in ledger mode: priority leads first; log outcomes as sends happen.
 
 ## Rules

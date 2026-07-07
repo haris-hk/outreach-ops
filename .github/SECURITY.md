@@ -1,34 +1,20 @@
 # Security Policy
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
-**Do NOT open a public issue for security vulnerabilities.**
+Please report vulnerabilities privately via **GitHub Security Advisories**:
+https://github.com/haris-hk/outreach-ops/security/advisories/new
+(or email harishussainkhan.124@gmail.com with subject `SECURITY: outreach-ops`).
 
-Instead, please email **hi@santifer.io** with:
+Do NOT open a public issue for security reports. You'll get an acknowledgment
+within 7 days. Coordinated disclosure preferred; credit given unless you
+opt out.
 
-1. Description of the vulnerability
-2. Steps to reproduce
-3. Potential impact
-4. Suggested fix (if any)
+## Scope notes
 
-You will receive a response within 72 hours. We will work with you to understand and address the issue before any public disclosure.
-
-## Scope
-
-Security issues in the following are in scope:
-
-- **Scripts** (`*.mjs`) — command injection, path traversal, SSRF
-- **Dashboard** (`dashboard/`) — any Go binary vulnerabilities
-- **Templates** (`templates/`) — XSS in generated HTML/PDF
-- **Configuration** — secrets exposure, unsafe defaults
-
-## Out of Scope
-
-- Issues in third-party dependencies (report upstream)
-- Issues requiring physical access to the user's machine
-- Social engineering attacks
-- outreach-ops is a local tool — there is no hosted service to attack
-
-## Disclosure Policy
-
-We follow coordinated disclosure. Once a fix is released, we will credit the reporter (unless they prefer anonymity) in the release notes.
+outreach-ops is a local-first tool: there is no hosted service, no server, no
+telemetry. The most security-relevant surfaces are the plugin system (keyed
+integrations — see the trust model in docs/PLUGINS.md: consent gating, host
+allowlists, commit pinning, tamper detection) and the signal providers
+(hostname-allowlisted, HTTPS-only). Reports about weakening the draft-only
+invariant (any path that could auto-send) are treated as highest severity.

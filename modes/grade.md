@@ -61,6 +61,6 @@ disqualify (reason).
 2. Append the ledger row to `data/leads.md`
    (`# | Date | Company | Contact | Role | Segment | Grade | Channel | Status | Dossier | Notes`),
    status `Graded` (or `Nurture`/`Disqualified`), then run
-   `node engine/verify-pipeline.mjs`.
+   `node engine/verify-ledger.mjs`.
 3. Reply in chat with: grade + one-line verdict, the block summaries, drafts
    (if produced) with char counts + hook sources + "why this angle".

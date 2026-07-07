@@ -4,7 +4,7 @@
  * The tracker is a markdown table that several scripts read. #946/#954 made the
  * column layout customizable (e.g. an inserted Location column) by mapping
  * columns *by header name* instead of fixed position — but that logic only
- * lived in `merge-tracker.mjs`. This module is the single home for it, so every
+ * lived in `merge.mjs`. This module is the single home for it, so every
  * reader (merge-tracker, dedup-tracker, followup-cadence, analyze-patterns)
  * tolerates the same layouts and can't drift apart.
  *

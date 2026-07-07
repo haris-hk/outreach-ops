@@ -54,11 +54,9 @@ const EXCLUDES = [
   'interview-prep/.gitkeep',
 ];
 
-// Trees that live in the repo but deliberately OUTSIDE the updater's world:
-// web/ is the experimental web UI — its own release-please component, never
-// shipped by update-system.mjs, never in the npm package. Excluding it here is
-// part of that isolation contract, not a coverage gap.
-const EXCLUDE_PREFIXES = ['web/'];
+// Trees deliberately OUTSIDE the updater's world: .internal/ holds gitignored
+// build/scratch notes and is never published or shipped.
+const EXCLUDE_PREFIXES = ['.internal/'];
 
 function covered(file) {
   // If explicitly excluded, it is covered

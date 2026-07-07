@@ -17,7 +17,7 @@ import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, rmSync } from 'fs'
 import { join, dirname } from 'path';
 import { tmpdir } from 'os';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { parseNextOverrides, resolveNextOverride, normalizeStatus, addDays, parseDate } from './followup-cadence.mjs';
+import { parseNextOverrides, resolveNextOverride, normalizeStatus, addDays, parseDate } from './cadence.mjs';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url))); // repo root
 const NODE = process.execPath;
