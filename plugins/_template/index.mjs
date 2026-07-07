@@ -1,6 +1,6 @@
 // @ts-check
 // {{NAME}} — a outreach-ops plugin.
-// Guide: https://github.com/harishussainkhan/outreach-ops/blob/main/docs/PLUGINS.md
+// Guide: https://github.com/haris-hk/outreach-ops/blob/main/docs/PLUGINS.md
 //
 // Rules the engine enforces for you:
 //  - Egress ONLY through ctx.fetch / ctx.fetchJson / ctx.fetchText (your manifest

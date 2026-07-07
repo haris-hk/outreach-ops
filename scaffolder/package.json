@@ -1,5 +1,5 @@
 {
-  "name": "@harishussainkhan/outreach-ops",
+  "name": "@haris-hk/outreach-ops",
   "version": "1.17.0",
   "description": "One-command installer for outreach-ops — the AI-powered job search pipeline built on Claude Code.",
   "bin": {
@@ -23,14 +23,14 @@
     "cli"
   ],
   "author": "Santiago Fernández de Valderrama <hi@santifer.io> (https://santifer.io)",
-  "homepage": "https://github.com/harishussainkhan/outreach-ops#readme",
+  "homepage": "https://github.com/haris-hk/outreach-ops#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harishussainkhan/outreach-ops.git",
+    "url": "git+https://github.com/haris-hk/outreach-ops.git",
     "directory": "scaffolder"
   },
   "bugs": {
-    "url": "https://github.com/harishussainkhan/outreach-ops/issues"
+    "url": "https://github.com/haris-hk/outreach-ops/issues"
   },
   "license": "MIT",
   "dependencies": {}

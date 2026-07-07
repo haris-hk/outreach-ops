@@ -31,7 +31,7 @@ scan (zero-token signal providers)      grade (A–G rubric, weighted 1–5)
 ## Quick start
 
 ```bash
-git clone https://github.com/harishussainkhan/outreach-ops.git
+git clone https://github.com/haris-hk/outreach-ops.git
 cd outreach-ops && npm install
 claude        # or codex / opencode / qwen / grok — any agent-skill CLI
 ```

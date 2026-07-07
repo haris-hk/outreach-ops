@@ -18,7 +18,7 @@
  *      node detect-reposts.mjs --window 60 (override 90-day window)
  *      node detect-reposts.mjs --self-test
  *
- * Issue #1205 — github.com/harishussainkhan/outreach-ops
+ * Issue #1205 — github.com/haris-hk/outreach-ops
  */
 
 import { readFileSync, existsSync } from 'fs';

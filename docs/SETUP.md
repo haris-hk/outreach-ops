@@ -12,7 +12,7 @@
 ## Install
 
 ```bash
-git clone https://github.com/harishussainkhan/outreach-ops.git
+git clone https://github.com/haris-hk/outreach-ops.git
 cd outreach-ops && npm install
 node engine/doctor.mjs        # health check — tells you exactly what's missing
 ```

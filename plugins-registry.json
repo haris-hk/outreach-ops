@@ -13,7 +13,7 @@
       "hooks": ["search"],
       "requiredEnv": ["TAVILY_API_KEY"],
       "allowedHosts": ["api.tavily.com"],
-      "registrationIssue": "https://github.com/harishussainkhan/outreach-ops/issues/1344",
+      "registrationIssue": "https://github.com/haris-hk/outreach-ops/issues/1344",
       "addedAt": "2026-06-29"
     },
     {
@@ -27,7 +27,7 @@
       "hooks": ["ingest"],
       "requiredEnv": ["GOOGLE_CALENDAR_CLIENT_ID", "GOOGLE_CALENDAR_CLIENT_SECRET", "GOOGLE_CALENDAR_REFRESH_TOKEN"],
       "allowedHosts": ["oauth2.googleapis.com", "www.googleapis.com"],
-      "registrationIssue": "https://github.com/harishussainkhan/outreach-ops/issues/1346",
+      "registrationIssue": "https://github.com/haris-hk/outreach-ops/issues/1346",
       "addedAt": "2026-06-29"
     },
     {
@@ -41,7 +41,7 @@
       "hooks": ["ingest"],
       "requiredEnv": ["GMAIL_CLIENT_ID", "GMAIL_CLIENT_SECRET", "GMAIL_REFRESH_TOKEN"],
       "allowedHosts": ["oauth2.googleapis.com", "gmail.googleapis.com"],
-      "registrationIssue": "https://github.com/harishussainkhan/outreach-ops/issues/1394",
+      "registrationIssue": "https://github.com/haris-hk/outreach-ops/issues/1394",
       "addedAt": "2026-07-01"
     },
     {
@@ -56,7 +56,7 @@
       "requiredEnv": ["MSGRAPH_CLIENT_ID", "MSGRAPH_REFRESH_TOKEN"],
       "optionalEnv": ["MSGRAPH_CLIENT_SECRET"],
       "allowedHosts": ["login.microsoftonline.com", "graph.microsoft.com"],
-      "registrationIssue": "https://github.com/harishussainkhan/outreach-ops/issues/1396",
+      "registrationIssue": "https://github.com/haris-hk/outreach-ops/issues/1396",
       "addedAt": "2026-07-01"
     },
     {
@@ -70,7 +70,7 @@
       "hooks": ["export"],
       "requiredEnv": [],
       "allowedHosts": [],
-      "registrationIssue": "https://github.com/harishussainkhan/outreach-ops/issues/1398",
+      "registrationIssue": "https://github.com/haris-hk/outreach-ops/issues/1398",
       "addedAt": "2026-07-01"
     },
     {
@@ -84,7 +84,7 @@
       "hooks": ["provider"],
       "requiredEnv": [],
       "allowedHosts": [],
-      "registrationIssue": "https://github.com/harishussainkhan/outreach-ops/issues/1412",
+      "registrationIssue": "https://github.com/haris-hk/outreach-ops/issues/1412",
       "addedAt": "2026-07-02"
     },
     {

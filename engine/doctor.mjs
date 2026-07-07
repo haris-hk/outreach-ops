@@ -120,7 +120,7 @@ function checkPlaywrightMcp(root) {
       'Browser-driven JD fetching and liveness checks (scan / pipeline / apply) need the',
       'Playwright MCP server. No project-level MCP config was detected in `.mcp.json`',
       'or `.claude/settings*.json`, so SPA job boards may return empty or stale content.',
-      'Tracking: https://github.com/harishussainkhan/outreach-ops/issues/506',
+      'Tracking: https://github.com/haris-hk/outreach-ops/issues/506',
     ],
   };
 }

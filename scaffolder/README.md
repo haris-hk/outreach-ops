@@ -1,9 +1,9 @@
 # outreach-ops
 
-One-command installer for [**outreach-ops**](https://github.com/harishussainkhan/outreach-ops) — the AI-powered job search pipeline built on Claude Code.
+One-command installer for [**outreach-ops**](https://github.com/haris-hk/outreach-ops) — the AI-powered job search pipeline built on Claude Code.
 
 ```bash
-npx @harishussainkhan/outreach-ops init
+npx @haris-hk/outreach-ops init
 ```
 
 This sets up a ready-to-use workspace:
@@ -18,10 +18,10 @@ The installer bootstraps CLI skill entrypoints after clone, so new CLIs (e.g. Gr
 ## Usage
 
 ```bash
-npx @harishussainkhan/outreach-ops init [folder]   # default folder: ./outreach-ops
+npx @haris-hk/outreach-ops init [folder]   # default folder: ./outreach-ops
 ```
 
-Prefer the manual route? `git clone` still works exactly as before — see the [setup guide](https://github.com/harishussainkhan/outreach-ops/blob/main/docs/SETUP.md).
+Prefer the manual route? `git clone` still works exactly as before — see the [setup guide](https://github.com/haris-hk/outreach-ops/blob/main/docs/SETUP.md).
 
 ## Requirements
 

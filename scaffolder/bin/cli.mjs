@@ -11,8 +11,8 @@ import { existsSync, readdirSync } from "node:fs";
 import { join, delimiter } from "node:path";
 import { ensureSkillEntrypoints } from "./skill-entrypoints.mjs";
 
-const REPO = "https://github.com/harishussainkhan/outreach-ops.git";
-const LATEST_RELEASE = "https://api.github.com/repos/harishussainkhan/outreach-ops/releases/latest";
+const REPO = "https://github.com/haris-hk/outreach-ops.git";
+const LATEST_RELEASE = "https://api.github.com/repos/haris-hk/outreach-ops/releases/latest";
 const NPM = process.platform === "win32" ? "npm.cmd" : "npm";
 
 // outreach-ops is AI-agnostic: every one of these CLIs reads AGENTS.md and works
@@ -35,7 +35,7 @@ Usage:
   npx outreach-ops init [folder]    Create a new workspace (default: ./outreach-ops)
 
 After setup, open your AI coding tool inside the folder and paste a job offer.
-Docs: https://github.com/harishussainkhan/outreach-ops`;
+Docs: https://github.com/haris-hk/outreach-ops`;
 
 function die(msg) {
   console.error(`\n✗ ${msg}\n`);

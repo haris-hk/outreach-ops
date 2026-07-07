@@ -6,9 +6,9 @@ outreach-ops is an open source project maintained in limited time. Here's how to
 
 | Question type | Where |
 |---|---|
-| **Bug** (something is broken) | [GitHub Issues](https://github.com/harishussainkhan/outreach-ops/issues) — use the Bug Report template |
-| **Feature idea** | [GitHub Issues](https://github.com/harishussainkhan/outreach-ops/issues) — use the Feature Request template |
-| **How do I...?** | [GitHub Discussions](https://github.com/harishussainkhan/outreach-ops/discussions) or [Discord](https://discord.gg/8pRpHETxa4) |
+| **Bug** (something is broken) | [GitHub Issues](https://github.com/haris-hk/outreach-ops/issues) — use the Bug Report template |
+| **Feature idea** | [GitHub Issues](https://github.com/haris-hk/outreach-ops/issues) — use the Feature Request template |
+| **How do I...?** | [GitHub Discussions](https://github.com/haris-hk/outreach-ops/discussions) or [Discord](https://discord.gg/8pRpHETxa4) |
 | **Setup help** | Check [docs/FAQ.md](docs/FAQ.md) for common questions, then [docs/SETUP.md](docs/SETUP.md), then ask in [Discord](https://discord.gg/8pRpHETxa4) |
 | **Security vulnerability** | Email hi@santifer.io — see [SECURITY.md](SECURITY.md) |
 
