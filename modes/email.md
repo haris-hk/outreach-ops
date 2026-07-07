@@ -21,8 +21,8 @@ Persona emphasis, banned phrases, voice-dna: per `modes/_shared.md` and `modes/d
 
 ## Gates before "send-ready"
 
-1. `node engine/verify-contact.mjs {lead}` — verified address required (M2; until it lands, mark the draft "UNVERIFIED CONTACT — verify before sending").
-2. `node engine/spam-preflight.mjs {draft}` — must pass (M3; until it lands, self-check: <2 links, no spam-trigger vocabulary, no ALL CAPS, personalization present).
+1. `node engine/verify-contact.mjs {email}` — exit 0 required (1 = invalid/risky, 2 = unverifiable: no verifier plugin enabled → tell the user to verify manually or enable hunter).
+2. `node engine/spam-preflight.mjs --file {draft} --subject "{subject}" --company {company} --contact "{contact}"` — exit 0 required; on failure, fix the flagged issues and re-run (never argue with the linter in the draft's favor).
 3. Grade ≥ contact threshold — below it this mode refuses (offer the nurture trigger instead).
 
 ## Output

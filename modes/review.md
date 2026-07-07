@@ -1,10 +1,30 @@
-# Mode: review — Weekly retro (fully lands in Milestone 3)
+# Mode: review — Weekly retro (learning loop)
 
-Target: read `node engine/analyze-patterns.mjs` output over `data/outcomes.tsv`
-(reply/positive/win rates by segment × channel × angle × personalization
-depth). PROPOSE — never auto-apply — changes to `profile/_weights.yml`, angle
-retirement/promotion, channel defaults. `preferences.yml →
-learning.auto_apply_weight_changes` stays false unless the user flips it.
+Turn logged outcomes into PROPOSED changes. Nothing is auto-applied:
+`preferences.yml → learning.auto_apply_weight_changes` defaults false and the
+proposal→approval step is the product's trust boundary.
 
-Until M3: eyeball `data/outcomes.tsv` + ledger statuses, summarize what's
-working, and propose one concrete experiment for next week.
+## Steps
+
+1. Run `node engine/patterns.mjs` (add `--min-n 5` once volume grows). Read
+   totals, per-dimension reply rates, timing tables, and `observations`.
+2. Cross-check the ledger: statuses distribution, leads stuck in Drafted
+   (gates failing?), Nurture leads whose watch trigger has since fired.
+3. Present a compact retro: what worked (with n), what didn't, one honest
+   caveat about sample size.
+4. PROPOSE, each with evidence and a concrete diff:
+   - **Weights** (`profile/_weights.yml`): e.g. timing weight ↑ if fresh-trigger
+     leads reply disproportionately. Show before/after YAML.
+   - **Angles**: promote/retire angle_tags per reply rate.
+   - **Channels** (`preferences.yml → channels`): per-segment default changes.
+   - **Voice**: if the user consistently edits drafts the same way before
+     sending, propose the corresponding voice-dna rule.
+5. Apply ONLY what the user approves, then log the change in the dossier-style
+   note `data/dossiers/review-{date}.md` (what changed, why, the numbers) so
+   future reviews can evaluate whether the change helped.
+
+## Guardrails
+
+- n < 5 per slice → observation, never a proposal.
+- One weights change per review cycle (isolate variables).
+- Never propose raising volume as a fix — the threshold philosophy stands.

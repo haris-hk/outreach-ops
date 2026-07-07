@@ -15,9 +15,10 @@
 - Write via editing the row, then ALWAYS run `node engine/verify-pipeline.mjs`.
 - Status transitions follow `templates/states.yml` order; Drafted → Queued
   additionally requires the email/spam gates (see `modes/email.md`).
-- **Outcome logging**: on Sent/Bumped/Replied/Call/Won/Lost also append to
-  `data/outcomes.tsv`: `lead_id  segment  channel  angle_tag  variant  ts  event`
-  (M3 formalizes via `engine/outcomes.mjs`; until then append the TSV line
-  directly). When the user reports editing a draft before sending, offer to
-  record the diff as a voice/preference learning in `profile/voice-dna.md`.
+- **Outcome logging**: on Sent/Bumped/Replied/Call/Won/Lost run
+  `node engine/outcomes.mjs log --lead {id} --company {c} --segment {s}
+  --channel {ch} --angle {tag} --event {event}` (angle_tag = the hook family
+  used, e.g. `timing-raise`, `oss-hook` — consistent tags power patterns.mjs).
+  When the user reports editing a draft before sending, offer to record the
+  diff as a voice/preference learning in `profile/voice-dna.md`.
 - After batch merges: `node engine/dedup-tracker.mjs`.
