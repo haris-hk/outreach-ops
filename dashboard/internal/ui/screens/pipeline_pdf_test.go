@@ -132,16 +132,11 @@ func TestRegenerateKeyFlashesWithoutManifestEntry(t *testing.T) {
 	}
 }
 
-func TestRegenerateKeyEmitsGenerateMsgFromManifest(t *testing.T) {
+func TestRegenerateKeyRendersRowDossier(t *testing.T) {
 	root := t.TempDir()
-	writePDFFixture(t, root, "output/cv-jane-doe-globex.html")
-	writePDFFixture(t, root, "data/pdf-index.tsv") // placeholder, overwritten below
-	manifest := "001\toutput/cv-jane-doe-globex-2026-06-05.pdf\toutput/cv-jane-doe-globex.html\tletter\t2026-06-05\n"
-	if err := os.WriteFile(filepath.Join(root, "data", "pdf-index.tsv"), []byte(manifest), 0o644); err != nil {
-		t.Fatalf("write manifest: %v", err)
-	}
+	writePDFFixture(t, root, "data/dossiers/001-globex-2026-06-05.md")
 	apps := []model.CareerApplication{
-		{Company: "Globex", Role: "Engineer", Status: "Evaluated", Score: 4.0, ReportNumber: "001"},
+		{Company: "Globex", Role: "Engineer", Status: "Graded", Score: 4.0, ReportNumber: "001", ReportPath: "dossiers/001-globex-2026-06-05.md"},
 	}
 
 	pm := newPDFTestModel(t, root, apps)
@@ -151,24 +146,34 @@ func TestRegenerateKeyEmitsGenerateMsgFromManifest(t *testing.T) {
 		t.Fatal("expected a generate command")
 	}
 	if updated.flash == "" {
-		t.Fatal("expected an in-progress flash while regenerating")
+		t.Fatal("expected an in-progress flash while rendering")
 	}
 	msg, ok := cmd().(PipelineGeneratePDFMsg)
 	if !ok {
 		t.Fatalf("expected PipelineGeneratePDFMsg, got %T", cmd())
 	}
-	if msg.ReportNumber != "001" || msg.HTMLPath != "output/cv-jane-doe-globex.html" || msg.Format != "letter" {
-		t.Fatalf("unexpected generate request: %+v", msg)
+	if msg.HTMLPath != "data/dossiers/001-globex-2026-06-05.md" || msg.PDFPath != "output/001-globex-2026-06-05.pdf" {
+		t.Fatalf("unexpected render request: %+v", msg)
 	}
 
 	// Outcome message updates the flash.
-	done, _ := updated.Update(PipelinePDFGeneratedMsg{Path: "/abs/cv.pdf"})
-	if !strings.Contains(done.flash, "cv.pdf") {
+	done, _ := updated.Update(PipelinePDFGeneratedMsg{Path: "/abs/001-globex.pdf"})
+	if !strings.Contains(done.flash, "001-globex.pdf") {
 		t.Fatalf("expected success flash to name the PDF, got %q", done.flash)
 	}
 	failed, _ := updated.Update(PipelinePDFGeneratedMsg{Err: "node not found"})
 	if !strings.Contains(failed.flash, "node not found") {
 		t.Fatalf("expected failure flash to carry the error, got %q", failed.flash)
+	}
+
+	// No dossier linked on the row: no command, guidance flash instead.
+	pmNone := newPDFTestModel(t, root, []model.CareerApplication{{Company: "Empty", Role: "X", Status: "New"}})
+	updatedNone, cmdNone := pmNone.Update(keyMsg("D"))
+	if cmdNone != nil {
+		t.Fatal("expected no command without a dossier link")
+	}
+	if !strings.Contains(updatedNone.flash, "grade the lead first") {
+		t.Fatalf("expected guidance flash, got %q", updatedNone.flash)
 	}
 }
 

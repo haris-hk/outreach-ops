@@ -302,28 +302,28 @@ func TestSearchStatePreservedAcrossReload(t *testing.T) {
 	}
 }
 
-func TestRejectedAndDiscardedTabsFilterCorrectly(t *testing.T) {
+func TestLostAndNurtureTabsFilterCorrectly(t *testing.T) {
 	apps := []model.CareerApplication{
 		{
 			Company:    "Acme",
 			Role:       "Backend Engineer",
-			Status:     "Rejected",
+			Status:     "Lost",
 			Score:      3.4,
-			ReportPath: "reports/001-acme.md",
+			ReportPath: "dossiers/001-acme.md",
 		},
 		{
 			Company:    "Beta",
 			Role:       "Platform Engineer",
-			Status:     "Discarded",
+			Status:     "Disqualified",
 			Score:      2.1,
-			ReportPath: "reports/002-beta.md",
+			ReportPath: "dossiers/002-beta.md",
 		},
 		{
 			Company:    "Gamma",
 			Role:       "AI Engineer",
-			Status:     "Applied",
+			Status:     "Sent",
 			Score:      4.6,
-			ReportPath: "reports/003-gamma.md",
+			ReportPath: "dossiers/003-gamma.md",
 		},
 	}
 
@@ -338,14 +338,14 @@ func TestRejectedAndDiscardedTabsFilterCorrectly(t *testing.T) {
 
 	pm.activeTab = tabIndexForFilter(t, filterRejected)
 	pm.applyFilterAndSort()
-	if len(pm.filtered) != 1 || pm.filtered[0].Status != "Rejected" {
-		t.Fatalf("expected rejected tab to isolate rejected rows, got %+v", pm.filtered)
+	if len(pm.filtered) != 1 || pm.filtered[0].Status != "Lost" {
+		t.Fatalf("expected LOST tab to isolate lost rows, got %+v", pm.filtered)
 	}
 
-	pm.activeTab = tabIndexForFilter(t, filterDiscarded)
+	pm.activeTab = tabIndexForFilter(t, filterSkip)
 	pm.applyFilterAndSort()
-	if len(pm.filtered) != 1 || pm.filtered[0].Status != "Discarded" {
-		t.Fatalf("expected discarded tab to isolate discarded rows, got %+v", pm.filtered)
+	if len(pm.filtered) != 1 || pm.filtered[0].Status != "Disqualified" {
+		t.Fatalf("expected NURTURE/DQ tab to isolate disqualified rows, got %+v", pm.filtered)
 	}
 }
 
@@ -447,7 +447,7 @@ func TestPreviewKeepsDiscardReasonWhenTlDrIsCached(t *testing.T) {
 	app := model.CareerApplication{
 		Company:    "Acme",
 		Role:       "Backend Engineer",
-		Status:     "Descartado 2026-03-12",
+		Status:     "Disqualified 2026-03-12",
 		Notes:      "took too long to respond",
 		ReportPath: "reports/001-acme.md",
 	}
@@ -464,7 +464,7 @@ func TestPreviewKeepsDiscardReasonWhenTlDrIsCached(t *testing.T) {
 	if !strings.Contains(preview, "took too long to respond") {
 		t.Fatalf("expected preview to keep the discard reason alongside the TL;DR, got %q", preview)
 	}
-	if !strings.Contains(preview, "Descartado 2026-03-12") {
+	if !strings.Contains(preview, "Disqualified 2026-03-12") {
 		t.Fatalf("expected preview to show the closing status, got %q", preview)
 	}
 }
