@@ -3,8 +3,8 @@ package screens
 import (
 	"testing"
 
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/model"
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/theme"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/model"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/theme"
 )
 
 func TestSortCycleIncludesNewColumns(t *testing.T) {

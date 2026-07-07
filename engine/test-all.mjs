@@ -64,8 +64,9 @@ for (const t of UNIT) {
     pass(t);
   } catch (e) {
     fail(`${t}: exit ${e.status ?? 'error'}`);
-    const out = `${e.stdout || ''}${e.stderr || ''}`.trim().split('\n').slice(-6).join('\n');
-    if (out) console.log(out.replace(/^/gm, '      '));
+    const lines = `${e.stdout || ''}\n${e.stderr || ''}`.trim().split('\n');
+    const shown = lines.length <= 14 ? lines : [...lines.slice(0, 10), `      … (${lines.length - 14} lines omitted)`, ...lines.slice(-4)];
+    if (shown.length) console.log(shown.join('\n').replace(/^/gm, '      '));
   }
 }
 
@@ -121,6 +122,7 @@ for (const f of textFiles) {
   const c = readFileSync(join(ROOT, f), 'utf-8');
   if (/career-ops|careerops|Career-Ops/i.test(c)) { fail(`brand string in ${f}`); brandBad++; }
   if (/santifer/i.test(c)) { fail(`upstream identity string in ${f}`); brandBad++; }
+  if (/harishussainkhan\/outreach-ops/.test(c)) { fail(`stale repo path (pre-rename username) in ${f}`); brandBad++; }
 }
 if (!brandBad) pass('no career-ops/santifer strings outside attribution files');
 

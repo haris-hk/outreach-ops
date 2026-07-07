@@ -10,10 +10,10 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/data"
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/model"
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/theme"
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/ui/screens"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/data"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/model"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/theme"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/ui/screens"
 )
 
 type viewState int

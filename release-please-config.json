@@ -21,12 +21,6 @@
           "path": "VERSION"
         }
       ]
-    },
-    "web": {
-      "release-type": "node",
-      "package-name": "outreach-ops-web",
-      "component": "web",
-      "include-component-in-tag": true
     }
   }
 }

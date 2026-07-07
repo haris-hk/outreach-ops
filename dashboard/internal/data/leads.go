@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/model"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/model"
 )
 
 var (

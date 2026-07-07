@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/model"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/model"
 )
 
 func writeFixture(t *testing.T, root, rel string, content string) {

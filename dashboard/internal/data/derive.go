@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/model"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/model"
 )
 
 // The tracker's Notes column is free-text, but evaluations write it with stable

@@ -3,7 +3,7 @@ package data
 import (
 	"testing"
 
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/model"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/model"
 )
 
 func TestDeriveNoteFields(t *testing.T) {

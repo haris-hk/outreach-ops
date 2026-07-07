@@ -12,9 +12,9 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/data"
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/model"
-	"github.com/harishussainkhan/outreach-ops/dashboard/internal/theme"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/data"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/model"
+	"github.com/haris-hk/outreach-ops/dashboard/internal/theme"
 )
 
 // PipelineClosedMsg is emitted when the pipeline screen is dismissed.
