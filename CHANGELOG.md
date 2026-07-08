@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0](https://github.com/haris-hk/outreach-ops/compare/outreach-ops-v0.3.0...outreach-ops-v0.4.0) (2026-07-08)
+
+
+### Features
+
+* scheduling as a first-class feature ([8fddd04](https://github.com/haris-hk/outreach-ops/commit/8fddd04f5e1951b901aa937ae96440943599d848))
+* scripts/daily-run.sh — schedulable heartbeat (scan + discover + replies + cadence, logged, fault-tolerant) ([9b8a4c1](https://github.com/haris-hk/outreach-ops/commit/9b8a4c132ac7beaa8ae1a67576d9bfa1ba54026e))
+
 ## [0.3.0](https://github.com/haris-hk/outreach-ops/compare/outreach-ops-v0.2.0...outreach-ops-v0.3.0) (2026-07-08)
 
 
