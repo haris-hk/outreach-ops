@@ -56,6 +56,7 @@ const UNIT = [
   'engine/signal-scan.test.mjs',
   'engine/learning-loop.test.mjs',
   'engine/web.test.mjs',
+  'engine/discovery.test.mjs',
 ];
 for (const t of UNIT) {
   if (!existsSync(join(ROOT, t))) { warn(`missing unit test ${t}`); continue; }
@@ -94,6 +95,9 @@ const REQUIRED = [
   'LEGAL.md', 'docs/SETUP.md', 'docs/FAQ.md', 'docs/RUNNING_ON_A_BUDGET.md',
   'web/server.mjs', 'web/index.html', 'engine/eval-grading.mjs', 'docs/demo.gif',
   'providers/sec-edgar.mjs', 'providers/producthunt.mjs', 'providers/github-search.mjs',
+  'providers/opencorporates.mjs', 'plugins/apollo/manifest.json',
+  'plugins/google-places/manifest.json', 'plugins/companies-house/manifest.json',
+  'docs/DISCOVERY_RECIPES.md',
   'docs/SUPPORTED_CLIS.md', 'docs/PLUGINS.md', 'engine/campaign.mjs',
   'modes/campaign.md', 'batch/batch-prompt.md',
   'AGENTS.md', 'modes/_shared.md', 'modes/_weights.default.yml', 'modes/grade.md',

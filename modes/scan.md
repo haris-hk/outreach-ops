@@ -26,6 +26,12 @@ Providers participating (see docs/ADDING_PROVIDERS.md to add more):
 | sec-edgar | US fundraising via SEC Form D filings | source `{provider: sec-edgar, query: "software", days: 14}` |
 | producthunt | daily launches (public RSS) | source `{provider: producthunt, keyword: ai}` |
 | github-search | new in-space repos (discovery) | source `{provider: github-search, query: "llm agents", language: python}` |
+| opencorporates | company registries, 140+ jurisdictions (newly incorporated = timing) | source `{provider: opencorporates, query: dental, jurisdiction: gb, days: 90}` |
+| google-places 🔑 | local/SMB businesses by query + area | plugin — enable + key, then `{provider: google-places, query: "agencies in Leeds"}` |
+| companies-house 🔑 | newly incorporated UK companies by SIC code | plugin (free key) — `{provider: companies-house, sic_codes: "62012", days: 30}` |
+| apify 🔑 | any Apify actor as a signal source | plugin — `{provider: apify, actor: "...", ...}` |
+
+Full chains per vertical: [docs/DISCOVERY_RECIPES.md](../docs/DISCOVERY_RECIPES.md).
 
 Individual mode: the raw job scanner survives as `node engine/scan-ats.mjs`
 (same providers, job-posting output) for literal job discovery.

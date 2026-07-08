@@ -26,6 +26,7 @@ import * as yaml from 'js-yaml'; // namespace import: works on js-yaml v4 (CJS i
 
 import { makeHttpCtx } from '../providers/_http.mjs';
 import { loadProviders } from '../providers/_registry.mjs';
+import { mergeProviderPlugins } from '../plugins/_engine.mjs';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -111,6 +112,9 @@ async function main() {
   }
 
   const providers = await loadProviders(PROVIDERS_DIR);
+  // Keyed provider-hook plugins (apify, google-places, companies-house, …)
+  // merge here — consent + key gated, fail-open, never override core ids.
+  await mergeProviderPlugins(providers, { root: ROOT });
   if (!providers.size) {
     console.error(`No signal providers found in ${PROVIDERS_DIR}`);
     process.exit(1);

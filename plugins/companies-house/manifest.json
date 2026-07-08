@@ -1,0 +1,13 @@
+{
+  "id": "companies-house",
+  "name": "Companies House UK registry",
+  "version": "0.1.0",
+  "apiVersion": 1,
+  "description": "Discover newly incorporated UK companies by SIC code / name via the free Companies House API — fresh-business trigger outside the startup bubble.",
+  "hooks": ["provider"],
+  "requiredEnv": ["COMPANIES_HOUSE_API_KEY"],
+  "allowedHosts": ["api.company-information.service.gov.uk"],
+  "skill": "skill.md",
+  "humanInTheLoop": true,
+  "homepage": "https://developer.company-information.service.gov.uk"
+}

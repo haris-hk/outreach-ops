@@ -20,7 +20,10 @@ Two gates must BOTH hold before a plugin runs: recorded consent
 
 | Plugin | Hooks | Purpose |
 |---|---|---|
+| apollo | enrich | THE person-finder: right contact by title at a company + org firmographics (paid credits) |
 | explorium | enrich | firmographics/technographics per lead (paid credits, lazy) |
+| google-places | provider | local/SMB business discovery for the signal scan (agencies, clinics, trades) |
+| companies-house | provider | newly incorporated UK companies by SIC code (free API key) |
 | hunter | enrich, verify | email finding + the Drafted→Queued verification gate |
 | gmail | replies | READ-ONLY reply detection (gmail.readonly; feeds outcomes.tsv) |
 | notion | export, search | lead-board export |

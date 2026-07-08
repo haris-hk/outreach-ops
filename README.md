@@ -196,8 +196,11 @@ A new prospect source is one ~150-line file against a stable contract:
 [docs/ADDING_PROVIDERS.md](docs/ADDING_PROVIDERS.md). Shipping providers:
 hiring-as-buying-signal (45+ ATS boards), GitHub orgs & in-space repo search,
 SEC Form D fundraising filings, Product Hunt & Show HN launches, news/RSS,
-YC/a16z portfolio lists. Keyed integrations are trust-gated plugins —
-[docs/PLUGINS.md](docs/PLUGINS.md).
+YC/a16z portfolio lists, OpenCorporates registries. Keyed integrations are
+trust-gated plugins — Apollo (person discovery), Google Places (local/SMB),
+Companies House (UK incorporations), Hunter, Explorium — see
+[docs/PLUGINS.md](docs/PLUGINS.md) and, for how to chain them per vertical,
+[docs/DISCOVERY_RECIPES.md](docs/DISCOVERY_RECIPES.md).
 
 ## The philosophy
 
