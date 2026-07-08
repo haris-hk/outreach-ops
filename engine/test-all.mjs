@@ -97,7 +97,7 @@ const REQUIRED = [
   'providers/sec-edgar.mjs', 'providers/producthunt.mjs', 'providers/github-search.mjs',
   'providers/opencorporates.mjs', 'plugins/apollo/manifest.json',
   'plugins/google-places/manifest.json', 'plugins/companies-house/manifest.json',
-  'docs/DISCOVERY_RECIPES.md',
+  'docs/DISCOVERY_RECIPES.md', 'engine/discover.mjs',
   'docs/SUPPORTED_CLIS.md', 'docs/PLUGINS.md', 'engine/campaign.mjs',
   'modes/campaign.md', 'batch/batch-prompt.md',
   'AGENTS.md', 'modes/_shared.md', 'modes/_weights.default.yml', 'modes/grade.md',

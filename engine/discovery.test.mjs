@@ -12,7 +12,7 @@ import { execFileSync } from 'child_process';
 import { mkdtempSync, writeFileSync, readFileSync, mkdirSync, rmSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { tmpdir } from 'os';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const NODE = process.execPath;
@@ -78,6 +78,46 @@ ok(readFileSync(join(ROOT, 'engine/scan.mjs'), 'utf-8').includes('mergeProviderP
 const enrichOut = JSON.parse(execFileSync(NODE, [join(ROOT, 'engine/enrich.mjs'), '--company', 'DiscTestCo', '--refresh'], { encoding: 'utf-8', cwd: ROOT }));
 ok(enrichOut.plugins_used.length === 0 && /no enrichment plugins enabled/.test(enrichOut.note || ''), 'enrich fan-out: gated plugins no-op cleanly');
 if (existsSync(join(ROOT, 'data/enrich-cache/disctestco.json'))) rmSync(join(ROOT, 'data/enrich-cache/disctestco.json'));
+
+// ── discover.mjs: query building + vendor normalization ────────────
+const { buildQuery, normalizeCompany } = await import('./discover.mjs');
+const icp = { segments: [{ id: 'seed-ai-startups', notes: 'ai infra teams', firmo: { industry: ['ai', 'saas'], geo: ['london'], size: [3, 50], stage: ['seed'] } }] };
+const q1 = buildQuery(icp, 'seed-ai-startups', {});
+ok(q1.keywords === 'ai infra teams' && q1.industry === 'ai, saas' && q1.geo === 'london' && q1._segment === 'seed-ai-startups', 'discover: segment → vendor-neutral query');
+const q2 = buildQuery(icp, null, { keywords: 'dental clinics', geo: 'Austin', limit: '10' });
+ok(q2.keywords === 'dental clinics' && q2.limit === 10 && !q2._segment, 'discover: CLI flags override segment');
+ok(buildQuery({ segments: [] }, null, {}) === null, 'discover: no segment + no flags → null');
+const nc = normalizeCompany({ company: ' NovaStack ', website: 'https://www.novastack.io', location: 'London' }, 'apollo');
+ok(nc.company === 'NovaStack' && nc.domain === 'novastack.io' && nc.signal_type === 'listing' && /via apollo/.test(nc.headline), 'discover: company normalizes with derived domain');
+ok(normalizeCompany({ company: 'NoUrl Co' }, 'x') === null && normalizeCompany({ website: 'https://x.io' }, 'x') === null, 'discover: missing name or https source → null');
+
+// ── search-hook mappers ─────────────────────────────────────────────
+const { mapOrgSearchResult } = await import('../plugins/apollo/index.mjs');
+const orgHit = mapOrgSearchResult({ name: 'NovaStack', website_url: 'https://novastack.io', primary_domain: 'novastack.io', city: 'London', country: 'UK', industry: 'fintech', estimated_num_employees: 12 });
+ok(orgHit.company === 'NovaStack' && orgHit.domain === 'novastack.io' && /12 employees/.test(orgHit.detail), 'apollo: org-search result maps to Company');
+ok(mapOrgSearchResult({ name: 'NoWeb Inc' }) === null, 'apollo: org without https source → null');
+const { placeToCompany } = await import('../plugins/google-places/index.mjs');
+const comp = placeToCompany({ displayName: { text: 'Bright Smile Dental' }, websiteUri: 'https://brightsmile.example', formattedAddress: '12 High St, Leeds', rating: 4.6, userRatingCount: 120, googleMapsUri: 'https://maps.google.com/?cid=1', businessStatus: 'OPERATIONAL' });
+ok(comp && comp.website === 'https://brightsmile.example' && comp.location === '12 High St, Leeds', 'google-places: place maps to Company');
+const { chCompanyToCompany } = await import('../plugins/companies-house/index.mjs');
+const chc = chCompanyToCompany({ company_name: 'NORTHERN SOLAR LTD', company_number: '12345678', company_status: 'active', date_of_creation: '2026-06-20', registered_office_address: { locality: 'Manchester' } });
+ok(chc && chc.location === 'Manchester' && /newly incorporated/.test(chc.detail), 'companies-house: item maps to Company');
+
+// search hook registered in manifests + hook tables
+const m2 = discoverPlugins(pluginRoots(ROOT));
+ok(['apollo', 'google-places', 'companies-house'].every((id) => m2.find((m) => m.id === id).hooks.includes('search')), 'search hook declared by all three manifests');
+for (const id of ['apollo', 'google-places', 'companies-house']) {
+  const mod = await import(pathToFileURL(join(ROOT, 'plugins', id, 'index.mjs')).href);
+  ok(typeof mod.search === 'function' && typeof mod.default.search === 'function', `${id}: search exported (named + hook table)`);
+}
+
+// discover.mjs end-to-end guidance path (no plugins enabled → exit 2 with pointer)
+try {
+  execFileSync(NODE, [join(ROOT, 'engine/discover.mjs'), '--keywords', 'test'], { encoding: 'utf-8', cwd: ROOT, stdio: 'pipe' });
+  ok(false, 'discover: should exit 2 without enabled plugins');
+} catch (e) {
+  ok(e.status === 2 && /No discovery plugins enabled/.test(`${e.stderr}`), 'discover: clean exit-2 guidance without enabled plugins');
+}
 
 rmSync(tmp, { recursive: true, force: true });
 console.log(`\n${passed} passed, ${failed} failed`);

@@ -39,6 +39,7 @@ export function placeToSignal(place, entry = {}) {
 }
 
 export default {
+  search,
   provider: {
     id: 'google-places',
     detect() { return null; }, // keyed providers never auto-detect
@@ -66,3 +67,41 @@ export default {
     },
   },
 };
+
+/** Map one Places result → discover.mjs Company. Exported for tests. */
+export function placeToCompany(place, entry = {}) {
+  const s = placeToSignal(place, entry);
+  if (!s) return null;
+  return {
+    company: s.company,
+    website: s.company_url,
+    location: place?.formattedAddress || undefined,
+    detail: s.detail,
+    source_url: s.source_url,
+  };
+}
+
+/** search(query, ctx) → Company[] — local/SMB discovery for discover.mjs. */
+export async function search(query, ctx) {
+  const key = ctx?.env?.GOOGLE_PLACES_API_KEY;
+  if (!key) return [];
+  const text = [query?.keywords, query?.industry, query?.geo && `in ${query.geo}`].filter(Boolean).join(' ');
+  if (!text.trim()) return [];
+  try {
+    const url = new URL(ENDPOINT);
+    if (url.hostname !== 'places.googleapis.com') throw new Error('untrusted host');
+    const res = await fetch(url.href, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': FIELD_MASK },
+      body: JSON.stringify({ textQuery: text, maxResultCount: Math.min(Number(query?.limit) || 15, 20) }),
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const minRating = Number(ctx?.settings?.min_rating) || 0;
+    return (json?.places || []).map((p) => placeToCompany(p, { min_rating: minRating })).filter(Boolean);
+  } catch (err) {
+    console.error(`  ⚠️  google-places search: ${err.message}`);
+    return [];
+  }
+}

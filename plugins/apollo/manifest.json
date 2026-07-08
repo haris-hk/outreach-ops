@@ -3,11 +3,18 @@
   "name": "Apollo.io people & org enrichment",
   "version": "0.1.0",
   "apiVersion": 1,
-  "description": "Find the right person at a company (by title) + org firmographics via the Apollo.io API — the founder-finding gap-closer (paid credits; lazy, per-lead only).",
-  "hooks": ["enrich"],
+  "description": "Find the right person at a company (by title) + org firmographics via the Apollo.io API \u2014 the founder-finding gap-closer (paid credits; lazy, per-lead only).",
+  "hooks": [
+    "enrich",
+    "search"
+  ],
   "costTier": "paid",
-  "requiredEnv": ["APOLLO_API_KEY"],
-  "allowedHosts": ["api.apollo.io"],
+  "requiredEnv": [
+    "APOLLO_API_KEY"
+  ],
+  "allowedHosts": [
+    "api.apollo.io"
+  ],
   "skill": "skill.md",
   "humanInTheLoop": true,
   "homepage": "https://docs.apollo.io"

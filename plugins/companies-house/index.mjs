@@ -30,6 +30,7 @@ export function chCompanyToSignal(item) {
 }
 
 export default {
+  search,
   provider: {
     id: 'companies-house',
     detect() { return null; }, // keyed providers never auto-detect
@@ -58,3 +59,42 @@ export default {
     },
   },
 };
+
+/** Map one advanced-search item → discover.mjs Company. Exported for tests. */
+export function chCompanyToCompany(item) {
+  const s = chCompanyToSignal(item);
+  if (!s) return null;
+  return {
+    company: s.company,
+    location: item?.registered_office_address?.locality || undefined,
+    detail: s.headline + (s.detail ? ` · ${s.detail}` : ''),
+    source_url: s.source_url,
+  };
+}
+
+/** search(query, ctx) → Company[] — UK registry discovery for discover.mjs. */
+export async function search(query, ctx) {
+  const key = ctx?.env?.COMPANIES_HOUSE_API_KEY;
+  if (!key) return [];
+  try {
+    const days = Number(ctx?.settings?.days) || 365;
+    const from = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
+    const url = new URL('/advanced-search/companies', HOST);
+    if (url.hostname !== 'api.company-information.service.gov.uk') throw new Error('untrusted host');
+    url.searchParams.set('incorporated_from', from);
+    url.searchParams.set('company_status', 'active');
+    url.searchParams.set('size', String(Math.min(Number(query?.limit) || 25, 50)));
+    if (query?.keywords) url.searchParams.set('company_name_includes', String(query.keywords));
+    if (ctx?.settings?.sic_codes) url.searchParams.set('sic_codes', String(ctx.settings.sic_codes));
+    const res = await fetch(url.href, {
+      headers: { authorization: `Basic ${Buffer.from(`${key}:`).toString('base64')}` },
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return (json?.items || []).map(chCompanyToCompany).filter(Boolean);
+  } catch (err) {
+    console.error(`  ⚠️  companies-house search: ${err.message}`);
+    return [];
+  }
+}

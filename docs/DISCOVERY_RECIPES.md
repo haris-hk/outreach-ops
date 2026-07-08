@@ -7,6 +7,12 @@ draft. Free sources first; paid credits only after a lead passes filters.
 
 **Legend:** 🆓 zero-key provider · 🔑 keyed plugin (consent + `.env` both required)
 
+**Two front doors:** `npm run scan` monitors your configured sources for
+signals; `npm run discover -- --segment X` (or `--keywords "..." --geo "..."`)
+asks every enabled search-hook plugin 🔑 to FIND companies matching the
+segment's firmographics — no source entries needed. Both feed the same inbox
+and share dedup history.
+
 ## SaaS founders, post-raise (the classic)
 
 ```yaml

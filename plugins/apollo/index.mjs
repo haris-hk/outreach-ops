@@ -89,4 +89,40 @@ export async function enrich(lead, ctx) {
 }
 
 // Hook table for the generic plugin runner (node plugins.mjs run apollo enrich).
-export default { enrich };
+export default { enrich, search };
+
+/** Map one Apollo org-search result → discover.mjs Company. Exported for tests. */
+export function mapOrgSearchResult(o) {
+  if (!o?.name) return null;
+  const website = o.website_url || undefined;
+  const source = website || o.linkedin_url;
+  if (!source || !/^https:\/\//.test(source)) return null;
+  return {
+    company: String(o.name).slice(0, 80),
+    website,
+    domain: o.primary_domain || undefined,
+    location: [o.city, o.state, o.country].filter(Boolean).join(', ') || undefined,
+    detail: [o.industry, o.estimated_num_employees && `${o.estimated_num_employees} employees`].filter(Boolean).join(' · ') || undefined,
+    source_url: source,
+  };
+}
+
+/** search(query, ctx) → Company[] — ICP-driven org discovery (discover.mjs). */
+export async function search(query, ctx) {
+  const key = ctx?.env?.APOLLO_API_KEY;
+  if (!key) return [];
+  try {
+    const body = {
+      page: 1,
+      per_page: Math.min(Number(query?.limit) || 25, 50),
+    };
+    if (query?.keywords) body.q_organization_keyword_tags = String(query.keywords).split(/[,;]/).map((s) => s.trim()).filter(Boolean);
+    if (query?.geo) body.organization_locations = String(query.geo).split(/[,;]/).map((s) => s.trim()).filter(Boolean);
+    const res = await post('/v1/mixed_companies/search', body, key);
+    const orgs = res?.organizations || res?.accounts || [];
+    return orgs.map(mapOrgSearchResult).filter(Boolean);
+  } catch (err) {
+    console.error(`  ⚠️  apollo search: ${err.message}`);
+    return [];
+  }
+}

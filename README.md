@@ -142,6 +142,7 @@ tamper-checked, and off by default.
 |---|---|
 | `npm run doctor` | Health check — tells you exactly what's missing and how to fix it |
 | `npm run scan` | Zero-token ICP signal scan → lead inbox (`--segment X`, `--dry-run`) |
+| `npm run discover -- --segment X` | ICP-driven company DISCOVERY via search-hook plugins (apollo, google-places, companies-house) → inbox |
 | `npm run ledger` | SQLite index over the ledger: `sync` · `query --status Sent` · `history --id N` · `export` · `delete --num N` |
 | `npm run find -- <query>` | Resolve a company/number fragment to its full lead identity |
 | `npm run web` | Read-only local lead board → http://127.0.0.1:4870 |

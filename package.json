@@ -1,7 +1,7 @@
 {
   "name": "outreach-ops",
   "version": "0.2.0",
-  "description": "AI prospect research, grading & outreach engine — local-first, draft-only, works with any AI coding CLI (Claude Code, Codex, OpenCode, Qwen)",
+  "description": "AI prospect research, grading & outreach engine \u2014 local-first, draft-only, works with any AI coding CLI (Claude Code, Codex, OpenCode, Qwen)",
   "private": true,
   "scripts": {
     "doctor": "node engine/doctor.mjs",
@@ -33,7 +33,8 @@
     "preflight": "node engine/spam-preflight.mjs",
     "deliverability": "node engine/deliverability-doctor.mjs",
     "eval:grading": "node engine/eval-grading.mjs",
-    "web": "node web/server.mjs"
+    "web": "node web/server.mjs",
+    "discover": "node engine/discover.mjs"
   },
   "keywords": [
     "ai",
