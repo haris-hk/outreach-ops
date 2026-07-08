@@ -2,6 +2,7 @@ name: Release Please
 on:
   push:
     branches: [main]
+  workflow_dispatch: {} # manual re-fire of the npm publish (e.g. after fixing trusted-publisher config)
 
 permissions:
   contents: write
@@ -22,14 +23,17 @@ jobs:
       # Runs in the same job because a release created via GITHUB_TOKEN does
       # not trigger separate `on: release` workflows.
       - uses: actions/checkout@v7
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.release_created || github.event_name == 'workflow_dispatch' }}
       - uses: actions/setup-node@v6
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.release_created || github.event_name == 'workflow_dispatch' }}
         with:
           node-version: 24
-          registry-url: "https://registry.npmjs.org"
+          # NOTE: no registry-url here on purpose. setup-node's registry-url
+          # writes an .npmrc _authToken=${NODE_AUTH_TOKEN} line; with no token
+          # env (we publish via OIDC trusted publishing) npm sees an empty
+          # credential and skips the OIDC exchange entirely.
       - name: Publish scaffolder to npm
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.release_created || github.event_name == 'workflow_dispatch' }}
         # Tokenless publish via npm Trusted Publishing (GitHub OIDC).
         # Requires the trusted-publisher config on the npm package settings
         # (GitHub Actions · haris-hk/outreach-ops · release.yml). No NPM_TOKEN.
