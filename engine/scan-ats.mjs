@@ -43,7 +43,7 @@ import { classifyFetchError } from './verify-portals.mjs';
 
 try {
   const { config } = await import('dotenv');
-  config();
+  config({ quiet: true }); // dotenv 17 stdout banner would corrupt piped output
 } catch {
   // dotenv is optional — fall back to process.env if not installed
 }

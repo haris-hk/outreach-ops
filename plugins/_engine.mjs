@@ -593,7 +593,7 @@ export async function loadDotenvOnce() {
   dotenvLoaded = true;
   try {
     const { config } = await import('dotenv');
-    config();
+    config({ quiet: true }); // dotenv 17 prints a stdout banner by default — enrich/verify-contact/check-replies emit machine-parsed JSON
   } catch {
     // dotenv optional — fall back to ambient process.env (CI, exported vars).
   }
