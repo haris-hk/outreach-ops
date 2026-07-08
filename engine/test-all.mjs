@@ -57,6 +57,7 @@ const UNIT = [
   'engine/learning-loop.test.mjs',
   'engine/web.test.mjs',
   'engine/discovery.test.mjs',
+  'engine/schedule.test.mjs',
 ];
 for (const t of UNIT) {
   if (!existsSync(join(ROOT, t))) { warn(`missing unit test ${t}`); continue; }
@@ -98,6 +99,7 @@ const REQUIRED = [
   'providers/opencorporates.mjs', 'plugins/apollo/manifest.json',
   'plugins/google-places/manifest.json', 'plugins/companies-house/manifest.json',
   'docs/DISCOVERY_RECIPES.md', 'engine/discover.mjs',
+  'engine/schedule.mjs', 'modes/schedule.md', 'scripts/daily-run.sh',
   'docs/SUPPORTED_CLIS.md', 'docs/PLUGINS.md', 'engine/campaign.mjs',
   'modes/campaign.md', 'batch/batch-prompt.md',
   'AGENTS.md', 'modes/_shared.md', 'modes/_weights.default.yml', 'modes/grade.md',

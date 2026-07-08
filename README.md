@@ -137,6 +137,7 @@ tamper-checked, and off by default.
 | `batch` | Parallel-grade 10–50 prospects via headless CLI workers, then merge with integrity checks |
 | `ledger` | View/update lead statuses, log outcomes, surface due follow-ups |
 | `review` | Weekly retro: mines your outcomes, PROPOSES weight/angle/channel tuning — you approve every change |
+| `schedule {when}` | "Scan every weekday at 8" → installs the OS-native recurring run; status / uninstall by sentence too |
 | `campaign` | Business mode: per-client ICP, preferences, voice, sender identity, and ledger |
 | `onboard` | (Re)run the profile interview |
 
@@ -153,7 +154,8 @@ tamper-checked, and off by default.
 | `npm run find -- <query>` | Resolve a company/number fragment to its full lead identity |
 | `npm run web` | Read-only local lead board → http://127.0.0.1:4870 |
 | `npm run serve:dashboard` | Terminal dashboard (needs Go): tabs, sorting, dossier preview, status picker |
-| `bash scripts/daily-run.sh` | Scheduled heartbeat: scan + discover + reply check + due follow-ups, logged to `data/run-logs/` — cron/launchd it |
+| `npm run schedule -- install --time 08:00` | **Set-and-forget:** installs the OS-native schedule (launchd/cron) for the heartbeat — `status` / `uninstall` / `run` manage it |
+| `bash scripts/daily-run.sh` | The heartbeat itself: scan + discover + reply check + due follow-ups, logged to `data/run-logs/` |
 
 **The outreach loop**
 

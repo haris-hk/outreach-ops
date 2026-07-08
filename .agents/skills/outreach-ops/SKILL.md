@@ -4,7 +4,7 @@ description: AI prospect research, grading & outreach engine — grade leads, sc
 arguments: mode
 user_invocable: true
 user-invocable: true
-argument-hint: "[grade | scan | dossier | dm | email | call | sequence | batch | ledger | review | onboard]"
+argument-hint: "[grade | scan | discover | dossier | dm | email | call | sequence | batch | ledger | review | schedule | campaign | onboard]"
 license: MIT
 ---
 
@@ -41,6 +41,7 @@ Determine the mode from `$mode`:
 | `batch` | `modes/batch.md` |
 | `ledger [update ...]` | `modes/ledger.md` |
 | `review` | `modes/review.md` |
+| `schedule ...` | `modes/schedule.md` |
 | `onboard` | `modes/onboard.md` |
 
 Unknown mode → show the menu and ask.

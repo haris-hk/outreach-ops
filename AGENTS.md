@@ -66,6 +66,7 @@ If `onboardingNeeded` is true (any of `profile/background.md`, `profile/offer.ym
 | `batch` | `modes/batch.md` | Parallel-grade many prospects via headless workers |
 | `ledger` | `modes/ledger.md` | View/update lead statuses; log outcomes |
 | `review` | `modes/review.md` | Weekly retro: outcome patterns → proposed rubric/angle changes |
+| `schedule {when}` | `modes/schedule.md` | Recurring scans: "every weekday at 8" → OS-native schedule (launchd/cron) |
 | `onboard` | `modes/onboard.md` | (Re)run profile setup |
 
 Read order for any mode: this file → `modes/_shared.md` (rubric, weights, global rules) → `profile/preferences.yml` + user-layer overrides (read LAST, they win) → the mode file.
