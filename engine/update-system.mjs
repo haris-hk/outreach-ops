@@ -89,6 +89,7 @@ const SYSTEM_PATHS = [
   'dashboard/',
   'fonts/',
   'scaffolder/',
+  'scripts/',
   'docs/',
   'test/',
   'web/',

@@ -153,6 +153,7 @@ tamper-checked, and off by default.
 | `npm run find -- <query>` | Resolve a company/number fragment to its full lead identity |
 | `npm run web` | Read-only local lead board → http://127.0.0.1:4870 |
 | `npm run serve:dashboard` | Terminal dashboard (needs Go): tabs, sorting, dossier preview, status picker |
+| `bash scripts/daily-run.sh` | Scheduled heartbeat: scan + discover + reply check + due follow-ups, logged to `data/run-logs/` — cron/launchd it |
 
 **The outreach loop**
 
