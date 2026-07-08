@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.2.0](https://github.com/haris-hk/outreach-ops/compare/outreach-ops-v0.1.0...outreach-ops-v0.2.0) (2026-07-07)
+
+
+### Features
+
+* milestone 0 — fork-strip of career-ops v1.17.0 into outreach-ops skeleton ([c5aaffc](https://github.com/haris-hk/outreach-ops/commit/c5aaffcace087762d048521b7a37fffc2f758a3f))
+* milestone 1 — agent layer, grading rubric, core modes, ledger retarget ([91a3f8e](https://github.com/haris-hk/outreach-ops/commit/91a3f8e374f3cb5ef9f99b04ca340baf5d491e53))
+* milestone 2 — prospect-hunting signal engine ([5be1457](https://github.com/haris-hk/outreach-ops/commit/5be145707f26c1266e2b26830d9942838c7dc602))
+* milestone 3 — learning loop, sequencing, safety gates ([793bae4](https://github.com/haris-hk/outreach-ops/commit/793bae4d2ebe6728753d44c1c449b52dc3b152c8))
+* milestone 4 — batch wiring, campaigns, TUI re-skin, docs, launch prep ([9d41da5](https://github.com/haris-hk/outreach-ops/commit/9d41da5aaed5124ce92ff4d18e7a3deabcb6df90))
+* web board, eval harness, 3 signal providers, demo gif, email de-exposure ([0449af5](https://github.com/haris-hk/outreach-ops/commit/0449af5aefc4f2c49cffeb13eafae4e56265b486))
+
+
+### Bug Fixes
+
+* **ci:** Go import paths, release-please manifest, deterministic CI, full diagnostics ([422e8c1](https://github.com/haris-hk/outreach-ops/commit/422e8c1a992feb3c597f4064bf7f6d77360599a7))
+* **ci:** test workflow runs engine/test-all.mjs and triggers on push to main ([bb7a544](https://github.com/haris-hk/outreach-ops/commit/bb7a544cd3729b479db3291efe29bd56a2cf6f5d))
+* deep-audit pass — batch merge round-trip, ledger export losslessness, identity stragglers ([a3a156c](https://github.com/haris-hk/outreach-ops/commit/a3a156c6279929393a3f11619d1a139f49470ba0))
+* **doctor:** auto-create data/dossiers, not the legacy reports/ dir ([e3e2c63](https://github.com/haris-hk/outreach-ops/commit/e3e2c63b41c3223094dff29f19e9d791658ca6d6))
+* hardening pass from external code review ([1344a57](https://github.com/haris-hk/outreach-ops/commit/1344a572a09f6f82c33e5461c94141ea52b06fc1))
+* js-yaml imports version-proof — namespace imports for v4 (CJS) and v5 (pure ESM) ([4cd76d6](https://github.com/haris-hk/outreach-ops/commit/4cd76d6656d365460d0670ba249018ae6fb517e9))
+
 ## 0.1.0 (unreleased)
 
 - Improvements pass: read-only local web lead board (zero-dependency, 127.0.0.1-only, traversal-protected, 11-test suite); LLM eval harness for the grading fixtures (anthropic/openai/ollama + --mock, npm run eval:grading); three new zero-key signal providers (SEC EDGAR Form D fundraising, Product Hunt RSS launches, GitHub in-space repo discovery); generated demo GIF in the README; personal email removed from all public surfaces (security reports via GitHub Advisories); residual job vocabulary cleaned from plugin docs and config examples.

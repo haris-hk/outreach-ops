@@ -127,6 +127,7 @@ const BOOTSTRAP_PATHS = [
 // User layer paths — NEVER touch these (safety check)
 const USER_PATHS = [
   'profile/',
+  'portals.yml',
   'data/',
   'campaigns/',
   'config/plugins.yml',

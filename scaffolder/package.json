@@ -1,7 +1,7 @@
 {
   "name": "@haris-hk/outreach-ops",
-  "version": "0.1.0",
-  "description": "One-command installer for outreach-ops \u2014 the AI prospect research, grading & outreach engine (local-first, draft-only).",
+  "version": "0.2.0",
+  "description": "One-command installer for outreach-ops — the AI prospect research, grading & outreach engine (local-first, draft-only).",
   "bin": {
     "outreach-ops": "bin/cli.mjs"
   },

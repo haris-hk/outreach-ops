@@ -13,6 +13,7 @@ Which files belong to the **system** (auto-updatable) and which belong to the **
 | `profile/voice-dna.md` | Your writing voice guardrail (style only) |
 | `profile/writing-samples/` | Your real messages for style calibration (README is system-owned docs) |
 | `profile/_weights.yml` | Your override of grading weights (optional) |
+| `portals.yml` | Your ATS job-scan watch list (individual mode; seeded from templates/portals.example.yml) |
 | `data/leads.md` | Lead ledger — single source of truth |
 | `data/leads.db` | Derived SQLite index (rebuildable; safe to delete) |
 | `data/inbox.md` | Scanner output awaiting triage |

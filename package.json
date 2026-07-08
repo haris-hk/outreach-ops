@@ -1,7 +1,7 @@
 {
   "name": "outreach-ops",
-  "version": "0.1.0",
-  "description": "AI prospect research, grading & outreach engine \u2014 local-first, draft-only, works with any AI coding CLI (Claude Code, Codex, OpenCode, Qwen)",
+  "version": "0.2.0",
+  "description": "AI prospect research, grading & outreach engine — local-first, draft-only, works with any AI coding CLI (Claude Code, Codex, OpenCode, Qwen)",
   "private": true,
   "scripts": {
     "doctor": "node engine/doctor.mjs",
@@ -55,7 +55,7 @@
     "js-yaml": "^4.1.0"
   },
   "optionalDependencies": {
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.4.2",
     "playwright": "^1.49.0"
   }
 }
