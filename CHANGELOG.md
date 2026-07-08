@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/haris-hk/outreach-ops/compare/outreach-ops-v0.2.0...outreach-ops-v0.3.0) (2026-07-08)
+
+
+### Features
+
+* discovery gap-closers — apollo, google-places, companies-house, opencorporates, recipes ([ae1997b](https://github.com/haris-hk/outreach-ops/commit/ae1997bed5702384bdacb53201d0d15e5530eaf4))
+* implement the search hook — discover.mjs goes live ([ac7738a](https://github.com/haris-hk/outreach-ops/commit/ac7738a296e8e33d737219c09e97a11e2d33db05))
+
+
+### Bug Fixes
+
+* protect portals.yml as user-layer data (gitignore + USER_PATHS + data contract) ([62928c4](https://github.com/haris-hk/outreach-ops/commit/62928c491ee2d168fbef1017cac55b43f77b8f79))
+* silence dotenv 17 stdout banner (quiet: true) ([d549adf](https://github.com/haris-hk/outreach-ops/commit/d549adf6e2d5e6e7583b64ea1c9f2960d08ab82c))
+
 ## [0.2.0](https://github.com/haris-hk/outreach-ops/compare/outreach-ops-v0.1.0...outreach-ops-v0.2.0) (2026-07-07)
 
 
