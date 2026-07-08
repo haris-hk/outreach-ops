@@ -30,7 +30,8 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Publish scaffolder to npm
         if: ${{ steps.release.outputs.release_created }}
+        # Tokenless publish via npm Trusted Publishing (GitHub OIDC).
+        # Requires the trusted-publisher config on the npm package settings
+        # (GitHub Actions · haris-hk/outreach-ops · release.yml). No NPM_TOKEN.
         run: npm publish --provenance --access public
         working-directory: scaffolder
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

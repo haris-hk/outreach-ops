@@ -33,9 +33,16 @@ scan (zero-token signal providers)      grade (A–G rubric, weighted 1–5)
 
 ## Getting started
 
-**No installer is needed.** Outreach-ops is a plain git repository — clone it,
-install dependencies, done. (An `npx` one-command scaffolder ships in
-`scaffolder/` for a future npm release, but cloning is the supported path.)
+**One command:**
+
+```bash
+npx @haris-hk/outreach-ops init
+```
+
+That clones the latest release into `./outreach-ops` and installs
+dependencies. Prefer plain git (e.g. to contribute)? `git clone
+https://github.com/haris-hk/outreach-ops.git && cd outreach-ops && npm install`
+does exactly the same thing.
 
 ### 1 · Prerequisites
 
@@ -54,9 +61,8 @@ for free-tier and local-model paths.
 ### 2 · Install
 
 ```bash
-git clone https://github.com/haris-hk/outreach-ops.git
+npx @haris-hk/outreach-ops init
 cd outreach-ops
-npm install
 npx playwright install chromium   # optional — PDFs & liveness checks
 ```
 
