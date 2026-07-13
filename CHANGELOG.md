@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/haris-hk/outreach-ops/compare/outreach-ops-v0.4.0...outreach-ops-v0.4.1) (2026-07-13)
+
+
+### Bug Fixes
+
+* **ci:** make OIDC publish actually attempt OIDC ([caa36cb](https://github.com/haris-hk/outreach-ops/commit/caa36cb40063b9d7ae3bf393054e4ce4cc560fa2))
+
 ## [0.4.0](https://github.com/haris-hk/outreach-ops/compare/outreach-ops-v0.3.0...outreach-ops-v0.4.0) (2026-07-08)
 
 
