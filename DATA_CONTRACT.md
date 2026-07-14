@@ -42,7 +42,7 @@ Which files belong to the **system** (auto-updatable) and which belong to the **
 | `scaffolder/` · `fonts/` · `docs/` · `test/` | Installer, fonts, docs, fixtures |
 | `CLAUDE.md`, `AGENTS.md`, CLI wrappers, `.agents/` + per-CLI skill dirs | Agent instruction layer |
 | Governance: `README.md`, `LICENSE`, `LEGAL.md`, `CONTRIBUTING.md`, `SECURITY.md`, etc. | Project docs |
-| `VERSION`, `package.json`, `Dockerfile`, `.github/` | Packaging/CI |
+| `VERSION`, `package.json`, `Dockerfile`, `.github/`, `.mcp.json` | Packaging/CI and MCP project config |
 
 ## The Rule
 

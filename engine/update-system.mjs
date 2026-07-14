@@ -101,6 +101,7 @@ const SYSTEM_PATHS = [
   '.antigravitycli/',
   '.kimi/',
   '.github/',
+  '.mcp.json',
 ];
 
 const BOOTSTRAP_PATHS = [
