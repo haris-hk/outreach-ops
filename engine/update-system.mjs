@@ -135,6 +135,7 @@ const USER_PATHS = [
   'plugins.local/',
   'plugins.lock',
   '.claude/settings.json',
+  '.mcp.json',
   '.env',
 ];
 

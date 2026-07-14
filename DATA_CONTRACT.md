@@ -27,6 +27,7 @@ Which files belong to the **system** (auto-updatable) and which belong to the **
 | `plugins.lock` | Integrity pins + recorded consent for enabled plugins |
 | `.env` | API keys |
 | `.claude/settings.json` | Your CLI settings |
+| `.mcp.json` | Your project-level MCP servers (Playwright, etc.) |
 
 ## System Layer (auto-updatable)
 
