@@ -54,7 +54,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^5.2.3"
   },
   "optionalDependencies": {
     "dotenv": "^17.4.2",
